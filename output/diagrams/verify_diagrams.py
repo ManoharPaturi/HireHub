@@ -78,6 +78,38 @@ for kind,panels in layouts.items():
         crop=ET.parse(OUT/'svg'/(kind+'-domain-'+str(panel['id']+1)+'.svg')).getroot()
         assert crop.attrib['viewBox']==f"0 {panel['y']} {panel['width']} {panel['height']}"
 
+# Chen uses entity-side participation, the opposite endpoint mapping from Crow's Foot.
+chen_root=ET.parse(OUT/'svg/er-chen.svg').getroot()
+chen_nodes=[n for n in chen_root.iter() if n.attrib.get('class')=='entity']
+assert len([n for n in chen_nodes if n.attrib['data-complete']=='true'])==12
+assert len([n for n in chen_root.iter() if n.attrib.get('class')=='relationship-diamond'])==16
+for panel in layouts['er-chen']:
+    for edge in panel['edges']:
+        actual=Base.metadata.tables[edge['child']].columns[edge['field']]
+        parent_part='(0,1)' if actual.unique else '(0,N)'
+        child_part='(0,1)' if actual.nullable else '(1,1)'
+        assert [p['value'] for p in edge['participation']]==[parent_part,child_part]
+    for n in panel['nodes']:
+        for c in n['columns']:
+            assert c['name'] in Base.metadata.tables[n['table']].columns
+            assert not c['fk'],'FKs are relationships in the Chen projection'
+        assert any(c['pk'] for c in n['columns'])
+for panel in layouts['er-chen']:
+    diamonds=[e['diamond'] for e in panel['edges']]
+    for i,d in enumerate(diamonds):
+        assert d['x']-d['width']/2>=40 and d['x']+d['width']/2<=panel['width']-40
+        assert d['y']-d['height']/2>=0 and d['y']+d['height']/2<=panel['height']
+        for m in diamonds[i+1:]:
+            assert abs(d['x']-m['x'])>=(d['width']+m['width'])/2 or abs(d['y']-m['y'])>=(d['height']+m['height'])/2
+for node in chen_nodes:
+    attrs=[n for n in node if n.attrib.get('class')=='attribute']
+    for i,a in enumerate(attrs):
+        for b in attrs[i+1:]:
+            assert abs(float(a.attrib['cx'])-float(b.attrib['cx']))>=float(a.attrib['rx'])+float(b.attrib['rx'])
+    tokens={t.strip() for t in node.itertext() if t.strip()}
+    assert 'id' in tokens
+assert len([n for n in chen_root.iter() if n.attrib.get('data-key-attribute')=='true'])==15
+
 full=(OUT/'sources/er-full.mmd').read_text()
 for e in schema['entities']:
     block=re.search(r'\b'+e['table']+r' \{(.*?)\n    \}',full,re.S).group(1)
@@ -122,6 +154,6 @@ for d in json.loads((OUT/'catalog.json').read_text()):
     assert 'foreignObject' not in svg.read_text(), 'Portable text-only SVG required'
     manifest.append({'id':d['id'],'svg':'svg/'+svg.name,'png':'png/'+d['id']+'.png','source':'sources/'+d['source'],'svg_sha256':hashlib.sha256(svg.read_bytes()).hexdigest()})
 source_paths=sorted({s for d in json.loads((OUT/'catalog.json').read_text()) for s in d['sources']})
-report={'verification':'passed','scope':'Declared ORM metadata, diagram definitions, route evidence and SVG structure. No live MySQL or end-to-end application execution.','tables':len(expected),'columns':sum(len(e['columns']) for e in schema['entities']),'foreign_keys':len(fks),'use_cases':18,'diagrams':manifest,'implementation_hashes':[{'source':p,'sha256':hashlib.sha256((ROOT/p).read_bytes()).hexdigest()} for p in source_paths],'checks':['all mapped tables and fields','declared nullability, types, PK, UK, index and delete rules','all 16 ER links and their endpoint multiplicities','all 114 fields present in the rendered full ER SVG','12 UML entity classes and 16 exact associations','all use-case endpoint evidence','activity guard completeness and endpoints','two-commit order in both sequence workflows','valid text-only SVG exports','12 principal entities and 16 exact rendered relations per structural view','no overlapping structural cards or connectors through cards','nine correctly bounded domain SVGs']}
+report={'verification':'passed','scope':'Declared ORM metadata, diagram definitions, route evidence and SVG structure. No live MySQL or end-to-end application execution.','tables':len(expected),'columns':sum(len(e['columns']) for e in schema['entities']),'foreign_keys':len(fks),'use_cases':18,'diagram_count':len(manifest),'diagrams':manifest,'implementation_hashes':[{'source':p,'sha256':hashlib.sha256((ROOT/p).read_bytes()).hexdigest()} for p in source_paths],'checks':['all mapped tables and fields','declared nullability, types, PK, UK, index and delete rules','all 16 ER links and their endpoint multiplicities','all 114 fields present in the rendered full ER SVG','12 UML entity classes and 16 exact associations','all use-case endpoint evidence','activity guard completeness and endpoints','two-commit order in both sequence workflows','valid text-only SVG exports','12 principal entities and 16 exact rendered relations per structural view','no overlapping structural cards or connectors through cards','12 correctly bounded domain SVGs','Chen entity rectangles, 16 relationship diamonds and underlined keys','same-side Chen min/max participation against ORM nullability and uniqueness']}
 (OUT/'verification.json').write_text(json.dumps(report,indent=2)+'\n')
-print('PASS:',len(expected),'tables;',report['columns'],'fields;',len(fks),'foreign keys; 7 diagram definitions.')
+print('PASS:',len(expected),'tables;',report['columns'],'fields;',len(fks),'foreign keys;',len(manifest),'diagram definitions.')

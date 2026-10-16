@@ -1,8 +1,8 @@
 [
   {
     "id": "er-overview",
-    "kind": "ER",
-    "title": "Relational overview",
+    "kind": "ER / Crow\u2019s Foot notation",
+    "title": "Relational overview \u2014 Crow\u2019s Foot ER",
     "subtitle": "All 12 tables and all 16 foreign keys, with identity fields only.",
     "source": "er-overview.mmd",
     "code": "erDiagram\n    direction LR\n    users {\n        INT id PK \"NOT NULL\"\n    }\n    recruiter_profiles {\n        INT id PK \"NOT NULL\"\n        INT user_id FK, UK \"NOT NULL\"\n    }\n    students {\n        INT id PK \"NOT NULL\"\n        INT user_id FK, UK \"NOT NULL\"\n    }\n    documents {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n    }\n    skills {\n        INT id PK \"NOT NULL\"\n    }\n    student_skills {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n        INT skill_id FK \"NOT NULL\"\n    }\n    internships {\n        INT id PK \"NOT NULL\"\n        INT recruiter_id FK \"NULL allowed\"\n    }\n    applications {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n        INT internship_id FK \"NOT NULL\"\n    }\n    interviews {\n        INT id PK \"NOT NULL\"\n        INT recruiter_id FK \"NOT NULL\"\n        INT application_id FK \"NOT NULL\"\n        INT internship_id FK \"NULL allowed\"\n    }\n    notifications {\n        INT id PK \"NOT NULL\"\n        INT user_id FK \"NOT NULL\"\n    }\n    saved_internships {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n        INT internship_id FK \"NOT NULL\"\n    }\n    messages {\n        INT id PK \"NOT NULL\"\n        INT sender_id FK \"NOT NULL\"\n        INT receiver_id FK \"NOT NULL\"\n    }\n    users ||..o| recruiter_profiles : \"user_id\"\n    users ||..o| students : \"user_id\"\n    students ||..o{ documents : \"student_id\"\n    students ||..o{ student_skills : \"student_id\"\n    skills ||..o{ student_skills : \"skill_id\"\n    recruiter_profiles |o..o{ internships : \"recruiter_id\"\n    students ||..o{ applications : \"student_id\"\n    internships ||..o{ applications : \"internship_id\"\n    recruiter_profiles ||..o{ interviews : \"recruiter_id\"\n    applications ||..o{ interviews : \"application_id\"\n    internships |o..o{ interviews : \"internship_id\"\n    users ||..o{ notifications : \"user_id\"\n    students ||..o{ saved_internships : \"student_id\"\n    internships ||..o{ saved_internships : \"internship_id\"\n    users ||..o{ messages : \"sender_id\"\n    users ||..o{ messages : \"receiver_id\"",
@@ -10,7 +10,8 @@
       "backend/app/db/models.py"
     ],
     "notes": [
-      "Use the Domain selector to view one area at a time. Dashed reference cards repeat an existing entity; all relationships appear once across the three views.",
+      "Use the Domain selector to view one area at a time. Reference labels repeat an existing entity; all relationships appear once across the three views.",
+      "Notation used: Crow\u2019s Foot ER. Table rectangles contain attributes; endpoint markers express cardinalities.",
       "Crow's-foot markers show cardinalities at both ends. Dashed links are non-identifying: every child table has its own surrogate primary key.",
       "A user may have zero or one student profile and zero or one recruiter profile. Role exclusivity is application logic, not a database inheritance relationship.",
       "The two messages-to-users links are distinct: sender_id and receiver_id."
@@ -44,8 +45,8 @@
   },
   {
     "id": "er-full",
-    "kind": "ER",
-    "title": "Full physical schema",
+    "kind": "ER / Crow\u2019s Foot notation",
+    "title": "Full physical schema \u2014 Crow\u2019s Foot ER",
     "subtitle": "Every mapped field, SQL type, key and declared nullability.",
     "source": "er-full.mmd",
     "code": "erDiagram\n    direction LR\n    users {\n        INT id PK \"NOT NULL\"\n        VARCHAR(255) email UK \"NOT NULL\"\n        VARCHAR(255) password_hash \"NOT NULL\"\n        VARCHAR(50) role \"NULL allowed\"\n        BOOLEAN is_active \"NULL allowed\"\n        DATETIME created_at \"NULL allowed\"\n    }\n    recruiter_profiles {\n        INT id PK \"NOT NULL\"\n        INT user_id FK, UK \"NOT NULL\"\n        VARCHAR(255) full_name \"NOT NULL\"\n        VARCHAR(255) company_name \"NOT NULL\"\n        VARCHAR(500) company_logo \"NULL allowed\"\n        VARCHAR(255) designation \"NULL allowed\"\n        VARCHAR(50) phone \"NULL allowed\"\n        VARCHAR(500) company_website \"NULL allowed\"\n        VARCHAR(100) company_size \"NULL allowed\"\n        VARCHAR(255) industry \"NULL allowed\"\n        TEXT bio \"NULL allowed\"\n        VARCHAR(500) linkedin_url \"NULL allowed\"\n        VARCHAR(255) location \"NULL allowed\"\n        DATETIME updated_at \"NULL allowed\"\n    }\n    students {\n        INT id PK \"NOT NULL\"\n        INT user_id FK, UK \"NOT NULL\"\n        VARCHAR(255) full_name \"NOT NULL\"\n        VARCHAR(50) phone \"NULL allowed\"\n        VARCHAR(500) avatar_url \"NULL allowed\"\n        VARCHAR(20) gender \"NULL allowed\"\n        VARCHAR(255) university \"NULL allowed\"\n        VARCHAR(255) degree \"NULL allowed\"\n        VARCHAR(255) field_of_study \"NULL allowed\"\n        INT graduation_year \"NULL allowed\"\n        FLOAT cgpa \"NULL allowed\"\n        TEXT bio \"NULL allowed\"\n        VARCHAR(255) location \"NULL allowed\"\n        VARCHAR(50) preferred_mode \"NULL allowed\"\n        VARCHAR(100) expected_stipend \"NULL allowed\"\n        VARCHAR(500) portfolio_url \"NULL allowed\"\n        VARCHAR(500) github_url \"NULL allowed\"\n        VARCHAR(500) linkedin_url \"NULL allowed\"\n        DATETIME updated_at \"NULL allowed\"\n    }\n    documents {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n        VARCHAR(100) document_type \"NOT NULL\"\n        VARCHAR(255) file_name \"NOT NULL\"\n        VARCHAR(500) file_url \"NULL allowed\"\n        VARCHAR(100) content_type \"NULL allowed\"\n        INT file_size \"NULL allowed\"\n        MEDIUMTEXT file_data \"NULL allowed\"\n        DATETIME uploaded_at \"NULL allowed\"\n    }\n    skills {\n        INT id PK \"NOT NULL\"\n        VARCHAR(100) name UK \"NOT NULL\"\n        VARCHAR(100) category \"NULL allowed\"\n    }\n    student_skills {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n        INT skill_id FK \"NOT NULL\"\n        VARCHAR(50) proficiency_level \"NULL allowed\"\n    }\n    internships {\n        INT id PK \"NOT NULL\"\n        INT recruiter_id FK \"NULL allowed\"\n        VARCHAR(255) title \"NOT NULL\"\n        VARCHAR(255) company_name \"NOT NULL\"\n        VARCHAR(500) company_logo \"NULL allowed\"\n        VARCHAR(255) location \"NOT NULL\"\n        VARCHAR(50) mode \"NULL allowed\"\n        INT stipend_amount \"NOT NULL\"\n        VARCHAR(10) stipend_currency \"NULL allowed\"\n        VARCHAR(100) duration \"NOT NULL\"\n        TEXT description \"NOT NULL\"\n        TEXT eligibility \"NULL allowed\"\n        TEXT responsibilities \"NULL allowed\"\n        TEXT benefits \"NULL allowed\"\n        VARCHAR(255) recruiter_name \"NULL allowed\"\n        VARCHAR(255) recruiter_email \"NULL allowed\"\n        VARCHAR(255) recruiter_title \"NULL allowed\"\n        VARCHAR(500) skills_required \"NULL allowed\"\n        BOOLEAN is_external \"NULL allowed\"\n        VARCHAR(500) external_link \"NULL allowed\"\n        BOOLEAN is_active \"NULL allowed\"\n        DATETIME deadline \"NULL allowed\"\n        DATETIME created_at \"NULL allowed\"\n    }\n    applications {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n        INT internship_id FK \"NOT NULL\"\n        VARCHAR(50) status \"NULL allowed\"\n        TEXT cover_letter \"NULL allowed\"\n        MEDIUMTEXT resume_url \"NULL allowed\"\n        DATETIME applied_at \"NULL allowed\"\n        TEXT recruiter_notes \"NULL allowed\"\n    }\n    interviews {\n        INT id PK \"NOT NULL\"\n        INT recruiter_id FK \"NOT NULL\"\n        INT application_id FK \"NOT NULL\"\n        INT internship_id FK \"NULL allowed\"\n        DATETIME scheduled_at \"NOT NULL\"\n        INT duration_minutes \"NULL allowed\"\n        VARCHAR(50) interview_type \"NULL allowed\"\n        VARCHAR(500) meeting_link \"NULL allowed\"\n        TEXT notes \"NULL allowed\"\n        VARCHAR(50) status \"NULL allowed\"\n        DATETIME created_at \"NULL allowed\"\n    }\n    notifications {\n        INT id PK \"NOT NULL\"\n        INT user_id FK \"NOT NULL\"\n        VARCHAR(255) title \"NOT NULL\"\n        TEXT message \"NOT NULL\"\n        VARCHAR(50) type \"NULL allowed\"\n        BOOLEAN is_read \"NULL allowed\"\n        DATETIME created_at \"NULL allowed\"\n    }\n    saved_internships {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n        INT internship_id FK \"NOT NULL\"\n        DATETIME saved_at \"NULL allowed\"\n    }\n    messages {\n        INT id PK \"NOT NULL\"\n        INT sender_id FK \"NOT NULL\"\n        INT receiver_id FK \"NOT NULL\"\n        TEXT content \"NOT NULL\"\n        BOOLEAN is_read \"NULL allowed\"\n        DATETIME sent_at \"NULL allowed\"\n    }\n    users ||..o| recruiter_profiles : \"user_id\"\n    users ||..o| students : \"user_id\"\n    students ||..o{ documents : \"student_id\"\n    students ||..o{ student_skills : \"student_id\"\n    skills ||..o{ student_skills : \"skill_id\"\n    recruiter_profiles |o..o{ internships : \"recruiter_id\"\n    students ||..o{ applications : \"student_id\"\n    internships ||..o{ applications : \"internship_id\"\n    recruiter_profiles ||..o{ interviews : \"recruiter_id\"\n    applications ||..o{ interviews : \"application_id\"\n    internships |o..o{ interviews : \"internship_id\"\n    users ||..o{ notifications : \"user_id\"\n    students ||..o{ saved_internships : \"student_id\"\n    internships ||..o{ saved_internships : \"internship_id\"\n    users ||..o{ messages : \"sender_id\"\n    users ||..o{ messages : \"receiver_id\"",
@@ -53,7 +54,8 @@
       "backend/app/db/models.py"
     ],
     "notes": [
-      "Use the Domain selector to view one area at a time. Dashed reference cards repeat an existing entity; all relationships appear once across the three views.",
+      "Use the Domain selector to view one area at a time. Reference labels repeat an existing entity; all relationships appear once across the three views.",
+      "Notation used: Crow\u2019s Foot ER. Table rectangles contain attributes; endpoint markers express cardinalities.",
       "NULL labels follow the ORM model literally. A default value does not imply NOT NULL.",
       "Only recruiter_id on internships and internship_id on interviews are nullable foreign keys.",
       "student_skills, applications and saved_internships have surrogate IDs but no composite pair-uniqueness constraints.",
@@ -87,6 +89,52 @@
     ]
   },
   {
+    "id": "er-chen",
+    "kind": "ER / Chen notation",
+    "title": "Conceptual entities and relationships \u2014 Chen ER",
+    "subtitle": "Rectangles, diamonds and attribute ovals, with explicit (min,max) participation.",
+    "source": "er-chen.json",
+    "code": null,
+    "sources": [
+      "backend/app/db/models.py"
+    ],
+    "notes": [
+      "Use the Domain selector to view one area at a time. Reference labels repeat an existing entity; all relationships appear once across the three views.",
+      "Chen shapes: rectangle = entity, diamond = relationship, oval = attribute. Underlined id is a primary key.",
+      "This view uses the (min,max) participation variant: read a pair beside an entity as how many relationship instances that entity can participate in. (0,N) means optional many; (1,1) means exactly one; (0,1) means optional one.",
+      "Example: STUDENTS (0,N) \u2014 Submits \u2014 (1,1) APPLICATIONS. A student can submit many applications; each application belongs to exactly one student. These same-side pairs differ from where Crow\u2019s Foot endpoint markers are read.",
+      "Only selected non-FK attributes are shown. Foreign keys are expressed as relationships; the full Crow\u2019s Foot view retains every mapped field.",
+      "All mapped entities have their own primary key, so no weak entity, identifying diamond, derived attribute or multivalued attribute is invented. Reference labels repeat the same entity across focused views.",
+      "Notation references: Emory CS457 ER diagrams and University of Pittsburgh ER model notes (min,max participation)."
+    ],
+    "domains": [
+      {
+        "id": 0,
+        "title": "Identity & communication",
+        "x": 0,
+        "y": 0,
+        "width": 3560,
+        "height": 1170
+      },
+      {
+        "id": 1,
+        "title": "Student data",
+        "x": 0,
+        "y": 1265,
+        "width": 2500,
+        "height": 1060
+      },
+      {
+        "id": 2,
+        "title": "Recruitment",
+        "x": 0,
+        "y": 2420,
+        "width": 3700,
+        "height": 2260
+      }
+    ]
+  },
+  {
     "id": "uml-class",
     "kind": "UML class",
     "title": "Domain class associations",
@@ -97,7 +145,7 @@
       "backend/app/db/models.py"
     ],
     "notes": [
-      "Use the Domain selector to view one area at a time. Dashed reference cards repeat an existing entity; all relationships appear once across the three views.",
+      "Use the Domain selector to view one area at a time. Reference labels repeat an existing entity; all relationships appear once across the three views.",
       "Solid lines are UML associations. No inheritance or composition is claimed.",
       "Selected attributes are shown for readability. Endpoint functions are not invented as entity methods.",
       "Student and RecruiterProfile associate with User. They do not inherit from User in the implementation."

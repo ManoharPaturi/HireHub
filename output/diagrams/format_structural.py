@@ -25,7 +25,7 @@ def format_structural(out,schema,selected):
     entities={e['table']:e for e in schema['entities']};rels=schema['relationships']
     layouts={};panel_titles=['Identity & communication','Student data','Recruitment']
     primary=[['users','students','recruiter_profiles','notifications','messages'],['skills','student_skills','documents'],['internships','applications','saved_internships','interviews']]
-    for diagram,mode in [('er-overview','keys'),('er-full','full'),('uml-class','class')]:
+    for diagram,mode in [('er-overview','keys'),('er-full','full'),('uml-class','class'),('er-chen','chen')]:
         structural=[];all_panels=[];offset=0;fullwidth=2700
         for domain,title in enumerate(panel_titles):
             refs=[] if domain==0 else ['students'] if domain==1 else ['students','recruiter_profiles']
@@ -33,10 +33,13 @@ def format_structural(out,schema,selected):
             for table in primary[domain]+refs:
                 entity=entities[table];ref=table in refs
                 cols=[c for c in entity['columns'] if (c['pk'] or c['fk'])] if ref or mode=='keys' else entity['columns'] if mode=='full' else [c for c in entity['columns'] if c['name'] in selected[table]]
-                nodes[table]={'table':table,'columns':cols,'ref':ref,'w':700,'h':62+len(cols)*36,'x':0,'y':0}
+                if mode=='chen':
+                    from format_chen import ATTRIBUTES
+                    cols=[c for c in entity['columns'] if c['name'] in (['id'] if ref else ATTRIBUTES[table])]
+                nodes[table]={'table':table,'columns':cols,'ref':ref,'w':700,'h':270 if mode=='chen' else 62+len(cols)*36,'x':0,'y':0}
             def pos(t,x,y):nodes[t].update(x=x,y=y)
             def pt(t,side,part=.5):
-                n=nodes[t];x,y,w,h=n['x'],n['y'],n['w'],n['h']
+                n=nodes[t];x,y,w,h=n['x'],n['y'],n['w'],120 if mode=='chen' else n['h']
                 return {'L':(x,y+h*part),'R':(x+w,y+h*part),'T':(x+w*part,y),'B':(x+w*part,y+h)}[side]
             edges=[]
             def edge(parent,child,field,points,label):
@@ -68,7 +71,7 @@ def format_structural(out,schema,selected):
             else:
                 pos('students',60,200);pos('saved_internships',1000,200)
                 saved_bottom=nodes['saved_internships']['y']+nodes['saved_internships']['h']
-                app_y=max(660,saved_bottom+240);pos('applications',1000,app_y)
+                app_y=max(660,saved_bottom+240)+(180 if mode=='chen' else 0);pos('applications',1000,app_y)
                 int_y=max(550,nodes['students']['y']+nodes['students']['h']+240);pos('internships',60,int_y)
                 app_bottom=app_y+nodes['applications']['h'];int_bottom=int_y+nodes['internships']['h']
                 interview_y=max(1040,app_bottom+170);pos('interviews',1900,interview_y)
@@ -91,9 +94,25 @@ def format_structural(out,schema,selected):
                 a,b=pt('recruiter_profiles','R',.65),pt('interviews','B')
                 bus=rec_y+nodes['recruiter_profiles']['h']+110
                 edge('recruiter_profiles','interviews','recruiter_id',[a,(820,a[1]),(820,bus),(b[0],bus),b],(1500,bus-20))
+            if mode=='chen':
+                # Bottom ports would pass through attributes; route these links around the clusters.
+                for e in edges:
+                    if (e['parent'],e['child'])==('users','notifications'):
+                        a,b=pt('users','L',.7),pt('notifications','L',.35)
+                        e['points']=[a,(810,a[1]),(810,b[1]),b]
+                    if (e['parent'],e['child'])==('recruiter_profiles','internships'):
+                        a,b=pt('recruiter_profiles','L',.3),pt('internships','L',.7)
+                        e['points']=[a,(-60,a[1]),(-60,b[1]),b]
+                    if (e['parent'],e['child'])==('recruiter_profiles','interviews'):
+                        a,b=pt('recruiter_profiles','R',.65),pt('interviews','R',.6)
+                        bus=nodes['recruiter_profiles']['y']+nodes['recruiter_profiles']['h']+110
+                        e['points']=[a,(820,a[1]),(820,bus),(2700,bus),(2700,b[1]),b]
+                from format_chen import transform
+                chen_width=transform(nodes,edges,domain)
             height=max(max(n['y']+n['h'] for n in nodes.values()),max(p[1] for e in edges for p in e['points']))+100
             width=2500 if domain==0 else 1800 if domain==1 else 2700
-            g=f'<g id="domain-{domain}" transform="translate(0,{offset})">'+text(60,48,f'{domain+1:02d}  {title}',30,weight='bold')+text(60,83,'Reference cards repeat an entity from another view; they do not introduce new tables.',18,fill='#63748C')
+            g=f'<g id="domain-{domain}" transform="translate(0,{offset})">'+text(60,48,f'{domain+1:02d}  {title} — '+('UML classes' if mode=='class' else 'Crow’s Foot ER'),30,weight='bold')+text(60,83,'Reference cards repeat an entity from another view; they do not introduce new tables.',18,fill='#63748C')
+            g+=text(60,116,'UML multiplicities: 1 = exactly one · 0..1 = optional one · 0..* = optional many' if mode=='class' else 'PK = primary key · FK = foreign key · UK = unique · NN = not null · NULL = nullable',18,fill='#63748C')
             for e in edges:
                 points=e['points'];rkey=e['child']+'.'+e['field'];dash=mode!='class'
                 g+=f'<g class="relation" data-key="{rkey}" data-parent="{e["parent"]}" data-child="{e["child"]}" data-parent-end="{e["parent_end"]}" data-child-end="{e["child_end"]}">'
@@ -126,9 +145,15 @@ def format_structural(out,schema,selected):
                         g+=text(x+18,yy,c['name'],22)+text(x+335,yy,typ,20,fill='#63748C')+text(x+505,yy,flags,18,fill='#5145CD')+text(x+w-18,yy,'NULL' if c['nullable'] else 'NN',18,anchor='end',fill='#63748C')
                     if i<len(n['columns'])-1:g+=f'<path d="M{x+12} {yy+11} H{x+w-12}" stroke="#E1E6EF" fill="none"/>'
                 g+='</g>'
-            g+='</g>';structural.append(g)
+            g+='</g>'
+            if mode=='chen':
+                from format_chen import render_panel
+                g=render_panel(nodes,edges,entities,domain,title,offset,height)
+                width=chen_width
+            structural.append(g)
             all_panels.append({'id':domain,'title':title,'x':0,'y':offset,'width':width,'height':height,'nodes':list(nodes.values()),'edges':edges})
             offset+=height+95
+        fullwidth=max(p['width'] for p in all_panels)
         svg=f'<svg xmlns="http://www.w3.org/2000/svg" width="{fullwidth}" height="{offset-95}" viewBox="0 0 {fullwidth} {offset-95}" role="img"><title>{esc(diagram)}: domain-organized structure</title><rect width="100%" height="100%" fill="white"/><g font-family="Arial, sans-serif" stroke-linejoin="round">'+''.join(structural)+'</g></svg>'
         (out/'svg'/(diagram+'.svg')).write_text(svg)
         for panel,g in zip(all_panels,structural):

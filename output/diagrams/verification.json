@@ -5,30 +5,39 @@
   "columns": 114,
   "foreign_keys": 16,
   "use_cases": 18,
+  "diagram_count": 8,
   "diagrams": [
     {
       "id": "er-overview",
       "svg": "svg/er-overview.svg",
       "png": "png/er-overview.png",
       "source": "sources/er-overview.mmd",
-      "svg_sha256": "f0e55bc4c0d8e3166d78fc3b4ca1406a582d39a20a89bc55cf4b77011c39079b",
-      "png_sha256": "41873cd3fe3c8aafff55c5cc708e7a20d243cbed57076c3515cf405c5827e9b8"
+      "svg_sha256": "ca2a6942195322e97b7551854ee7b5aa5cb818d8607b0293b4a23e9eb7604462",
+      "png_sha256": "ca863d646de6d87720576924fc0a5308eea0d8450b3f4f9fdac97f989e843bf3"
     },
     {
       "id": "er-full",
       "svg": "svg/er-full.svg",
       "png": "png/er-full.png",
       "source": "sources/er-full.mmd",
-      "svg_sha256": "af2972d1a9de094af29dcb765fb222a9d4fec340c155fc7858c59cc8b6fb6304",
-      "png_sha256": "5482a3336816e0edd5b711d9df121ca78453529c64d5b5f1c1169663cf022d32"
+      "svg_sha256": "28190d8c7cd61a19fcefb438ca628d5e3d725a17a8f05d99905157e501fb3f97",
+      "png_sha256": "bf5bf2229d9d3ac1ba00cc1ecf7c9d6e6bcd5ca09703660293f959558106217f"
+    },
+    {
+      "id": "er-chen",
+      "svg": "svg/er-chen.svg",
+      "png": "png/er-chen.png",
+      "source": "sources/er-chen.json",
+      "svg_sha256": "537d7810ec0caa3859c5cb623ac1a8a10982fc38e8cff2d7e0668529898734a8",
+      "png_sha256": "e428d2b93dbb5cf7c6dceadebf2c3f4c766c21b515170236f64988eec5acd386"
     },
     {
       "id": "uml-class",
       "svg": "svg/uml-class.svg",
       "png": "png/uml-class.png",
       "source": "sources/uml-class.mmd",
-      "svg_sha256": "e8a4f3d25e73847849d5a8964204944ed24035b10a0f336864e436b978eed33e",
-      "png_sha256": "fc3983406daf48173d11313c3d399d608bd45d3c88c5d3b9c3c74ffd65068164"
+      "svg_sha256": "c00d831369856b8f284a0632718b813e5270535b7c2a33489d1fbb62a3eb3fd8",
+      "png_sha256": "358aa05698aad47f42429cc2dd2f88789da1c201aa75298c02fd7ce204cc1045"
     },
     {
       "id": "uml-use-case",
@@ -133,7 +142,9 @@
     "valid text-only SVG exports",
     "12 principal entities and 16 exact rendered relations per structural view",
     "no overlapping structural cards or connectors through cards",
-    "nine correctly bounded domain SVGs"
+    "12 correctly bounded domain SVGs",
+    "Chen entity rectangles, 16 relationship diamonds and underlined keys",
+    "same-side Chen min/max participation against ORM nullability and uniqueness"
   ],
   "browser_checks": {
     "checks": [
@@ -141,7 +152,7 @@
         "id": "er-overview",
         "w": 2700,
         "h": 3874,
-        "texts": 176,
+        "texts": 179,
         "zoomed": "125%",
         "svgDownload": true,
         "sourceDownload": true
@@ -150,7 +161,16 @@
         "id": "er-full",
         "w": 2700,
         "h": 4792,
-        "texts": 520,
+        "texts": 523,
+        "zoomed": "125%",
+        "svgDownload": true,
+        "sourceDownload": true
+      },
+      {
+        "id": "er-chen",
+        "w": 3700,
+        "h": 4680,
+        "texts": 118,
         "zoomed": "125%",
         "svgDownload": true,
         "sourceDownload": true
@@ -159,7 +179,7 @@
         "id": "uml-class",
         "w": 2700,
         "h": 4018,
-        "texts": 123,
+        "texts": 126,
         "zoomed": "125%",
         "svgDownload": true,
         "sourceDownload": true
@@ -353,6 +373,11 @@
   ],
   "fit_checks": [
     {
+      "id": "er-chen",
+      "fits": true,
+      "scrollTop": 0
+    },
+    {
       "id": "er-full",
       "fits": true,
       "scrollTop": 0
@@ -432,6 +457,27 @@
       "pngExport": true
     },
     {
+      "id": "er-chen-domain-1",
+      "viewBox": "0 0 3560 1170",
+      "textWithinCards": true,
+      "svgExport": true,
+      "pngExport": true
+    },
+    {
+      "id": "er-chen-domain-2",
+      "viewBox": "0 1265 2500 1060",
+      "textWithinCards": true,
+      "svgExport": true,
+      "pngExport": true
+    },
+    {
+      "id": "er-chen-domain-3",
+      "viewBox": "0 2420 3700 2260",
+      "textWithinCards": true,
+      "svgExport": true,
+      "pngExport": true
+    },
+    {
       "id": "uml-class-domain-1",
       "viewBox": "0 0 2500 1066",
       "textWithinCards": true,
@@ -465,81 +511,109 @@
     {
       "id": "uml-class",
       "overlappingRelationshipTexts": []
+    },
+    {
+      "id": "er-chen",
+      "overlappingRelationshipTexts": []
     }
   ],
   "focused_export_hashes": [
     {
+      "file": "svg/er-chen-domain-1.svg",
+      "sha256": "3b4967e921cf9287576842fc7b5c0d9e5dc8ef37096ffa136ad4fe0f99416288"
+    },
+    {
+      "file": "svg/er-chen-domain-2.svg",
+      "sha256": "404c0b80a609ead600d29499ea79dbbf64e9bdb9fbddbf6c3a83e6c9795512ef"
+    },
+    {
+      "file": "svg/er-chen-domain-3.svg",
+      "sha256": "4f2c83fafab098d57e9f7cec5b63dfe02a44320c4f3918a7e8cb8ed4f2be0483"
+    },
+    {
       "file": "svg/er-full-domain-1.svg",
-      "sha256": "0bac0d37ca4d7b6fefa65ef9de8967de9298197d4cc26a3cc2667f23df8c58d6"
+      "sha256": "9e373a8fbeaf2ddc9bb40339b74dee563a3db7a4c1a71b42cbec4c8e2b3840c4"
     },
     {
       "file": "svg/er-full-domain-2.svg",
-      "sha256": "472fd6241ed3269c6b951e6bd80969387412fdea8d98eb26bf3d46245db25e85"
+      "sha256": "2ad42acb4b70f4d01fa4921f10b6cab97f11c8827cb71c27f1c1902552ce234f"
     },
     {
       "file": "svg/er-full-domain-3.svg",
-      "sha256": "019a15cbd571bea3dc329d27c4ee103daa175fbab86cbc764c5eec4ec46c769f"
+      "sha256": "af04e5b2adbb48ee449c45c471a6d76e195fe30caec741b0c81b4db1847c963d"
     },
     {
       "file": "svg/er-overview-domain-1.svg",
-      "sha256": "9593cacc0169dd7b8f75d1401029c8f1f41148c1ff70b18a314e72381af4c3e8"
+      "sha256": "257ba73dd5cae754799980b8d2f3122c4e725688360f294ef1a4c659a8c8fd1b"
     },
     {
       "file": "svg/er-overview-domain-2.svg",
-      "sha256": "9d4db7baedb5e864caea8c76d6315cf108ad4c162c1737674467cd9ed72f9859"
+      "sha256": "75f3634785c826ac690133d83c22c324e808cbdb8d2d56e43bea74d0ba41aa92"
     },
     {
       "file": "svg/er-overview-domain-3.svg",
-      "sha256": "519e5718c0351b37154d98327095defa3e0b7f296a69be047443eb140b405d13"
+      "sha256": "83de98c5e0f0b945c8d352478dc554835df8acefac4c29370e470abf4e8e76ad"
     },
     {
       "file": "svg/uml-class-domain-1.svg",
-      "sha256": "c1735949aeba17799cf7aec8662c69679237296131d82a9de46a69f4587c3c4c"
+      "sha256": "f6c74bea0c9723e24e4974daa08e2c8986b54f456e072a166a8a10513cd5c7ab"
     },
     {
       "file": "svg/uml-class-domain-2.svg",
-      "sha256": "9328e93769bb545a52a8aa4f6cb3d14ce6feb6f7c4cc34a8411b1d6e88c03a57"
+      "sha256": "05402e06a6647e10ec47bf0b91a1ec99d66596c4c9f60cdb94262b278813d02f"
     },
     {
       "file": "svg/uml-class-domain-3.svg",
-      "sha256": "8728a22ce8c5a272e49f1dc30fef3de0678df6a8e7177591a6756d9638bfc59c"
+      "sha256": "0f47071aec2bb0ff2bc153bee42a2c83766102438d3802985b55a4e22c0cc3e0"
+    },
+    {
+      "file": "png/er-chen-domain-1.png",
+      "sha256": "f612f11c009c8a0f922014d3465c9f33fe47b897ccef9c7b7761bf7240b87864"
+    },
+    {
+      "file": "png/er-chen-domain-2.png",
+      "sha256": "3404ba5892e5b73a5c8d606f9e836de3c4ec66db3c69e6f0bd74a1be514664fc"
+    },
+    {
+      "file": "png/er-chen-domain-3.png",
+      "sha256": "35269b1e2c04e47de2932155234f1b9964eee1738c31c37ceda646fa06501198"
     },
     {
       "file": "png/er-full-domain-1.png",
-      "sha256": "06a12ee95c8cc43b612292cdae688610439135b36f750e9b098d588482f4e2df"
+      "sha256": "755bc063fdae29dd767cbbae0fedfef16d12f4f6d62ff6d5e33340670188ea0b"
     },
     {
       "file": "png/er-full-domain-2.png",
-      "sha256": "377cfa12a5b5ed6f8e67941646006db19de054cbccbd85f72c23071f1cd73c36"
+      "sha256": "674b7b2b96fcd2293116b0a09f658b63e3aecb7a1042470f7763f989f7085fd5"
     },
     {
       "file": "png/er-full-domain-3.png",
-      "sha256": "3011da9e80cf0ae039ed715db72a80395e020935b55ea6fca1daf84ee2f9e894"
+      "sha256": "f4322ce5f48a9a46033489d12926e2bf20a83f684369940af92ea958ed2286d0"
     },
     {
       "file": "png/er-overview-domain-1.png",
-      "sha256": "d4184219d0f5973795e1d09c07cc8aa47e854e2b1afb9ecda78de99e297b9f0d"
+      "sha256": "b43e61b3f8533054e79bfe68daae9f35cf3ffbb00dd25abf8b37ee86f21dc145"
     },
     {
       "file": "png/er-overview-domain-2.png",
-      "sha256": "9eca30fd1b31b515c66568597a04f5fdc09dca60dc138a5b3cf7d689b2380353"
+      "sha256": "8fb27c155d4f391cf016fd486f9e97c8271e39eea22adaaebfb668bb65e1e1b6"
     },
     {
       "file": "png/er-overview-domain-3.png",
-      "sha256": "750da64a45e1479afdd30d82c1cb41cbb55f725f3eca45b7218b751005d2dbfc"
+      "sha256": "2760952eb9d424656a0be4682e4fea386237ed20715a2ec4c27af298e4b47360"
     },
     {
       "file": "png/uml-class-domain-1.png",
-      "sha256": "ee9e16f1e04a49779a4ae8bc485b09da772fbfc687395de33938aaefbabd4549"
+      "sha256": "24d25735839abb8735f5eb7a5b68263eb011b60c5d3c864113538b10f557d27f"
     },
     {
       "file": "png/uml-class-domain-2.png",
-      "sha256": "3667ebcc00ed7c68e8686650d37455aa147db863339db2d977b7c9e5e7a20c94"
+      "sha256": "e3c0058a1dc6e016363a889e450a3eaf00aa17e9188c265574487a4afbe04c2b"
     },
     {
       "file": "png/uml-class-domain-3.png",
-      "sha256": "531402e8b549f288ae292b3922e6fda5579c5c3945c7d8582a04db81210a416c"
+      "sha256": "ecb029bc39668859899fbe7a7a06df54aa870f12212f56a78b81cda2abdf6852"
     }
   ],
-  "visual_review": "Inspected structural domain renders, use-case role projections, sequence lanes and gallery fit. Repositioned relationship labels to keep multiplicities visible. All diagrams remain deterministic SVG, with no generated artwork."
+  "visual_review": "Inspected Crow\u2019s Foot and Chen structural domain renders, use-case role projections, sequence lanes and gallery fit. Chen uses explicit same-side min/max participation and selected non-FK attribute ovals. Repositioned relationship labels to keep multiplicities visible. All diagrams remain deterministic SVG, with no generated artwork."
 }
