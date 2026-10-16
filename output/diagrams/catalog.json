@@ -10,9 +10,36 @@
       "backend/app/db/models.py"
     ],
     "notes": [
+      "Use the Domain selector to view one area at a time. Dashed reference cards repeat an existing entity; all relationships appear once across the three views.",
       "Crow's-foot markers show cardinalities at both ends. Dashed links are non-identifying: every child table has its own surrogate primary key.",
       "A user may have zero or one student profile and zero or one recruiter profile. Role exclusivity is application logic, not a database inheritance relationship.",
       "The two messages-to-users links are distinct: sender_id and receiver_id."
+    ],
+    "domains": [
+      {
+        "id": 0,
+        "title": "Identity & communication",
+        "x": 0,
+        "y": 0,
+        "width": 2500,
+        "height": 1030
+      },
+      {
+        "id": 1,
+        "title": "Student data",
+        "x": 0,
+        "y": 1125,
+        "width": 1800,
+        "height": 884
+      },
+      {
+        "id": 2,
+        "title": "Recruitment",
+        "x": 0,
+        "y": 2104,
+        "width": 2700,
+        "height": 1770
+      }
     ]
   },
   {
@@ -26,10 +53,37 @@
       "backend/app/db/models.py"
     ],
     "notes": [
+      "Use the Domain selector to view one area at a time. Dashed reference cards repeat an existing entity; all relationships appear once across the three views.",
       "NULL labels follow the ORM model literally. A default value does not imply NOT NULL.",
       "Only recruiter_id on internships and internship_id on interviews are nullable foreign keys.",
       "student_skills, applications and saved_internships have surrogate IDs but no composite pair-uniqueness constraints.",
       "documents belongs to students; there is no documents-to-applications foreign key. Application resume content is stored separately in applications.resume_url."
+    ],
+    "domains": [
+      {
+        "id": 0,
+        "title": "Identity & communication",
+        "x": 0,
+        "y": 0,
+        "width": 2500,
+        "height": 1304
+      },
+      {
+        "id": 1,
+        "title": "Student data",
+        "x": 0,
+        "y": 1399,
+        "width": 1800,
+        "height": 1136
+      },
+      {
+        "id": 2,
+        "title": "Recruitment",
+        "x": 0,
+        "y": 2630,
+        "width": 2700,
+        "height": 2162
+      }
     ]
   },
   {
@@ -43,9 +97,36 @@
       "backend/app/db/models.py"
     ],
     "notes": [
+      "Use the Domain selector to view one area at a time. Dashed reference cards repeat an existing entity; all relationships appear once across the three views.",
       "Solid lines are UML associations. No inheritance or composition is claimed.",
       "Selected attributes are shown for readability. Endpoint functions are not invented as entity methods.",
       "Student and RecruiterProfile associate with User. They do not inherit from User in the implementation."
+    ],
+    "domains": [
+      {
+        "id": 0,
+        "title": "Identity & communication",
+        "x": 0,
+        "y": 0,
+        "width": 2500,
+        "height": 1066
+      },
+      {
+        "id": 1,
+        "title": "Student data",
+        "x": 0,
+        "y": 1161,
+        "width": 1800,
+        "height": 956
+      },
+      {
+        "id": 2,
+        "title": "Recruitment",
+        "x": 0,
+        "y": 2212,
+        "width": 2700,
+        "height": 1806
+      }
     ]
   },
   {
@@ -66,6 +147,7 @@
       "backend/app/routers/notifications.py"
     ],
     "notes": [
+      "The three role views are projections of the same HireHub system, not separate systems.",
       "Actors remain outside the system boundary. Ellipses represent user goals; unarrowed solid lines show participation.",
       "Authenticated access is a precondition for protected goals, not an include arrow to a login screen.",
       "Messaging requires an existing application connection. Shared goal names appear for each participating role to keep the view readable.",

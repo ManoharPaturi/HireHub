@@ -11,48 +11,48 @@
       "svg": "svg/er-overview.svg",
       "png": "png/er-overview.png",
       "source": "sources/er-overview.mmd",
-      "svg_sha256": "7e991222dd486fc37b595e9a039b68be3deaf6ea0d7dfb5ce94a226accccd565",
-      "png_sha256": "af0750d43f4c73835143b03e3876273fc6181a3be5dcb107319e2d8146401670"
+      "svg_sha256": "f0e55bc4c0d8e3166d78fc3b4ca1406a582d39a20a89bc55cf4b77011c39079b",
+      "png_sha256": "41873cd3fe3c8aafff55c5cc708e7a20d243cbed57076c3515cf405c5827e9b8"
     },
     {
       "id": "er-full",
       "svg": "svg/er-full.svg",
       "png": "png/er-full.png",
       "source": "sources/er-full.mmd",
-      "svg_sha256": "d0dd529a6e95e99c5b9134fd77c305f5973aaa42d383deea13180f008ecd5d2a",
-      "png_sha256": "8cc3aa6a95aabf1174d6b2c77d22ac7e356092d06d5022cb3a3ef35ec7cc9e42"
+      "svg_sha256": "af2972d1a9de094af29dcb765fb222a9d4fec340c155fc7858c59cc8b6fb6304",
+      "png_sha256": "5482a3336816e0edd5b711d9df121ca78453529c64d5b5f1c1169663cf022d32"
     },
     {
       "id": "uml-class",
       "svg": "svg/uml-class.svg",
       "png": "png/uml-class.png",
       "source": "sources/uml-class.mmd",
-      "svg_sha256": "d3a3f849dddc452ef750e513a9fadaf56bcb6239c071ad7a103cbc1b96f54253",
-      "png_sha256": "678d81a5dc1a21c81349fb1bfd446d1e47682c47524d45178cb0d03d0181dd75"
+      "svg_sha256": "e8a4f3d25e73847849d5a8964204944ed24035b10a0f336864e436b978eed33e",
+      "png_sha256": "fc3983406daf48173d11313c3d399d608bd45d3c88c5d3b9c3c74ffd65068164"
     },
     {
       "id": "uml-use-case",
       "svg": "svg/uml-use-case.svg",
       "png": "png/uml-use-case.png",
       "source": "sources/uml-use-case.json",
-      "svg_sha256": "d6829986f3c14fbc13f815b3d24f206b3fd9bbba8f0a588185c0bffa8a15c429",
-      "png_sha256": "863749f4130424a9ef5a32d0c6cd18b907f1b3f7fce00896b94ca27078e599e9"
+      "svg_sha256": "deaa8f137f44ba3d54629af7f4a2ba6afbaf23448367dea4e43cd8f21a7207cd",
+      "png_sha256": "280c115a36307f467e5e114e0f99d711ceba1fd4d5187f53e0a4ac93fd0787fa"
     },
     {
       "id": "uml-sequence-apply",
       "svg": "svg/uml-sequence-apply.svg",
       "png": "png/uml-sequence-apply.png",
       "source": "sources/uml-sequence-apply.mmd",
-      "svg_sha256": "1c8c5115551b0a7e03ac7e48ed65a4960aaf171e9e9a9c3e110d86f8242784fc",
-      "png_sha256": "464067420c7f670b19344467d3a2f0ce54731a5b9bb8724565b2eb641840bdcb"
+      "svg_sha256": "5c3023bccb997d3f113f8b7272c0ec6c9854c42821f02b87213c8fe6d842add3",
+      "png_sha256": "239913ffdafafc5d80c83cb1da824cf8b25a0c5b1c8b848e63be3243657de2f8"
     },
     {
       "id": "uml-sequence-interview",
       "svg": "svg/uml-sequence-interview.svg",
       "png": "png/uml-sequence-interview.png",
       "source": "sources/uml-sequence-interview.mmd",
-      "svg_sha256": "61bbcab5a908590cb27f5950e0f65e92c43de515a6fb1b200ed89c4d149f0a2f",
-      "png_sha256": "8751daa63d6e96cdc23f95cbb5b7b47c6c14cbfe5ec78abfa133a4560ea604c9"
+      "svg_sha256": "5c6176999f11e89c6ffa1c04a2deec9611981e9a23898bcf8226f38a5b4975a1",
+      "png_sha256": "544317cfed62930c7dee2365d7257a90ce5c1e0057c3fdb3e07db04ee2e563cf"
     },
     {
       "id": "uml-activity",
@@ -130,60 +130,63 @@
     "all use-case endpoint evidence",
     "activity guard completeness and endpoints",
     "two-commit order in both sequence workflows",
-    "valid text-only SVG exports"
+    "valid text-only SVG exports",
+    "12 principal entities and 16 exact rendered relations per structural view",
+    "no overlapping structural cards or connectors through cards",
+    "nine correctly bounded domain SVGs"
   ],
   "browser_checks": {
     "checks": [
       {
         "id": "er-overview",
-        "w": 2400.546875,
-        "h": 1374.625,
-        "texts": 140,
+        "w": 2700,
+        "h": 3874,
+        "texts": 176,
         "zoomed": "125%",
         "svgDownload": true,
         "sourceDownload": true
       },
       {
         "id": "er-full",
-        "w": 3294.375,
-        "h": 2651,
-        "texts": 484,
+        "w": 2700,
+        "h": 4792,
+        "texts": 520,
         "zoomed": "125%",
         "svgDownload": true,
         "sourceDownload": true
       },
       {
         "id": "uml-class",
-        "w": 1781.7548828125,
-        "h": 1160,
-        "texts": 105,
+        "w": 2700,
+        "h": 4018,
+        "texts": 123,
         "zoomed": "125%",
         "svgDownload": true,
         "sourceDownload": true
       },
       {
         "id": "uml-use-case",
-        "w": 1180,
-        "h": 2140,
-        "texts": 22,
+        "w": 2520,
+        "h": 1050,
+        "texts": 28,
         "zoomed": "125%",
         "svgDownload": true,
         "sourceDownload": true
       },
       {
         "id": "uml-sequence-apply",
-        "w": 892,
-        "h": 1860,
-        "texts": 78,
+        "w": 1442,
+        "h": 1550,
+        "texts": 57,
         "zoomed": "125%",
         "svgDownload": true,
         "sourceDownload": true
       },
       {
         "id": "uml-sequence-interview",
-        "w": 901,
-        "h": 1453,
-        "texts": 63,
+        "w": 1440,
+        "h": 1189,
+        "texts": 45,
         "zoomed": "125%",
         "svgDownload": true,
         "sourceDownload": true
@@ -207,21 +210,21 @@
   "export_checks": [
     {
       "id": "er-full",
-      "pngExportBytes": 2222739,
-      "width": 6588,
-      "height": 5302
+      "pngExportBytes": 875247,
+      "width": 5000,
+      "height": 2608
     },
     {
       "id": "uml-use-case",
-      "pngExportBytes": 834972,
-      "width": 2360,
-      "height": 4280
+      "pngExportBytes": 734934,
+      "width": 5040,
+      "height": 2100
     },
     {
       "id": "uml-class",
-      "pngExportBytes": 587867,
-      "width": 3563,
-      "height": 2320
+      "pngExportBytes": 415764,
+      "width": 5000,
+      "height": 2132
     },
     {
       "id": "uml-activity",
@@ -234,52 +237,52 @@
       "dashed": true,
       "notes": [
         {
-          "x": 480,
-          "y": 1575,
-          "w": 292,
+          "x": 790,
+          "y": 1351,
+          "w": 542,
           "h": 139
         }
       ],
       "texts": [
         {
           "text": "Application and alerts",
-          "x": 549.484375,
-          "y": 1590.140625,
+          "x": 984.484375,
+          "y": 1366.140625,
           "w": 153.0078125,
           "h": 17.1796875
         },
         {
           "text": "use separate commits.",
-          "x": 545.5234375,
-          "y": 1607.140625,
+          "x": 980.5234375,
+          "y": 1383.140625,
           "w": 160.953125,
           "h": 17.1796875
         },
         {
           "text": "COMMIT 1 survives a later",
-          "x": 531.015625,
-          "y": 1624.140625,
+          "x": 966.015625,
+          "y": 1400.140625,
           "w": 190.1875,
           "h": 17.015625
         },
         {
           "text": "alert failure.",
-          "x": 584.203125,
-          "y": 1641.140625,
+          "x": 1019.203125,
+          "y": 1417.140625,
           "w": 83.59375,
           "h": 17.015625
         },
         {
           "text": "Duplicate checks are not",
-          "x": 538.3984375,
-          "y": 1658.140625,
+          "x": 973.3984375,
+          "y": 1434.140625,
           "w": 175.203125,
           "h": 17.1796875
         },
         {
           "text": "a UNIQUE constraint.",
-          "x": 549.0859375,
-          "y": 1676.140625,
+          "x": 984.0859375,
+          "y": 1452.140625,
           "w": 153.828125,
           "h": 17.015625
         }
@@ -290,65 +293,65 @@
       "dashed": true,
       "notes": [
         {
-          "x": 491,
-          "y": 295,
-          "w": 290,
+          "x": 790,
+          "y": 259,
+          "w": 540,
           "h": 87
         },
         {
-          "x": 491,
-          "y": 1219,
-          "w": 290,
+          "x": 790,
+          "y": 1041,
+          "w": 540,
           "h": 88
         }
       ],
       "texts": [
         {
           "text": "Recruiter role is checked.",
-          "x": 545.7421875,
-          "y": 310.140625,
+          "x": 969.7421875,
+          "y": 274.140625,
           "w": 180.515625,
           "h": 17.015625
         },
         {
           "text": "Candidate ownership",
-          "x": 560.8359375,
-          "y": 327.140625,
+          "x": 984.8359375,
+          "y": 291.140625,
           "w": 150.328125,
           "h": 17.1796875
         },
         {
           "text": "is not checked here.",
-          "x": 564.3984375,
-          "y": 344.140625,
+          "x": 988.3984375,
+          "y": 308.140625,
           "w": 143.203125,
           "h": 17.015625
         },
         {
           "text": "Two separate commits.",
-          "x": 553.75,
-          "y": 1234.140625,
+          "x": 977.75,
+          "y": 1056.140625,
           "w": 164.5,
           "h": 17.1796875
         },
         {
           "text": "Foreign keys validate IDs,",
-          "x": 543.9609375,
-          "y": 1251.140625,
+          "x": 967.9609375,
+          "y": 1073.140625,
           "w": 184.078125,
           "h": 17.3671875
         },
         {
           "text": "not recruiter ownership.",
-          "x": 552.40625,
-          "y": 1269.140625,
+          "x": 976.40625,
+          "y": 1091.140625,
           "w": 167.1875,
           "h": 17.1796875
         }
       ]
     }
   ],
-  "final_fit_navigation": [
+  "fit_checks": [
     {
       "id": "er-full",
       "fits": true,
@@ -385,5 +388,158 @@
       "scrollTop": 0
     }
   ],
-  "visual_review": "All seven standalone PNGs visually inspected; sequence note bounds also checked in the SVG DOM."
+  "focused_domain_checks": [
+    {
+      "id": "er-overview-domain-1",
+      "viewBox": "0 0 2500 1030",
+      "textWithinCards": true,
+      "svgExport": true,
+      "pngExport": true
+    },
+    {
+      "id": "er-overview-domain-2",
+      "viewBox": "0 1125 1800 884",
+      "textWithinCards": true,
+      "svgExport": true,
+      "pngExport": true
+    },
+    {
+      "id": "er-overview-domain-3",
+      "viewBox": "0 2104 2700 1770",
+      "textWithinCards": true,
+      "svgExport": true,
+      "pngExport": true
+    },
+    {
+      "id": "er-full-domain-1",
+      "viewBox": "0 0 2500 1304",
+      "textWithinCards": true,
+      "svgExport": true,
+      "pngExport": true
+    },
+    {
+      "id": "er-full-domain-2",
+      "viewBox": "0 1399 1800 1136",
+      "textWithinCards": true,
+      "svgExport": true,
+      "pngExport": true
+    },
+    {
+      "id": "er-full-domain-3",
+      "viewBox": "0 2630 2700 2162",
+      "textWithinCards": true,
+      "svgExport": true,
+      "pngExport": true
+    },
+    {
+      "id": "uml-class-domain-1",
+      "viewBox": "0 0 2500 1066",
+      "textWithinCards": true,
+      "svgExport": true,
+      "pngExport": true
+    },
+    {
+      "id": "uml-class-domain-2",
+      "viewBox": "0 1161 1800 956",
+      "textWithinCards": true,
+      "svgExport": true,
+      "pngExport": true
+    },
+    {
+      "id": "uml-class-domain-3",
+      "viewBox": "0 2212 2700 1806",
+      "textWithinCards": true,
+      "svgExport": true,
+      "pngExport": true
+    }
+  ],
+  "relationship_label_checks": [
+    {
+      "id": "er-full",
+      "overlappingRelationshipTexts": []
+    },
+    {
+      "id": "er-overview",
+      "overlappingRelationshipTexts": []
+    },
+    {
+      "id": "uml-class",
+      "overlappingRelationshipTexts": []
+    }
+  ],
+  "focused_export_hashes": [
+    {
+      "file": "svg/er-full-domain-1.svg",
+      "sha256": "0bac0d37ca4d7b6fefa65ef9de8967de9298197d4cc26a3cc2667f23df8c58d6"
+    },
+    {
+      "file": "svg/er-full-domain-2.svg",
+      "sha256": "472fd6241ed3269c6b951e6bd80969387412fdea8d98eb26bf3d46245db25e85"
+    },
+    {
+      "file": "svg/er-full-domain-3.svg",
+      "sha256": "019a15cbd571bea3dc329d27c4ee103daa175fbab86cbc764c5eec4ec46c769f"
+    },
+    {
+      "file": "svg/er-overview-domain-1.svg",
+      "sha256": "9593cacc0169dd7b8f75d1401029c8f1f41148c1ff70b18a314e72381af4c3e8"
+    },
+    {
+      "file": "svg/er-overview-domain-2.svg",
+      "sha256": "9d4db7baedb5e864caea8c76d6315cf108ad4c162c1737674467cd9ed72f9859"
+    },
+    {
+      "file": "svg/er-overview-domain-3.svg",
+      "sha256": "519e5718c0351b37154d98327095defa3e0b7f296a69be047443eb140b405d13"
+    },
+    {
+      "file": "svg/uml-class-domain-1.svg",
+      "sha256": "c1735949aeba17799cf7aec8662c69679237296131d82a9de46a69f4587c3c4c"
+    },
+    {
+      "file": "svg/uml-class-domain-2.svg",
+      "sha256": "9328e93769bb545a52a8aa4f6cb3d14ce6feb6f7c4cc34a8411b1d6e88c03a57"
+    },
+    {
+      "file": "svg/uml-class-domain-3.svg",
+      "sha256": "8728a22ce8c5a272e49f1dc30fef3de0678df6a8e7177591a6756d9638bfc59c"
+    },
+    {
+      "file": "png/er-full-domain-1.png",
+      "sha256": "06a12ee95c8cc43b612292cdae688610439135b36f750e9b098d588482f4e2df"
+    },
+    {
+      "file": "png/er-full-domain-2.png",
+      "sha256": "377cfa12a5b5ed6f8e67941646006db19de054cbccbd85f72c23071f1cd73c36"
+    },
+    {
+      "file": "png/er-full-domain-3.png",
+      "sha256": "3011da9e80cf0ae039ed715db72a80395e020935b55ea6fca1daf84ee2f9e894"
+    },
+    {
+      "file": "png/er-overview-domain-1.png",
+      "sha256": "d4184219d0f5973795e1d09c07cc8aa47e854e2b1afb9ecda78de99e297b9f0d"
+    },
+    {
+      "file": "png/er-overview-domain-2.png",
+      "sha256": "9eca30fd1b31b515c66568597a04f5fdc09dca60dc138a5b3cf7d689b2380353"
+    },
+    {
+      "file": "png/er-overview-domain-3.png",
+      "sha256": "750da64a45e1479afdd30d82c1cb41cbb55f725f3eca45b7218b751005d2dbfc"
+    },
+    {
+      "file": "png/uml-class-domain-1.png",
+      "sha256": "ee9e16f1e04a49779a4ae8bc485b09da772fbfc687395de33938aaefbabd4549"
+    },
+    {
+      "file": "png/uml-class-domain-2.png",
+      "sha256": "3667ebcc00ed7c68e8686650d37455aa147db863339db2d977b7c9e5e7a20c94"
+    },
+    {
+      "file": "png/uml-class-domain-3.png",
+      "sha256": "531402e8b549f288ae292b3922e6fda5579c5c3945c7d8582a04db81210a416c"
+    }
+  ],
+  "visual_review": "Inspected structural domain renders, use-case role projections, sequence lanes and gallery fit. Repositioned relationship labels to keep multiplicities visible. All diagrams remain deterministic SVG, with no generated artwork."
 }

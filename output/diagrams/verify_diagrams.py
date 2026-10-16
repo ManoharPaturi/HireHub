@@ -42,13 +42,42 @@ for filename in ['er-overview.mmd','er-full.mmd']:
         expected_links.append(f'{parent} {left}..{right} {child} : "{field}"')
     assert sorted(lines)==sorted(expected_links),filename
 rendered=ET.parse(OUT/'svg/er-full.svg').getroot()
-rendered_nodes=[n for n in rendered.iter() if n.tag.endswith('g') and '-entity-' in n.attrib.get('id','')]
+rendered_nodes=[n for n in rendered.iter() if n.tag.endswith('g') and '-entity-' in n.attrib.get('id','') and n.attrib.get('data-complete')=='true']
 assert len(rendered_nodes)==12
 for e in schema['entities']:
     node=next(n for n in rendered_nodes if '-entity-'+e['table']+'-' in n.attrib['id'])
     tokens={x.strip() for x in node.itertext() if x.strip()}
     assert e['table'] in tokens,e['table']
     for c in e['columns']:assert c['name'] in tokens,(e['table'],c['name'],'rendered field')
+# Check the rendered topology and orthogonal layout independently of the formatter.
+layouts=json.loads((OUT/'layout.json').read_text())
+for kind,panels in layouts.items():
+    principal=[n['table'] for panel in panels for n in panel['nodes'] if not n['ref']]
+    assert sorted(principal)==sorted(expected),kind
+    actual_links=[(r['parent'],r['child'],r['field'],r['parent_end'],r['child_end']) for panel in panels for r in panel['edges']]
+    assert sorted(actual_links)==sorted(fks),(kind,'layout relationships')
+    svg_root=ET.parse(OUT/'svg'/(kind+'.svg')).getroot()
+    svg_links=[n for n in svg_root.iter() if n.attrib.get('class')=='relation']
+    assert len(svg_links)==16
+    for r in schema['relationships']:
+        n=next(n for n in svg_links if n.attrib['data-key']==r['child']+'.'+r['field'])
+        assert n.attrib['data-parent']==r['parent'] and n.attrib['data-child']==r['child']
+        assert n.attrib['data-parent-end']==r['parent_end'] and n.attrib['data-child-end']==r['child_end']
+    for panel in panels:
+        nodes=panel['nodes']
+        for i,n in enumerate(nodes):
+            for m in nodes[i+1:]:
+                assert not(max(n['x'],m['x'])<min(n['x']+n['w'],m['x']+m['w']) and max(n['y'],m['y'])<min(n['y']+n['h'],m['y']+m['h'])),(kind,'overlapping cards')
+        for edge in panel['edges']:
+            for a,b in zip(edge['points'],edge['points'][1:]):
+                assert a[0]==b[0] or a[1]==b[1],(kind,'non-orthogonal connector')
+                for n in nodes:
+                    x,y,w,h=n['x'],n['y'],n['w'],n['h']
+                    crosses=(x<a[0]<x+w and max(min(a[1],b[1]),y)<min(max(a[1],b[1]),y+h)) if a[0]==b[0] else (y<a[1]<y+h and max(min(a[0],b[0]),x)<min(max(a[0],b[0]),x+w))
+                    assert not crosses,(kind,edge['child'],edge['field'],'connector passes through '+n['table'])
+        crop=ET.parse(OUT/'svg'/(kind+'-domain-'+str(panel['id']+1)+'.svg')).getroot()
+        assert crop.attrib['viewBox']==f"0 {panel['y']} {panel['width']} {panel['height']}"
+
 full=(OUT/'sources/er-full.mmd').read_text()
 for e in schema['entities']:
     block=re.search(r'\b'+e['table']+r' \{(.*?)\n    \}',full,re.S).group(1)
@@ -93,6 +122,6 @@ for d in json.loads((OUT/'catalog.json').read_text()):
     assert 'foreignObject' not in svg.read_text(), 'Portable text-only SVG required'
     manifest.append({'id':d['id'],'svg':'svg/'+svg.name,'png':'png/'+d['id']+'.png','source':'sources/'+d['source'],'svg_sha256':hashlib.sha256(svg.read_bytes()).hexdigest()})
 source_paths=sorted({s for d in json.loads((OUT/'catalog.json').read_text()) for s in d['sources']})
-report={'verification':'passed','scope':'Declared ORM metadata, diagram definitions, route evidence and SVG structure. No live MySQL or end-to-end application execution.','tables':len(expected),'columns':sum(len(e['columns']) for e in schema['entities']),'foreign_keys':len(fks),'use_cases':18,'diagrams':manifest,'implementation_hashes':[{'source':p,'sha256':hashlib.sha256((ROOT/p).read_bytes()).hexdigest()} for p in source_paths],'checks':['all mapped tables and fields','declared nullability, types, PK, UK, index and delete rules','all 16 ER links and their endpoint multiplicities','all 114 fields present in the rendered full ER SVG','12 UML entity classes and 16 exact associations','all use-case endpoint evidence','activity guard completeness and endpoints','two-commit order in both sequence workflows','valid text-only SVG exports']}
+report={'verification':'passed','scope':'Declared ORM metadata, diagram definitions, route evidence and SVG structure. No live MySQL or end-to-end application execution.','tables':len(expected),'columns':sum(len(e['columns']) for e in schema['entities']),'foreign_keys':len(fks),'use_cases':18,'diagrams':manifest,'implementation_hashes':[{'source':p,'sha256':hashlib.sha256((ROOT/p).read_bytes()).hexdigest()} for p in source_paths],'checks':['all mapped tables and fields','declared nullability, types, PK, UK, index and delete rules','all 16 ER links and their endpoint multiplicities','all 114 fields present in the rendered full ER SVG','12 UML entity classes and 16 exact associations','all use-case endpoint evidence','activity guard completeness and endpoints','two-commit order in both sequence workflows','valid text-only SVG exports','12 principal entities and 16 exact rendered relations per structural view','no overlapping structural cards or connectors through cards','nine correctly bounded domain SVGs']}
 (OUT/'verification.json').write_text(json.dumps(report,indent=2)+'\n')
 print('PASS:',len(expected),'tables;',report['columns'],'fields;',len(fks),'foreign keys; 7 diagram definitions.')
