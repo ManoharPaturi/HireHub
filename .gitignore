@@ -1,0 +1,41 @@
+# Dependencies and generated application output
+node_modules/
+dist/
+dist-ssr/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Machine-specific configuration and credentials
+.env
+.env.*
+!.env.example
+*.local
+*.pem
+*.key
+*.db
+*.sqlite
+*.sqlite3
+
+# Agent work files, captures and temporary exports
+.codex-*/
+.playwright-mcp/
+.zcode/
+.DS_Store
+*.log
+.idea/
+.vscode/
+
+# LaTeX intermediate files; keep the final .tex and .pdf
+*.aux
+*.nav
+*.out
+*.snm
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.vrb
+

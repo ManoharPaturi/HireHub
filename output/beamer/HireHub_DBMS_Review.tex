@@ -1,0 +1,232 @@
+% HireHub DBMS review: exactly 8 slides, approximately 5 minutes.
+% Standalone source. Compile with pdfLaTeX in Overleaf or a local TeX editor.
+% Speaker notes are included in the source and hidden in the slide PDF.
+\documentclass[aspectratio=169,11pt]{beamer}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{booktabs,tabularx,array}
+\usetheme{Boadilla}
+\usefonttheme{professionalfonts}
+\definecolor{HireInk}{HTML}{17243A}
+\definecolor{HirePurple}{HTML}{5145CD}
+\definecolor{HireMuted}{HTML}{526176}
+\definecolor{HirePaper}{HTML}{F6F7FC}
+\setbeamercolor{normal text}{fg=HireInk,bg=white}
+\setbeamercolor{structure}{fg=HirePurple}
+\setbeamercolor{frametitle}{fg=HireInk,bg=white}
+\setbeamercolor{title}{fg=HireInk}
+\setbeamercolor{block title}{fg=HirePurple,bg=HirePaper}
+\setbeamercolor{block body}{fg=HireInk,bg=HirePaper}
+\setbeamercolor{alerted text}{fg=HirePurple}
+\setbeamercolor{author in head/foot}{fg=HireMuted,bg=HirePaper}
+\setbeamercolor{title in head/foot}{fg=HireMuted,bg=HirePaper}
+\setbeamercolor{date in head/foot}{fg=HireMuted,bg=HirePaper}
+\setbeamerfont{frametitle}{size=\Large,series=\bfseries}
+\setbeamerfont{block title}{series=\bfseries}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize item}{\small\textbullet}
+\setbeamertemplate{itemize subitem}{\tiny\textbullet}
+\setbeamersize{text margin left=8mm,text margin right=8mm}
+\setbeamertemplate{footline}{%
+  \leavevmode\hbox{%
+    \begin{beamercolorbox}[wd=.70\paperwidth,ht=2.7ex,dp=1.2ex,leftskip=8mm]{author in head/foot}
+      HireHub \hspace{1em} DBMS Project Review
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.30\paperwidth,ht=2.7ex,dp=1.2ex,rightskip=8mm plus1fil]{date in head/foot}
+      \hfill\insertframenumber\,/\,\inserttotalframenumber
+    \end{beamercolorbox}}}
+\setbeameroption{hide notes}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\slidelead}[1]{\par{\color{HirePurple}\bfseries #1}\par\smallskip}
+\title{HireHub Internship Portal}
+\author{Manohar Paturi \and Sainath B \and Pushpak K \and Shanmukh Badam}
+\date{}
+
+\begin{document}
+
+% 1. Introduction and problem statement (35 seconds).
+\begin{frame}{Introduction \& Problem Statement}
+  {\LARGE\bfseries HireHub}\par
+  \par\vspace{1mm}
+  {\large Internship Discovery and Recruitment Management}\par
+  \par\vspace{3mm}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{.61\textwidth}
+      \slidelead{Problem}
+      Separate forms, emails and spreadsheets make candidate review and application tracking difficult to coordinate.
+      \par\vspace{3mm}
+      \slidelead{Our solution}
+      A shared portal for students, recruiters and administrators, covering discovery, applications, interviews and communication.
+      \par\vspace{3mm}
+    \end{column}
+    \begin{column}{.35\textwidth}
+      \slidelead{Presented by}
+      \footnotesize
+      \textbf{Manohar Paturi}\\CB.SC.U4AIE24339\par\vspace{2mm}
+      \textbf{Sainath B}\\CB.SC.U4AIE24309\par\vspace{2mm}
+      \textbf{Pushpak K}\\CB.SC.U4AIE24328\par\vspace{2mm}
+      \textbf{Shanmukh Badam}\\CB.SC.U4AIE24307
+    \end{column}
+  \end{columns}
+  \par\vspace{3mm}
+  {\footnotesize\color{HireMuted} React + TypeScript \quad FastAPI + SQLAlchemy \quad MySQL}
+  \note{35 seconds. HireHub connects students, recruiters and administrators. The problem is that separate emails, forms and spreadsheets make recruitment hard to coordinate. Our portal brings discovery, applications, candidate review and interviews into a shared database-backed workflow. React provides the interface, FastAPI handles requests, SQLAlchemy maps application objects to tables, and MySQL stores the records. Sources: frontend/src/App.tsx; frontend/src/services/api.ts; backend/app/main.py; backend/app/db/database.py.}
+\end{frame}
+
+% 2. Feature-to-concept mapping (50 seconds).
+\begin{frame}{Functionalities \& Associated DBMS Concepts}
+  \small
+  \renewcommand{\arraystretch}{1.25}
+  \begin{tabularx}{\textwidth}{@{}L{.29\textwidth}Y@{}}
+    \toprule
+    \textbf{Functionality} & \textbf{DBMS concepts used in HireHub}\\
+    \midrule
+    Registration \& profiles & Primary keys, unique emails, foreign keys and one-to-one profiles\\
+    Search \& recommendations & Filtered queries, pattern matching, sorting and pagination\\
+    Applications \& bookmarks & Linking tables for student--internship relationships\\
+    Student skills & Many-to-many relationship through \texttt{student\_skills}\\
+    Candidate review \& interviews & Related inserts and updates, status fields and commits\\
+    Messages \& notifications & Sender/receiver foreign keys, timestamps and read flags\\
+    Admin analytics & \texttt{JOIN}, \texttt{COUNT}, \texttt{AVG} and \texttt{GROUP BY}\\
+    \bottomrule
+  \end{tabularx}\par
+  \par\vspace{3mm}
+  \textbf{Database:} 12 tables connected by 16 foreign-key relationships.
+  \note{50 seconds. The DBMS concepts map directly to features. Unique emails identify accounts, and foreign keys link profiles. Applications and bookmarks connect students to internships. Student skills use a junction table, which represents a many-to-many relationship. Search uses filters, ordering and pagination. Interviews and status changes update related records. Messages reference users twice, as sender and receiver. Admin reports combine joins with count, average and grouping. There are twelve tables and sixteen foreign keys in the ORM models. Sources: backend/app/db/models.py; backend/app/routers/internships.py; backend/app/routers/admin.py; backend/app/routers/messages.py.}
+\end{frame}
+
+% 3. User-facing modules (40 seconds).
+\begin{frame}{Modules \& Explanations}
+  \small
+  \renewcommand{\arraystretch}{1.45}
+  \begin{tabularx}{\textwidth}{@{}L{.25\textwidth}Y@{}}
+    \toprule
+    \textbf{Module} & \textbf{Responsibility}\\
+    \midrule
+    \textbf{Student} & Academic profiles, skills, document uploads, internship discovery, bookmarks and application tracking\\
+    \textbf{Recruiter} & Internship posting and management, candidate profiles, resume access, table/Kanban applicant views and status updates\\
+    \textbf{Interviews} & Date, duration, interview type and meeting link; scheduling updates the application and creates a notification\\
+    \textbf{Communication} & Student--recruiter conversations connected through applications, message previews and unread counts\\
+    \textbf{Administrator} & User and posting management, application oversight, statistics, charts and recent activity\\
+    \bottomrule
+  \end{tabularx}\par
+  \note{40 seconds. The student module handles discovery and applications. Recruiters manage opportunities and inspect applicants using table or Kanban views. Interview scheduling records the meeting details and updates the application. Communication is limited to students and recruiters who are connected through an application. Administrators manage accounts and postings and inspect reports. The modules share related database records rather than maintaining separate recruitment spreadsheets. Sources: frontend/src/components/Student/StudentApp.tsx; frontend/src/components/Recruiter/RecruiterApp.tsx; frontend/src/components/Recruiter/ApplicantsView.tsx; backend/app/routers/recruiter.py; backend/app/routers/messages.py; backend/app/routers/admin.py.}
+\end{frame}
+
+% 4. Implementation outputs, not fabricated performance results (40 seconds).
+\begin{frame}{Results \& Discussion}
+  \small
+  \slidelead{Implemented outputs}
+  \begin{itemize}\setlength{\itemsep}{2mm}
+    \item \textbf{Student dashboard:} application progress, saved roles and recommended internships.
+    \item \textbf{Recruiter workspace:} applicant pipeline, candidate details, resume access and interview list.
+    \item \textbf{Admin dashboard:} 14-day application trends, status distribution, work modes and company summaries.
+    \item \textbf{Communication:} stored conversations and notifications for recruitment events.
+  \end{itemize}
+  \par\vspace{2mm}
+  \slidelead{Discussion}
+  The same application record connects student tracking, recruiter review and database reports.
+  \par\vspace{2mm}
+  {\footnotesize\color{HireMuted} Evaluation scope: demonstration data is available. Large-scale performance and placement impact have not been measured.}
+  \note{40 seconds. The code implements three distinct workspaces. Students see applications, saved roles and recommendations. Recruiters see candidates, resumes, status stages and interviews. The administrator sees counts and grouped charts, including fourteen days of applications. The main result is an integrated recruitment workflow supported by linked records. This slide describes implementation outputs, not benchmark results. We have not established improved placement rates or concurrent-user capacity. Show actual screens during the separate code demonstration. Sources: frontend/src/components/Dashboard/StudentDashboard.tsx; frontend/src/components/Recruiter/ApplicantsView.tsx; frontend/src/components/Admin/AdminApp.tsx; backend/app/routers/admin.py; backend/app/db/init_db.py.}
+\end{frame}
+
+% 5. Balanced evaluation (35 seconds).
+\begin{frame}{Advantages \& Limitations}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{.47\textwidth}
+      \slidelead{Advantages}
+      \begin{itemize}\setlength{\itemsep}{2mm}
+        \item One system for applications, interviews and communication.
+        \item Visible application stages for both sides.
+        \item Foreign keys connect recruitment records.
+        \item Reports use the stored recruitment data.
+      \end{itemize}
+    \end{column}
+    \begin{column}{.49\textwidth}
+      \slidelead{Limitations}
+      \begin{itemize}\setlength{\itemsep}{2mm}
+        \item Recommendations use simple matching rules.
+        \item External applications are not automatically tracked.
+        \item Base64 resumes increase database storage.
+        \item Calendar grid and some settings remain incomplete.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \par\vspace{3mm}
+  {\small\color{HireMuted} Next improvements: stronger database constraints, normalized internship skills and testing with more users.}
+  \note{35 seconds. HireHub centralizes the workflow and makes application progress visible. Relational links let different views refer to the same records. Current limitations are simple recommendations, external application tracking, database storage overhead from Base64 resumes and incomplete calendar/settings controls. Important next improvements include composite uniqueness constraints, a separate internship-skill junction table and evaluation with more users. Sources: backend/app/db/models.py; backend/app/routers/internships.py; backend/app/routers/applications.py; frontend/src/components/Internships/InternshipDetailModal.tsx; frontend/src/components/Recruiter/InterviewCalendar.tsx; frontend/src/components/Recruiter/RecruiterSettings.tsx.}
+\end{frame}
+
+% 6. Contribution and comparison, with a clearly identified baseline (40 seconds).
+\begin{frame}{Project Highlights \& Expected Impact}
+  \small
+  \textbf{Highlights:} linked application and interview records, application-connected messaging, rule-based suggestions and admin analytics.
+  \par\vspace{3mm}
+  \renewcommand{\arraystretch}{1.35}
+  \begin{tabularx}{\textwidth}{@{}YY@{}}
+    \toprule
+    \textbf{Manual workflow baseline} & \textbf{HireHub implementation}\\
+    \midrule
+    Candidate details across forms and emails & Combined candidate and application view\\
+    Status maintained in separate spreadsheets & Shared application-status record\\
+    Interview details coordinated separately & Interviews linked to applications\\
+    Reports prepared by manual counting & Aggregate database queries\\
+    \bottomrule
+  \end{tabularx}\par
+  \par\vspace{3mm}
+  \textbf{Contribution:} integration of recruitment workflows within one project.\par\smallskip
+  \textbf{Expected impact:} less repeated coordination and clearer application visibility.
+  \par\vspace{2mm}
+  {\scriptsize\color{HireMuted} Manual-process comparison only. A user study is needed to measure impact.}
+  \note{40 seconds. We compare HireHub with a manual workflow based on separate forms, emails and spreadsheets. Candidate information, application status, interviews and reports are connected in the portal. The project's contribution is integrating these pieces. Recommendations use skills or preferred mode and order results by stipend, with a recent-post fallback. We do not claim a trained AI model or commercial uniqueness. Less manual coordination is an expected benefit that should be measured through a user study. Sources: backend/app/routers/internships.py; backend/app/routers/messages.py; backend/app/routers/recruiter.py; backend/app/routers/admin.py. The comparison is an illustrative baseline.}
+\end{frame}
+
+% 7. Specific engineering lessons (35 seconds).
+\begin{frame}{Challenges \& Learnings}
+  \small
+  \renewcommand{\arraystretch}{1.45}
+  \begin{tabularx}{\textwidth}{@{}L{.34\textwidth}Y@{}}
+    \toprule
+    \textbf{Challenge} & \textbf{Learning}\\
+    \midrule
+    Modeling recruitment relationships & Choose one-to-one, one-to-many and many-to-many relationships from the actual workflow\\
+    MySQL foreign-key setup & Related columns need compatible types and collations\\
+    Uploading large resumes & Use multipart requests and suitable database column types\\
+    Managing user roles and ownership & Check permissions in the backend as well as the interface\\
+    Coordinating related updates & Plan transaction boundaries and enforce important rules in the database\\
+    \bottomrule
+  \end{tabularx}\par
+  \par\vspace{3mm}
+  \textbf{Key learning:} a good data model must work with reliable API and interface behavior.
+  \note{35 seconds. We learned how to model the workflow using several relationship types. Foreign-key setup depends on compatible MySQL column definitions and collations. Resume uploads require correct multipart requests and a large enough field. Role and ownership checks belong in the backend, since hiding a button does not enforce access. Related updates also need clear transaction boundaries so failures do not leave partial workflows. Sources: backend/README.md; frontend/src/services/api.ts; backend/app/db/models.py; backend/app/routers/applications.py; backend/app/routers/recruiter.py; backend/app/routers/auth.py.}
+\end{frame}
+
+% 8. Budget assumptions, not invented expenses (25 seconds).
+\begin{frame}{Budgeting}
+  \slidelead{Local academic demonstration: estimated additional cash cost}
+  \small
+  \renewcommand{\arraystretch}{1.35}
+  \begin{tabularx}{\textwidth}{@{}L{.27\textwidth}Y r@{}}
+    \toprule
+    \textbf{Component} & \textbf{Assumption} & \textbf{Cost}\\
+    \midrule
+    Development tools & Existing environment and open-source tooling & INR 0\\
+    MySQL database & Local community installation & INR 0\\
+    Hosting and domain & Existing laptop; no paid hosting or domain & INR 0\\
+    Hardware / internet & Existing resources; electricity excluded & Excluded\\
+    Development effort & Student project contribution & Excluded\\
+    \midrule
+    \textbf{Additional cash total} & \textbf{Under the assumptions above} & \textbf{INR 0}\\
+    \bottomrule
+  \end{tabularx}\par
+  \par\vspace{3mm}
+  \textbf{Future deployment:} budget separately for hosting, database storage, backups and an optional domain.
+  \par\vspace{2mm}
+  {\footnotesize\color{HireMuted} Planning estimate only. Actual expenses have not been supplied.}
+  \note{25 seconds. This budget estimates additional cash spending for a local academic demonstration. It assumes an existing laptop, connectivity and a community database installation, with no paid domain or hosting. Under those assumptions the additional cash estimate is zero rupees. Hardware, internet, electricity and development time are excluded, not valued at zero. A hosted version needs a separate budget. No actual expense statement has been supplied. Basis: project stack and explicit local-demo assumptions.}
+\end{frame}
+
+\end{document}
