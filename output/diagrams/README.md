@@ -4,26 +4,36 @@ Open **[index.html](index.html)** in a browser. It is a standalone offline viewe
 
 | Diagram | Vector image | PNG image | Editable definition |
 | --- | --- | --- | --- |
-| Crow’s Foot ER overview | [SVG](svg/er-overview.svg) | [PNG](png/er-overview.png) | [Mermaid](sources/er-overview.mmd) |
+| Crow’s Foot ER overview | [SVG](svg/er-overview.svg) | Export from viewer | [Mermaid](sources/er-overview.mmd) |
 | Crow’s Foot full physical schema | [SVG](svg/er-full.svg) | [PNG](png/er-full.png) | [Mermaid](sources/er-full.mmd) |
 | Chen ER (entities, relationships, selected attributes) | [SVG](svg/er-chen.svg) | [PNG](png/er-chen.png) | [Layout/evidence](sources/er-chen.json) |
 | UML domain class associations | [SVG](svg/uml-class.svg) | [PNG](png/uml-class.png) | [Mermaid](sources/uml-class.mmd) |
-| UML use cases | [SVG](svg/uml-use-case.svg) | [PNG](png/uml-use-case.png) | [Layout/evidence](sources/uml-use-case.json) |
-| UML application sequence | [SVG](svg/uml-sequence-apply.svg) | [PNG](png/uml-sequence-apply.png) | [Mermaid](sources/uml-sequence-apply.mmd) |
-| UML interview sequence | [SVG](svg/uml-sequence-interview.svg) | [PNG](png/uml-sequence-interview.png) | [Mermaid](sources/uml-sequence-interview.mmd) |
-| UML application activity | [SVG](svg/uml-activity.svg) | [PNG](png/uml-activity.png) | [Nodes and edges](sources/uml-activity.json) |
+| UML use cases | [SVG](svg/uml-use-case.svg) | Export from viewer | [Layout/evidence](sources/uml-use-case.json) |
+| UML application sequence | [SVG](svg/uml-sequence-apply.svg) | Export from viewer | [Mermaid](sources/uml-sequence-apply.mmd) |
+| UML interview sequence | [SVG](svg/uml-sequence-interview.svg) | Export from viewer | [Mermaid](sources/uml-sequence-interview.mmd) |
+| UML application activity | [SVG](svg/uml-activity.svg) | Export from viewer | [Nodes and edges](sources/uml-activity.json) |
 
-## Focused exports
+## Three PNG images
 
-Each structural view also has standalone domain images for use in reports and slides:
+The `png/` folder contains only these final images:
+
+- [Crow’s Foot ER — full schema](png/er-full.png)
+- [Chen ER](png/er-chen.png)
+- [UML class diagram](png/uml-class.png)
+
+Other views remain available as SVGs in the HTML viewer. PNGs for those views can be exported from the viewer when needed.
+
+## Focused SVG views
+
+Each structural view also has standalone domain SVGs for use in reports and slides:
 
 | Domain | Crow’s Foot ER overview | Full ER schema | UML classes |
 | --- | --- | --- | --- |
-| Identity & communication | [SVG](svg/er-overview-domain-1.svg) / [PNG](png/er-overview-domain-1.png) | [SVG](svg/er-full-domain-1.svg) / [PNG](png/er-full-domain-1.png) | [SVG](svg/uml-class-domain-1.svg) / [PNG](png/uml-class-domain-1.png) |
-| Student data | [SVG](svg/er-overview-domain-2.svg) / [PNG](png/er-overview-domain-2.png) | [SVG](svg/er-full-domain-2.svg) / [PNG](png/er-full-domain-2.png) | [SVG](svg/uml-class-domain-2.svg) / [PNG](png/uml-class-domain-2.png) |
-| Recruitment | [SVG](svg/er-overview-domain-3.svg) / [PNG](png/er-overview-domain-3.png) | [SVG](svg/er-full-domain-3.svg) / [PNG](png/er-full-domain-3.png) | [SVG](svg/uml-class-domain-3.svg) / [PNG](png/uml-class-domain-3.png) |
+| Identity & communication | [SVG](svg/er-overview-domain-1.svg) | [SVG](svg/er-full-domain-1.svg) | [SVG](svg/uml-class-domain-1.svg) |
+| Student data | [SVG](svg/er-overview-domain-2.svg) | [SVG](svg/er-full-domain-2.svg) | [SVG](svg/uml-class-domain-2.svg) |
+| Recruitment | [SVG](svg/er-overview-domain-3.svg) | [SVG](svg/er-full-domain-3.svg) | [SVG](svg/uml-class-domain-3.svg) |
 
-Chen focused views: [Identity & communication SVG](svg/er-chen-domain-1.svg) / [PNG](png/er-chen-domain-1.png), [Student data SVG](svg/er-chen-domain-2.svg) / [PNG](png/er-chen-domain-2.png), and [Recruitment SVG](svg/er-chen-domain-3.svg) / [PNG](png/er-chen-domain-3.png).
+Chen focused views: [Identity & communication SVG](svg/er-chen-domain-1.svg), [Student data SVG](svg/er-chen-domain-2.svg), and [Recruitment SVG](svg/er-chen-domain-3.svg).
 
 ## ER notation guide
 
@@ -66,4 +76,4 @@ With backend dependencies installed, run:
 python output/diagrams/verify_diagrams.py
 ```
 
-`build_diagrams.py` extracts schema definitions and generates the use-case/activity SVGs. `format_structural.py` creates orthogonal ER/class layouts; `format_chen.py` draws the Chen entity, relationship and attribute shapes. The formatter uses uniform spacing and emits `layout.json` plus twelve focused domain SVGs. Reference cards repeat existing entities for context; all 12 principal entities and all 16 relationships appear once across the three domains. Mermaid ER/class sources remain editable semantic definitions; rendering them directly will use Mermaid's own layout. Only the two sequence Mermaid definitions must be rendered into their matching files in `svg/` after changes. Then run `python output/diagrams/build_diagrams.py --gallery` to embed those SVGs into the offline viewer, refresh PNG exports, and rerun verification. The current viewer and images are already rendered.
+`build_diagrams.py` extracts schema definitions and generates the use-case/activity SVGs. `format_structural.py` creates orthogonal ER/class layouts; `format_chen.py` draws the Chen entity, relationship and attribute shapes. The formatter uses uniform spacing and emits `layout.json` plus twelve focused domain SVGs. Reference cards repeat existing entities for context; all 12 principal entities and all 16 relationships appear once across the three domains. Mermaid ER/class sources remain editable semantic definitions; rendering them directly will use Mermaid's own layout. Only the two sequence Mermaid definitions must be rendered into their matching files in `svg/` after changes. Then run `python output/diagrams/build_diagrams.py --gallery` to embed those SVGs into the offline viewer, refresh PNG exports, and rerun verification. Keep only `er-full.png`, `er-chen.png`, and `uml-class.png` as the packaged PNG files. The current viewer and images are already rendered.

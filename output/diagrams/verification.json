@@ -5,15 +5,19 @@
   "columns": 114,
   "foreign_keys": 16,
   "use_cases": 18,
+  "packaged_pngs": [
+    "er-chen.png",
+    "er-full.png",
+    "uml-class.png"
+  ],
   "diagram_count": 8,
   "diagrams": [
     {
       "id": "er-overview",
       "svg": "svg/er-overview.svg",
-      "png": "png/er-overview.png",
+      "png": null,
       "source": "sources/er-overview.mmd",
-      "svg_sha256": "ca2a6942195322e97b7551854ee7b5aa5cb818d8607b0293b4a23e9eb7604462",
-      "png_sha256": "ca863d646de6d87720576924fc0a5308eea0d8450b3f4f9fdac97f989e843bf3"
+      "svg_sha256": "ca2a6942195322e97b7551854ee7b5aa5cb818d8607b0293b4a23e9eb7604462"
     },
     {
       "id": "er-full",
@@ -42,34 +46,30 @@
     {
       "id": "uml-use-case",
       "svg": "svg/uml-use-case.svg",
-      "png": "png/uml-use-case.png",
+      "png": null,
       "source": "sources/uml-use-case.json",
-      "svg_sha256": "deaa8f137f44ba3d54629af7f4a2ba6afbaf23448367dea4e43cd8f21a7207cd",
-      "png_sha256": "280c115a36307f467e5e114e0f99d711ceba1fd4d5187f53e0a4ac93fd0787fa"
+      "svg_sha256": "deaa8f137f44ba3d54629af7f4a2ba6afbaf23448367dea4e43cd8f21a7207cd"
     },
     {
       "id": "uml-sequence-apply",
       "svg": "svg/uml-sequence-apply.svg",
-      "png": "png/uml-sequence-apply.png",
+      "png": null,
       "source": "sources/uml-sequence-apply.mmd",
-      "svg_sha256": "5c3023bccb997d3f113f8b7272c0ec6c9854c42821f02b87213c8fe6d842add3",
-      "png_sha256": "239913ffdafafc5d80c83cb1da824cf8b25a0c5b1c8b848e63be3243657de2f8"
+      "svg_sha256": "5c3023bccb997d3f113f8b7272c0ec6c9854c42821f02b87213c8fe6d842add3"
     },
     {
       "id": "uml-sequence-interview",
       "svg": "svg/uml-sequence-interview.svg",
-      "png": "png/uml-sequence-interview.png",
+      "png": null,
       "source": "sources/uml-sequence-interview.mmd",
-      "svg_sha256": "5c6176999f11e89c6ffa1c04a2deec9611981e9a23898bcf8226f38a5b4975a1",
-      "png_sha256": "544317cfed62930c7dee2365d7257a90ce5c1e0057c3fdb3e07db04ee2e563cf"
+      "svg_sha256": "5c6176999f11e89c6ffa1c04a2deec9611981e9a23898bcf8226f38a5b4975a1"
     },
     {
       "id": "uml-activity",
       "svg": "svg/uml-activity.svg",
-      "png": "png/uml-activity.png",
+      "png": null,
       "source": "sources/uml-activity.json",
-      "svg_sha256": "7fea2146d3382946c84e4599a3909168efa9dac438c3894b151275aefb5a452c",
-      "png_sha256": "6f99dd956cd634ac26525cdd28ed077cbd44a6322eec1388beea5576a3b87ffe"
+      "svg_sha256": "7fea2146d3382946c84e4599a3909168efa9dac438c3894b151275aefb5a452c"
     }
   ],
   "implementation_hashes": [
@@ -131,6 +131,7 @@
     }
   ],
   "checks": [
+    "exactly two ER PNGs and one UML PNG packaged",
     "all mapped tables and fields",
     "declared nullability, types, PK, UK, index and delete rules",
     "all 16 ER links and their endpoint multiplicities",
@@ -517,6 +518,7 @@
       "overlappingRelationshipTexts": []
     }
   ],
+  "visual_review": "Inspected Crow\u2019s Foot and Chen structural domain renders, use-case role projections, sequence lanes and gallery fit. Chen uses explicit same-side min/max participation and selected non-FK attribute ovals. Repositioned relationship labels to keep multiplicities visible. All diagrams remain deterministic SVG, with no generated artwork.",
   "focused_export_hashes": [
     {
       "file": "svg/er-chen-domain-1.svg",
@@ -565,55 +567,7 @@
     {
       "file": "svg/uml-class-domain-3.svg",
       "sha256": "0f47071aec2bb0ff2bc153bee42a2c83766102438d3802985b55a4e22c0cc3e0"
-    },
-    {
-      "file": "png/er-chen-domain-1.png",
-      "sha256": "f612f11c009c8a0f922014d3465c9f33fe47b897ccef9c7b7761bf7240b87864"
-    },
-    {
-      "file": "png/er-chen-domain-2.png",
-      "sha256": "3404ba5892e5b73a5c8d606f9e836de3c4ec66db3c69e6f0bd74a1be514664fc"
-    },
-    {
-      "file": "png/er-chen-domain-3.png",
-      "sha256": "35269b1e2c04e47de2932155234f1b9964eee1738c31c37ceda646fa06501198"
-    },
-    {
-      "file": "png/er-full-domain-1.png",
-      "sha256": "755bc063fdae29dd767cbbae0fedfef16d12f4f6d62ff6d5e33340670188ea0b"
-    },
-    {
-      "file": "png/er-full-domain-2.png",
-      "sha256": "674b7b2b96fcd2293116b0a09f658b63e3aecb7a1042470f7763f989f7085fd5"
-    },
-    {
-      "file": "png/er-full-domain-3.png",
-      "sha256": "f4322ce5f48a9a46033489d12926e2bf20a83f684369940af92ea958ed2286d0"
-    },
-    {
-      "file": "png/er-overview-domain-1.png",
-      "sha256": "b43e61b3f8533054e79bfe68daae9f35cf3ffbb00dd25abf8b37ee86f21dc145"
-    },
-    {
-      "file": "png/er-overview-domain-2.png",
-      "sha256": "8fb27c155d4f391cf016fd486f9e97c8271e39eea22adaaebfb668bb65e1e1b6"
-    },
-    {
-      "file": "png/er-overview-domain-3.png",
-      "sha256": "2760952eb9d424656a0be4682e4fea386237ed20715a2ec4c27af298e4b47360"
-    },
-    {
-      "file": "png/uml-class-domain-1.png",
-      "sha256": "24d25735839abb8735f5eb7a5b68263eb011b60c5d3c864113538b10f557d27f"
-    },
-    {
-      "file": "png/uml-class-domain-2.png",
-      "sha256": "e3c0058a1dc6e016363a889e450a3eaf00aa17e9188c265574487a4afbe04c2b"
-    },
-    {
-      "file": "png/uml-class-domain-3.png",
-      "sha256": "ecb029bc39668859899fbe7a7a06df54aa870f12212f56a78b81cda2abdf6852"
     }
   ],
-  "visual_review": "Inspected Crow\u2019s Foot and Chen structural domain renders, use-case role projections, sequence lanes and gallery fit. Chen uses explicit same-side min/max participation and selected non-FK attribute ovals. Repositioned relationship labels to keep multiplicities visible. All diagrams remain deterministic SVG, with no generated artwork."
+  "png_selection": "Only the full Crow\u2019s Foot ER, Chen ER and UML class diagram are packaged as PNGs. Other viewer views support on-demand export."
 }
