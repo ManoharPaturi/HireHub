@@ -5,7 +5,8 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
-\usepackage{booktabs,tabularx,array}
+\usepackage{tabularx,array}
+\setlength{\arrayrulewidth}{0.45pt}
 \usetheme{Boadilla}
 \usefonttheme{professionalfonts}
 \definecolor{HireInk}{HTML}{17243A}
@@ -79,18 +80,24 @@
 \begin{frame}{Functionalities \& Associated DBMS Concepts}
   \small
   \renewcommand{\arraystretch}{1.25}
-  \begin{tabularx}{\textwidth}{@{}L{.29\textwidth}Y@{}}
-    \toprule
+  \begin{tabularx}{\textwidth}{|L{.29\textwidth}|Y|}
+    \hline
     \textbf{Functionality} & \textbf{DBMS concepts used in HireHub}\\
-    \midrule
+    \hline
     Registration \& profiles & Primary keys, unique emails, foreign keys and one-to-one profiles\\
+    \hline
     Search \& recommendations & Filtered queries, pattern matching, sorting and pagination\\
+    \hline
     Applications \& bookmarks & Linking tables for student--internship relationships\\
+    \hline
     Student skills & Many-to-many relationship through \texttt{student\_skills}\\
+    \hline
     Candidate review \& interviews & Related inserts and updates, status fields and commits\\
+    \hline
     Messages \& notifications & Sender/receiver foreign keys, timestamps and read flags\\
+    \hline
     Admin analytics & \texttt{JOIN}, \texttt{COUNT}, \texttt{AVG} and \texttt{GROUP BY}\\
-    \bottomrule
+    \hline
   \end{tabularx}\par
   \par\vspace{3mm}
   \textbf{Database:} 12 tables connected by 16 foreign-key relationships.
@@ -101,16 +108,20 @@
 \begin{frame}{Modules \& Explanations}
   \small
   \renewcommand{\arraystretch}{1.45}
-  \begin{tabularx}{\textwidth}{@{}L{.25\textwidth}Y@{}}
-    \toprule
+  \begin{tabularx}{\textwidth}{|L{.25\textwidth}|Y|}
+    \hline
     \textbf{Module} & \textbf{Responsibility}\\
-    \midrule
+    \hline
     \textbf{Student} & Academic profiles, skills, document uploads, internship discovery, bookmarks and application tracking\\
+    \hline
     \textbf{Recruiter} & Internship posting and management, candidate profiles, resume access, table/Kanban applicant views and status updates\\
+    \hline
     \textbf{Interviews} & Date, duration, interview type and meeting link; scheduling updates the application and creates a notification\\
+    \hline
     \textbf{Communication} & Student--recruiter conversations connected through applications, message previews and unread counts\\
+    \hline
     \textbf{Administrator} & User and posting management, application oversight, statistics, charts and recent activity\\
-    \bottomrule
+    \hline
   \end{tabularx}\par
   \note{40 seconds. The student module handles discovery and applications. Recruiters manage opportunities and inspect applicants using table or Kanban views. Interview scheduling records the meeting details and updates the application. Communication is limited to students and recruiters who are connected through an application. Administrators manage accounts and postings and inspect reports. The modules share related database records rather than maintaining separate recruitment spreadsheets. Sources: frontend/src/components/Student/StudentApp.tsx; frontend/src/components/Recruiter/RecruiterApp.tsx; frontend/src/components/Recruiter/ApplicantsView.tsx; backend/app/routers/recruiter.py; backend/app/routers/messages.py; backend/app/routers/admin.py.}
 \end{frame}
@@ -166,15 +177,18 @@
   \textbf{Highlights:} linked application and interview records, application-connected messaging, rule-based suggestions and admin analytics.
   \par\vspace{3mm}
   \renewcommand{\arraystretch}{1.35}
-  \begin{tabularx}{\textwidth}{@{}YY@{}}
-    \toprule
+  \begin{tabularx}{\textwidth}{|Y|Y|}
+    \hline
     \textbf{Manual workflow baseline} & \textbf{HireHub implementation}\\
-    \midrule
+    \hline
     Candidate details across forms and emails & Combined candidate and application view\\
+    \hline
     Status maintained in separate spreadsheets & Shared application-status record\\
+    \hline
     Interview details coordinated separately & Interviews linked to applications\\
+    \hline
     Reports prepared by manual counting & Aggregate database queries\\
-    \bottomrule
+    \hline
   \end{tabularx}\par
   \par\vspace{3mm}
   \textbf{Contribution:} integration of recruitment workflows within one project.\par\smallskip
@@ -188,16 +202,20 @@
 \begin{frame}{Challenges \& Learnings}
   \small
   \renewcommand{\arraystretch}{1.45}
-  \begin{tabularx}{\textwidth}{@{}L{.34\textwidth}Y@{}}
-    \toprule
+  \begin{tabularx}{\textwidth}{|L{.34\textwidth}|Y|}
+    \hline
     \textbf{Challenge} & \textbf{Learning}\\
-    \midrule
+    \hline
     Modeling recruitment relationships & Choose one-to-one, one-to-many and many-to-many relationships from the actual workflow\\
+    \hline
     MySQL foreign-key setup & Related columns need compatible types and collations\\
+    \hline
     Uploading large resumes & Use multipart requests and suitable database column types\\
+    \hline
     Managing user roles and ownership & Check permissions in the backend as well as the interface\\
+    \hline
     Coordinating related updates & Plan transaction boundaries and enforce important rules in the database\\
-    \bottomrule
+    \hline
   \end{tabularx}\par
   \par\vspace{3mm}
   \textbf{Key learning:} a good data model must work with reliable API and interface behavior.
@@ -209,18 +227,22 @@
   \slidelead{Local academic demonstration: estimated additional cash cost}
   \small
   \renewcommand{\arraystretch}{1.35}
-  \begin{tabularx}{\textwidth}{@{}L{.27\textwidth}Y r@{}}
-    \toprule
+  \begin{tabularx}{\textwidth}{|L{.27\textwidth}|Y|r|}
+    \hline
     \textbf{Component} & \textbf{Assumption} & \textbf{Cost}\\
-    \midrule
+    \hline
     Development tools & Existing environment and open-source tooling & INR 0\\
+    \hline
     MySQL database & Local community installation & INR 0\\
+    \hline
     Hosting and domain & Existing laptop; no paid hosting or domain & INR 0\\
+    \hline
     Hardware / internet & Existing resources; electricity excluded & Excluded\\
+    \hline
     Development effort & Student project contribution & Excluded\\
-    \midrule
+    \hline
     \textbf{Additional cash total} & \textbf{Under the assumptions above} & \textbf{INR 0}\\
-    \bottomrule
+    \hline
   \end{tabularx}\par
   \par\vspace{3mm}
   \textbf{Future deployment:} budget separately for hosting, database storage, backups and an optional domain.
