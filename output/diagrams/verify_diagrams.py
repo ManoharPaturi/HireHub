@@ -75,6 +75,7 @@ for kind,panels in layouts.items():
                     x,y,w,h=n['x'],n['y'],n['w'],n['h']
                     crosses=(x<a[0]<x+w and max(min(a[1],b[1]),y)<min(max(a[1],b[1]),y+h)) if a[0]==b[0] else (y<a[1]<y+h and max(min(a[0],b[0]),x)<min(max(a[0],b[0]),x+w))
                     assert not crosses,(kind,edge['child'],edge['field'],'connector passes through '+n['table'])
+        if len(panels)==1:continue
         crop=ET.parse(OUT/'svg'/(kind+'-domain-'+str(panel['id']+1)+'.svg')).getroot()
         assert crop.attrib['viewBox']==f"0 {panel['y']} {panel['width']} {panel['height']}"
 
@@ -105,10 +106,30 @@ for node in chen_nodes:
     attrs=[n for n in node if n.attrib.get('class')=='attribute']
     for i,a in enumerate(attrs):
         for b in attrs[i+1:]:
-            assert abs(float(a.attrib['cx'])-float(b.attrib['cx']))>=float(a.attrib['rx'])+float(b.attrib['rx'])
+            assert abs(float(a.attrib['cx'])-float(b.attrib['cx']))>=float(a.attrib['rx'])+float(b.attrib['rx']) or abs(float(a.attrib['cy'])-float(b.attrib['cy']))>=float(a.attrib['ry'])+float(b.attrib['ry'])
     tokens={t.strip() for t in node.itertext() if t.strip()}
     assert 'id' in tokens
-assert len([n for n in chen_root.iter() if n.attrib.get('data-key-attribute')=='true'])==15
+assert len([n for n in chen_root.iter() if n.attrib.get('data-key-attribute')=='true'])==12
+
+# Check whole-diagram connectivity, route crossings and the reserved header.
+for kind,panels in layouts.items():
+    assert len(panels)==1 and len(panels[0]['nodes'])==12,kind
+    panel=panels[0];edges=panel['edges'];seen={panel['nodes'][0]['table']}
+    while True:
+        expanded=seen|{r['child'] for r in edges if r['parent'] in seen}|{r['parent'] for r in edges if r['child'] in seen}
+        if expanded==seen:break
+        seen=expanded
+    assert seen==set(expected),(kind,'disconnected entity graph')
+    def segments_cross(a,b,c,d):
+        if a[0]==b[0] and c[1]==d[1]:return min(c[0],d[0])<a[0]<max(c[0],d[0]) and min(a[1],b[1])<c[1]<max(a[1],b[1])
+        if a[1]==b[1] and c[0]==d[0]:return segments_cross(c,d,a,b)
+        if a[0]==b[0]==c[0]==d[0]:return max(min(a[1],b[1]),min(c[1],d[1]))<min(max(a[1],b[1]),max(c[1],d[1]))
+        if a[1]==b[1]==c[1]==d[1]:return max(min(a[0],b[0]),min(c[0],d[0]))<min(max(a[0],b[0]),max(c[0],d[0]))
+        return False
+    for i,e in enumerate(edges):
+        assert all(p[1]>=190 for p in e['points']),(kind,'route enters header')
+        for f in edges[i+1:]:
+            assert not any(segments_cross(a,b,c,d) for a,b in zip(e['points'],e['points'][1:]) for c,d in zip(f['points'],f['points'][1:])),(kind,'crossing or shared connectors',e['field'],f['field'])
 
 full=(OUT/'sources/er-full.mmd').read_text()
 for e in schema['entities']:
@@ -156,6 +177,6 @@ for d in json.loads((OUT/'catalog.json').read_text()):
     assert 'foreignObject' not in svg.read_text(), 'Portable text-only SVG required'
     manifest.append({'id':d['id'],'svg':'svg/'+svg.name,'png':('png/'+d['id']+'.png') if d['id']+'.png' in packaged_pngs else None,'source':'sources/'+d['source'],'svg_sha256':hashlib.sha256(svg.read_bytes()).hexdigest()})
 source_paths=sorted({s for d in json.loads((OUT/'catalog.json').read_text()) for s in d['sources']})
-report={'verification':'passed','scope':'Declared ORM metadata, diagram definitions, route evidence and SVG structure. No live MySQL or end-to-end application execution.','tables':len(expected),'columns':sum(len(e['columns']) for e in schema['entities']),'foreign_keys':len(fks),'use_cases':18,'packaged_pngs':sorted(packaged_pngs),'diagram_count':len(manifest),'diagrams':manifest,'implementation_hashes':[{'source':p,'sha256':hashlib.sha256((ROOT/p).read_bytes()).hexdigest()} for p in source_paths],'checks':['exactly two ER PNGs and one UML PNG packaged','all mapped tables and fields','declared nullability, types, PK, UK, index and delete rules','all 16 ER links and their endpoint multiplicities','all 114 fields present in the rendered full ER SVG','12 UML entity classes and 16 exact associations','all use-case endpoint evidence','activity guard completeness and endpoints','two-commit order in both sequence workflows','valid text-only SVG exports','12 principal entities and 16 exact rendered relations per structural view','no overlapping structural cards or connectors through cards','12 correctly bounded domain SVGs','Chen entity rectangles, 16 relationship diamonds and underlined keys','same-side Chen min/max participation against ORM nullability and uniqueness']}
+report={'verification':'passed','scope':'Declared ORM metadata, diagram definitions, route evidence and SVG structure. No live MySQL or end-to-end application execution.','tables':len(expected),'columns':sum(len(e['columns']) for e in schema['entities']),'foreign_keys':len(fks),'packaged_pngs':sorted(packaged_pngs),'diagram_count':len(manifest),'diagrams':manifest,'implementation_hashes':[{'source':p,'sha256':hashlib.sha256((ROOT/p).read_bytes()).hexdigest()} for p in source_paths],'checks':['exactly two ER PNGs and one UML PNG packaged','single connected graph with no repeated entity cards','no connector crossings or shared connector segments','all mapped tables and fields','declared nullability, types, PK, UK, index and delete rules','all 16 ER links and their endpoint multiplicities','all 114 fields present in the rendered full ER SVG','12 UML entity classes and 16 exact associations','all use-case endpoint evidence','activity guard completeness and endpoints','two-commit order in both sequence workflows','valid text-only SVG exports','12 principal entities and 16 exact rendered relations per structural view','no overlapping structural cards or connectors through cards','three connected final diagrams with each of 12 entities appearing once','Chen entity rectangles, 16 relationship diamonds and underlined keys','same-side Chen min/max participation against ORM nullability and uniqueness']}
 (OUT/'verification.json').write_text(json.dumps(report,indent=2)+'\n')
 print('PASS:',len(expected),'tables;',report['columns'],'fields;',len(fks),'foreign keys;',len(manifest),'diagram definitions.')

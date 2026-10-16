@@ -1,49 +1,5 @@
 [
   {
-    "id": "er-overview",
-    "kind": "ER / Crow\u2019s Foot notation",
-    "title": "Relational overview \u2014 Crow\u2019s Foot ER",
-    "subtitle": "All 12 tables and all 16 foreign keys, with identity fields only.",
-    "source": "er-overview.mmd",
-    "code": "erDiagram\n    direction LR\n    users {\n        INT id PK \"NOT NULL\"\n    }\n    recruiter_profiles {\n        INT id PK \"NOT NULL\"\n        INT user_id FK, UK \"NOT NULL\"\n    }\n    students {\n        INT id PK \"NOT NULL\"\n        INT user_id FK, UK \"NOT NULL\"\n    }\n    documents {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n    }\n    skills {\n        INT id PK \"NOT NULL\"\n    }\n    student_skills {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n        INT skill_id FK \"NOT NULL\"\n    }\n    internships {\n        INT id PK \"NOT NULL\"\n        INT recruiter_id FK \"NULL allowed\"\n    }\n    applications {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n        INT internship_id FK \"NOT NULL\"\n    }\n    interviews {\n        INT id PK \"NOT NULL\"\n        INT recruiter_id FK \"NOT NULL\"\n        INT application_id FK \"NOT NULL\"\n        INT internship_id FK \"NULL allowed\"\n    }\n    notifications {\n        INT id PK \"NOT NULL\"\n        INT user_id FK \"NOT NULL\"\n    }\n    saved_internships {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n        INT internship_id FK \"NOT NULL\"\n    }\n    messages {\n        INT id PK \"NOT NULL\"\n        INT sender_id FK \"NOT NULL\"\n        INT receiver_id FK \"NOT NULL\"\n    }\n    users ||..o| recruiter_profiles : \"user_id\"\n    users ||..o| students : \"user_id\"\n    students ||..o{ documents : \"student_id\"\n    students ||..o{ student_skills : \"student_id\"\n    skills ||..o{ student_skills : \"skill_id\"\n    recruiter_profiles |o..o{ internships : \"recruiter_id\"\n    students ||..o{ applications : \"student_id\"\n    internships ||..o{ applications : \"internship_id\"\n    recruiter_profiles ||..o{ interviews : \"recruiter_id\"\n    applications ||..o{ interviews : \"application_id\"\n    internships |o..o{ interviews : \"internship_id\"\n    users ||..o{ notifications : \"user_id\"\n    students ||..o{ saved_internships : \"student_id\"\n    internships ||..o{ saved_internships : \"internship_id\"\n    users ||..o{ messages : \"sender_id\"\n    users ||..o{ messages : \"receiver_id\"",
-    "sources": [
-      "backend/app/db/models.py"
-    ],
-    "notes": [
-      "Use the Domain selector to view one area at a time. Reference labels repeat an existing entity; all relationships appear once across the three views.",
-      "Notation used: Crow\u2019s Foot ER. Table rectangles contain attributes; endpoint markers express cardinalities.",
-      "Crow's-foot markers show cardinalities at both ends. Dashed links are non-identifying: every child table has its own surrogate primary key.",
-      "A user may have zero or one student profile and zero or one recruiter profile. Role exclusivity is application logic, not a database inheritance relationship.",
-      "The two messages-to-users links are distinct: sender_id and receiver_id."
-    ],
-    "domains": [
-      {
-        "id": 0,
-        "title": "Identity & communication",
-        "x": 0,
-        "y": 0,
-        "width": 2500,
-        "height": 1030
-      },
-      {
-        "id": 1,
-        "title": "Student data",
-        "x": 0,
-        "y": 1125,
-        "width": 1800,
-        "height": 884
-      },
-      {
-        "id": 2,
-        "title": "Recruitment",
-        "x": 0,
-        "y": 2104,
-        "width": 2700,
-        "height": 1770
-      }
-    ]
-  },
-  {
     "id": "er-full",
     "kind": "ER / Crow\u2019s Foot notation",
     "title": "Full physical schema \u2014 Crow\u2019s Foot ER",
@@ -54,39 +10,14 @@
       "backend/app/db/models.py"
     ],
     "notes": [
-      "Use the Domain selector to view one area at a time. Reference labels repeat an existing entity; all relationships appear once across the three views.",
+      "Each entity appears once in this connected diagram.",
       "Notation used: Crow\u2019s Foot ER. Table rectangles contain attributes; endpoint markers express cardinalities.",
       "NULL labels follow the ORM model literally. A default value does not imply NOT NULL.",
       "Only recruiter_id on internships and internship_id on interviews are nullable foreign keys.",
       "student_skills, applications and saved_internships have surrogate IDs but no composite pair-uniqueness constraints.",
       "documents belongs to students; there is no documents-to-applications foreign key. Application resume content is stored separately in applications.resume_url."
     ],
-    "domains": [
-      {
-        "id": 0,
-        "title": "Identity & communication",
-        "x": 0,
-        "y": 0,
-        "width": 2500,
-        "height": 1304
-      },
-      {
-        "id": 1,
-        "title": "Student data",
-        "x": 0,
-        "y": 1399,
-        "width": 1800,
-        "height": 1136
-      },
-      {
-        "id": 2,
-        "title": "Recruitment",
-        "x": 0,
-        "y": 2630,
-        "width": 2700,
-        "height": 2162
-      }
-    ]
+    "domains": []
   },
   {
     "id": "er-chen",
@@ -99,40 +30,15 @@
       "backend/app/db/models.py"
     ],
     "notes": [
-      "Use the Domain selector to view one area at a time. Reference labels repeat an existing entity; all relationships appear once across the three views.",
+      "Each entity appears once in this connected diagram.",
       "Chen shapes: rectangle = entity, diamond = relationship, oval = attribute. Underlined id is a primary key.",
       "This view uses the (min,max) participation variant: read a pair beside an entity as how many relationship instances that entity can participate in. (0,N) means optional many; (1,1) means exactly one; (0,1) means optional one.",
       "Example: STUDENTS (0,N) \u2014 Submits \u2014 (1,1) APPLICATIONS. A student can submit many applications; each application belongs to exactly one student. These same-side pairs differ from where Crow\u2019s Foot endpoint markers are read.",
       "Only selected non-FK attributes are shown. Foreign keys are expressed as relationships; the full Crow\u2019s Foot view retains every mapped field.",
-      "All mapped entities have their own primary key, so no weak entity, identifying diamond, derived attribute or multivalued attribute is invented. Reference labels repeat the same entity across focused views.",
+      "All mapped entities have their own primary key, so no weak entity, identifying diamond, derived attribute or multivalued attribute is invented. Each entity appears once in the connected view.",
       "Notation references: Emory CS457 ER diagrams and University of Pittsburgh ER model notes (min,max participation)."
     ],
-    "domains": [
-      {
-        "id": 0,
-        "title": "Identity & communication",
-        "x": 0,
-        "y": 0,
-        "width": 3560,
-        "height": 1170
-      },
-      {
-        "id": 1,
-        "title": "Student data",
-        "x": 0,
-        "y": 1265,
-        "width": 2500,
-        "height": 1060
-      },
-      {
-        "id": 2,
-        "title": "Recruitment",
-        "x": 0,
-        "y": 2420,
-        "width": 3700,
-        "height": 2260
-      }
-    ]
+    "domains": []
   },
   {
     "id": "uml-class",
@@ -145,116 +51,11 @@
       "backend/app/db/models.py"
     ],
     "notes": [
-      "Use the Domain selector to view one area at a time. Reference labels repeat an existing entity; all relationships appear once across the three views.",
+      "Each entity appears once in this connected diagram.",
       "Solid lines are UML associations. No inheritance or composition is claimed.",
       "Selected attributes are shown for readability. Endpoint functions are not invented as entity methods.",
       "Student and RecruiterProfile associate with User. They do not inherit from User in the implementation."
     ],
-    "domains": [
-      {
-        "id": 0,
-        "title": "Identity & communication",
-        "x": 0,
-        "y": 0,
-        "width": 2500,
-        "height": 1066
-      },
-      {
-        "id": 1,
-        "title": "Student data",
-        "x": 0,
-        "y": 1161,
-        "width": 1800,
-        "height": 956
-      },
-      {
-        "id": 2,
-        "title": "Recruitment",
-        "x": 0,
-        "y": 2212,
-        "width": 2700,
-        "height": 1806
-      }
-    ]
-  },
-  {
-    "id": "uml-use-case",
-    "kind": "UML use case",
-    "title": "Actors and system responsibilities",
-    "subtitle": "Student, recruiter and administrator goals inside the HireHub system boundary.",
-    "source": "uml-use-case.json",
-    "code": null,
-    "sources": [
-      "backend/app/routers/auth.py",
-      "backend/app/routers/students.py",
-      "backend/app/routers/internships.py",
-      "backend/app/routers/applications.py",
-      "backend/app/routers/recruiter.py",
-      "backend/app/routers/admin.py",
-      "backend/app/routers/messages.py",
-      "backend/app/routers/notifications.py"
-    ],
-    "notes": [
-      "The three role views are projections of the same HireHub system, not separate systems.",
-      "Actors remain outside the system boundary. Ellipses represent user goals; unarrowed solid lines show participation.",
-      "Authenticated access is a precondition for protected goals, not an include arrow to a login screen.",
-      "Messaging requires an existing application connection. Shared goal names appear for each participating role to keep the view readable.",
-      "Admin self-registration, email delivery, a calendar grid and machine-learned matching are not shown as implemented capabilities."
-    ]
-  },
-  {
-    "id": "uml-sequence-apply",
-    "kind": "UML sequence",
-    "title": "Submit an application",
-    "subtitle": "Internal application request, optional resume, rejection paths and both commits.",
-    "source": "uml-sequence-apply.mmd",
-    "code": "sequenceDiagram\n    autonumber\n    actor S as Student\n    participant UI as React student UI\n    participant API as FastAPI applications route\n    participant DB as MySQL via SQLAlchemy\n    S->>UI: Submit application with optional resume\n    UI->>API: POST /api/applications (bearer token, multipart)\n    API->>DB: Load account by token subject\n    DB-->>API: Account identity\n    API->>API: Check active-account flag\n    API->>DB: Find student, internship, existing application\n    DB-->>API: Related records and duplicate result\n    alt Missing profile or internship\n        API-->>UI: 404 response\n    else Application already exists\n        API-->>UI: 400 response\n    else New application\n        opt Resume supplied\n            API->>API: Read resume bytes\n            break Abort request if size exceeds 8 MiB\n                API-->>UI: 413 response before writes\n            end\n            opt Non-empty file\n                API->>API: Encode data URI and queue Document\n            end\n        end\n        API->>DB: INSERT Application (+ optional Document), COMMIT 1\n        DB-->>API: Application ID, refreshed record\n        API->>DB: INSERT student alert (+ recruiter alert if linked), COMMIT 2\n        DB-->>API: Alerts persisted\n        API-->>UI: Application response with related internship\n        UI-->>S: Confirmation, refresh listing/dashboard data\n    end\n    Note over API,DB: Application and alerts<br/>use separate commits.<br/>COMMIT 1 survives a later<br/>alert failure.<br/>Duplicate checks are not<br/>a UNIQUE constraint.\n",
-    "sources": [
-      "frontend/src/components/Student/StudentApp.tsx",
-      "frontend/src/services/api.ts",
-      "backend/app/routers/auth.py",
-      "backend/app/routers/applications.py"
-    ],
-    "notes": [
-      "Solid arrows are requests/calls; dashed arrows are replies. opt and alt frames show conditional behavior.",
-      "Authentication/token rejection and database exceptions can terminate processing; the diagram details business validation branches after successful authentication.",
-      "COMMIT 1 saves the application and optional document. COMMIT 2 saves alerts. These boundaries intentionally match the current code."
-    ]
-  },
-  {
-    "id": "uml-sequence-interview",
-    "kind": "UML sequence",
-    "title": "Schedule an interview",
-    "subtitle": "Recruiter scheduling with the current authorization and transaction behavior.",
-    "source": "uml-sequence-interview.mmd",
-    "code": "sequenceDiagram\n    autonumber\n    actor R as Recruiter\n    participant UI as ApplicantsView\n    participant API as FastAPI recruiter route\n    participant DB as MySQL via SQLAlchemy\n    R->>UI: Select candidate, enter interview details\n    UI->>API: POST /api/recruiter/interviews\n    API->>DB: Load active account and recruiter profile\n    DB-->>API: Recruiter identity\n    Note over API,DB: Recruiter role is checked.<br/>Candidate ownership<br/>is not checked here.\n    API->>DB: INSERT Interview, COMMIT 1, refresh\n    DB-->>API: Saved interview\n    API->>DB: Find Application by submitted application_id\n    DB-->>API: Application record\n    opt Referenced application found\n        API->>API: Set status to Interview Scheduled\n        API->>API: Queue student notification if student is linked\n        API->>DB: UPDATE Application (+ notification), COMMIT 2\n        DB-->>API: Changes persisted\n    end\n    API-->>UI: Interview response with display names\n    UI->>API: Reload recruiter workspace datasets\n    API-->>UI: Updated applicants, interviews and totals\n    UI-->>R: Updated applicant list and interview schedule\n    Note over API,DB: Two separate commits.<br/>Foreign keys validate IDs,<br/>not recruiter ownership.\n",
-    "sources": [
-      "frontend/src/components/Recruiter/ApplicantsView.tsx",
-      "frontend/src/components/Recruiter/RecruiterApp.tsx",
-      "backend/app/routers/recruiter.py"
-    ],
-    "notes": [
-      "Successful authentication and database writes are assumed; failures return before later steps.",
-      "The recruiter role dependency is implemented, but schedule_interview does not verify ownership of the submitted application. The diagram records this gap rather than inventing a check.",
-      "Interview persistence precedes the application status/notification commit. The meeting link is supplied data; there is no video-conferencing integration."
-    ]
-  },
-  {
-    "id": "uml-activity",
-    "kind": "UML activity",
-    "title": "Application submission activity",
-    "subtitle": "Guarded branches for internal/external roles and the internal API processing path.",
-    "source": "uml-activity.json",
-    "code": null,
-    "sources": [
-      "frontend/src/components/Internships/InternshipDetailModal.tsx",
-      "backend/app/routers/applications.py"
-    ],
-    "notes": [
-      "Filled circle: initial node. Bullseye: activity final. Rounded rectangles: actions. Diamonds: decisions. Every outgoing decision edge has a guard.",
-      "External applications redirect to a supplied company link; this branch does not create a local application record.",
-      "The internal branch assumes a valid active-account token. A rejected request ends this attempt; a user may start another attempt.",
-      "Application validation does not currently enforce active-post or deadline eligibility; no such checks are invented here."
-    ]
+    "domains": []
   }
 ]

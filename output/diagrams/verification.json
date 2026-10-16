@@ -4,134 +4,48 @@
   "tables": 12,
   "columns": 114,
   "foreign_keys": 16,
-  "use_cases": 18,
   "packaged_pngs": [
     "er-chen.png",
     "er-full.png",
     "uml-class.png"
   ],
-  "diagram_count": 8,
+  "diagram_count": 3,
   "diagrams": [
-    {
-      "id": "er-overview",
-      "svg": "svg/er-overview.svg",
-      "png": null,
-      "source": "sources/er-overview.mmd",
-      "svg_sha256": "ca2a6942195322e97b7551854ee7b5aa5cb818d8607b0293b4a23e9eb7604462"
-    },
     {
       "id": "er-full",
       "svg": "svg/er-full.svg",
       "png": "png/er-full.png",
       "source": "sources/er-full.mmd",
-      "svg_sha256": "28190d8c7cd61a19fcefb438ca628d5e3d725a17a8f05d99905157e501fb3f97",
-      "png_sha256": "bf5bf2229d9d3ac1ba00cc1ecf7c9d6e6bcd5ca09703660293f959558106217f"
+      "svg_sha256": "2792da560d845c417fd9dd3ff9fcee382466b68124860d892ffa16ea8219ae6d",
+      "png_sha256": "69f21e03cd2f2d242d5bb1dcc6d5ec2feb190ddaf5a617df6e112edc468094bb"
     },
     {
       "id": "er-chen",
       "svg": "svg/er-chen.svg",
       "png": "png/er-chen.png",
       "source": "sources/er-chen.json",
-      "svg_sha256": "537d7810ec0caa3859c5cb623ac1a8a10982fc38e8cff2d7e0668529898734a8",
-      "png_sha256": "e428d2b93dbb5cf7c6dceadebf2c3f4c766c21b515170236f64988eec5acd386"
+      "svg_sha256": "b928069a2ec8ddefe917410d13b735744fb52028e5c3dde7f7790f0dcbaeab0d",
+      "png_sha256": "296cfbd6e9fcb7d4f44b984227670c3bb8f24fdd9b5d433f681346dbcd6ba3c8"
     },
     {
       "id": "uml-class",
       "svg": "svg/uml-class.svg",
       "png": "png/uml-class.png",
       "source": "sources/uml-class.mmd",
-      "svg_sha256": "c00d831369856b8f284a0632718b813e5270535b7c2a33489d1fbb62a3eb3fd8",
-      "png_sha256": "358aa05698aad47f42429cc2dd2f88789da1c201aa75298c02fd7ce204cc1045"
-    },
-    {
-      "id": "uml-use-case",
-      "svg": "svg/uml-use-case.svg",
-      "png": null,
-      "source": "sources/uml-use-case.json",
-      "svg_sha256": "deaa8f137f44ba3d54629af7f4a2ba6afbaf23448367dea4e43cd8f21a7207cd"
-    },
-    {
-      "id": "uml-sequence-apply",
-      "svg": "svg/uml-sequence-apply.svg",
-      "png": null,
-      "source": "sources/uml-sequence-apply.mmd",
-      "svg_sha256": "5c3023bccb997d3f113f8b7272c0ec6c9854c42821f02b87213c8fe6d842add3"
-    },
-    {
-      "id": "uml-sequence-interview",
-      "svg": "svg/uml-sequence-interview.svg",
-      "png": null,
-      "source": "sources/uml-sequence-interview.mmd",
-      "svg_sha256": "5c6176999f11e89c6ffa1c04a2deec9611981e9a23898bcf8226f38a5b4975a1"
-    },
-    {
-      "id": "uml-activity",
-      "svg": "svg/uml-activity.svg",
-      "png": null,
-      "source": "sources/uml-activity.json",
-      "svg_sha256": "7fea2146d3382946c84e4599a3909168efa9dac438c3894b151275aefb5a452c"
+      "svg_sha256": "e53b445dca7ffcbe4e4ef85439ac25a905054a33e5910cdbb739feebb1a992fe",
+      "png_sha256": "3be8c538ae1991d05456c047b7e435c980bc3c651d8d0042ff47c3e8f05a14cd"
     }
   ],
   "implementation_hashes": [
     {
       "source": "backend/app/db/models.py",
       "sha256": "31aea1ccb0541eb28fb394ca6d7227dec430cafe64ac47d35540f986a9a4eba5"
-    },
-    {
-      "source": "backend/app/routers/admin.py",
-      "sha256": "f8cead9ba5271b940da548958d5b71879001fdb042afd7959acfc4b5a63ff5f4"
-    },
-    {
-      "source": "backend/app/routers/applications.py",
-      "sha256": "d6860365eece116c0b4fda1e3e3c3becbe29cb6d139d15a19a18f3a18f2bf501"
-    },
-    {
-      "source": "backend/app/routers/auth.py",
-      "sha256": "4dcce0956e6ba0931763f6628f68fee1176090e21c3507de44096663f6bc968b"
-    },
-    {
-      "source": "backend/app/routers/internships.py",
-      "sha256": "8505aa6be8dff407d7f79e566561bbe1335967cd7cccb16e6e70b41e4583150e"
-    },
-    {
-      "source": "backend/app/routers/messages.py",
-      "sha256": "f919ca0d8b74dfed7f1fa2732d74fdedf3306da1d1910b4d26eaf7968c064626"
-    },
-    {
-      "source": "backend/app/routers/notifications.py",
-      "sha256": "c319251cb37380476b2ce77a7a81aed458ca5eeb0845f98bcfea2e26eb78d07d"
-    },
-    {
-      "source": "backend/app/routers/recruiter.py",
-      "sha256": "8d78f5d04bb8dd8857576b652744541d2f841bb23fc61df78df77cf7ce80d8e4"
-    },
-    {
-      "source": "backend/app/routers/students.py",
-      "sha256": "e88831aadaea06178f1e2d945bf01d7eee709a6f397a9cc12cbaeddc6e9d5a48"
-    },
-    {
-      "source": "frontend/src/components/Internships/InternshipDetailModal.tsx",
-      "sha256": "ce17509c96e6ac4d824f0e49ccb9ba7466050b76392381c7d18cca2ca42a6d6a"
-    },
-    {
-      "source": "frontend/src/components/Recruiter/ApplicantsView.tsx",
-      "sha256": "f5bbfb281fad0b77cde5fa410122f4e64bb0ccc091847f240160e52aefad3a41"
-    },
-    {
-      "source": "frontend/src/components/Recruiter/RecruiterApp.tsx",
-      "sha256": "6c8907972c760a518be0ee0502ccc5448ec17ffbe63b99eddcfe94649831a724"
-    },
-    {
-      "source": "frontend/src/components/Student/StudentApp.tsx",
-      "sha256": "d4e6cf85a580f0d3340f7facc6a1d2627dcd1450e76d7e69d197cac08a41a863"
-    },
-    {
-      "source": "frontend/src/services/api.ts",
-      "sha256": "4a08900fdac511438129b5b9bc3696ce6c1d30d660fc11d76dfbea75cdee37be"
     }
   ],
   "checks": [
     "exactly two ER PNGs and one UML PNG packaged",
+    "single connected graph with no repeated entity cards",
+    "no connector crossings or shared connector segments",
     "all mapped tables and fields",
     "declared nullability, types, PK, UK, index and delete rules",
     "all 16 ER links and their endpoint multiplicities",
@@ -143,431 +57,84 @@
     "valid text-only SVG exports",
     "12 principal entities and 16 exact rendered relations per structural view",
     "no overlapping structural cards or connectors through cards",
-    "12 correctly bounded domain SVGs",
+    "three connected final diagrams with each of 12 entities appearing once",
     "Chen entity rectangles, 16 relationship diamonds and underlined keys",
     "same-side Chen min/max participation against ORM nullability and uniqueness"
   ],
   "browser_checks": {
-    "checks": [
-      {
-        "id": "er-overview",
-        "w": 2700,
-        "h": 3874,
-        "texts": 179,
-        "zoomed": "125%",
-        "svgDownload": true,
-        "sourceDownload": true
-      },
+    "results": [
       {
         "id": "er-full",
-        "w": 2700,
-        "h": 4792,
-        "texts": 523,
-        "zoomed": "125%",
-        "svgDownload": true,
-        "sourceDownload": true
+        "width": 3350,
+        "height": 2796,
+        "entities": 12,
+        "relations": 16,
+        "referenceCards": 0,
+        "issues": []
       },
       {
         "id": "er-chen",
-        "w": 3700,
-        "h": 4680,
-        "texts": 118,
-        "zoomed": "125%",
-        "svgDownload": true,
-        "sourceDownload": true
+        "width": 3170,
+        "height": 2155,
+        "entities": 12,
+        "relations": 16,
+        "referenceCards": 0,
+        "issues": []
       },
       {
         "id": "uml-class",
-        "w": 2700,
-        "h": 4018,
-        "texts": 126,
-        "zoomed": "125%",
-        "svgDownload": true,
-        "sourceDownload": true
-      },
-      {
-        "id": "uml-use-case",
-        "w": 2520,
-        "h": 1050,
-        "texts": 28,
-        "zoomed": "125%",
-        "svgDownload": true,
-        "sourceDownload": true
-      },
-      {
-        "id": "uml-sequence-apply",
-        "w": 1442,
-        "h": 1550,
-        "texts": 57,
-        "zoomed": "125%",
-        "svgDownload": true,
-        "sourceDownload": true
-      },
-      {
-        "id": "uml-sequence-interview",
-        "w": 1440,
-        "h": 1189,
-        "texts": 45,
-        "zoomed": "125%",
-        "svgDownload": true,
-        "sourceDownload": true
-      },
-      {
-        "id": "uml-activity",
-        "w": 2040,
-        "h": 1950,
-        "texts": 30,
-        "zoomed": "125%",
-        "svgDownload": true,
-        "sourceDownload": true
-      },
-      {
-        "pngDownload": "uml-sequence-apply.png"
+        "width": 2710,
+        "height": 1772,
+        "entities": 12,
+        "relations": 16,
+        "referenceCards": 0,
+        "issues": []
       }
     ],
     "consoleErrors": [],
-    "networkRequests": []
+    "exports": [
+      "SVG",
+      "PNG"
+    ],
+    "viewerFit": true
   },
-  "export_checks": [
-    {
-      "id": "er-full",
-      "pngExportBytes": 875247,
-      "width": 5000,
-      "height": 2608
-    },
-    {
-      "id": "uml-use-case",
-      "pngExportBytes": 734934,
-      "width": 5040,
-      "height": 2100
-    },
-    {
-      "id": "uml-class",
-      "pngExportBytes": 415764,
-      "width": 5000,
-      "height": 2132
-    },
-    {
-      "id": "uml-activity",
-      "pngExportBytes": 681574,
-      "width": 4080,
-      "height": 3900
-    },
-    {
-      "id": "uml-sequence-apply",
-      "dashed": true,
-      "notes": [
-        {
-          "x": 790,
-          "y": 1351,
-          "w": 542,
-          "h": 139
-        }
-      ],
-      "texts": [
-        {
-          "text": "Application and alerts",
-          "x": 984.484375,
-          "y": 1366.140625,
-          "w": 153.0078125,
-          "h": 17.1796875
-        },
-        {
-          "text": "use separate commits.",
-          "x": 980.5234375,
-          "y": 1383.140625,
-          "w": 160.953125,
-          "h": 17.1796875
-        },
-        {
-          "text": "COMMIT 1 survives a later",
-          "x": 966.015625,
-          "y": 1400.140625,
-          "w": 190.1875,
-          "h": 17.015625
-        },
-        {
-          "text": "alert failure.",
-          "x": 1019.203125,
-          "y": 1417.140625,
-          "w": 83.59375,
-          "h": 17.015625
-        },
-        {
-          "text": "Duplicate checks are not",
-          "x": 973.3984375,
-          "y": 1434.140625,
-          "w": 175.203125,
-          "h": 17.1796875
-        },
-        {
-          "text": "a UNIQUE constraint.",
-          "x": 984.0859375,
-          "y": 1452.140625,
-          "w": 153.828125,
-          "h": 17.015625
-        }
-      ]
-    },
-    {
-      "id": "uml-sequence-interview",
-      "dashed": true,
-      "notes": [
-        {
-          "x": 790,
-          "y": 259,
-          "w": 540,
-          "h": 87
-        },
-        {
-          "x": 790,
-          "y": 1041,
-          "w": 540,
-          "h": 88
-        }
-      ],
-      "texts": [
-        {
-          "text": "Recruiter role is checked.",
-          "x": 969.7421875,
-          "y": 274.140625,
-          "w": 180.515625,
-          "h": 17.015625
-        },
-        {
-          "text": "Candidate ownership",
-          "x": 984.8359375,
-          "y": 291.140625,
-          "w": 150.328125,
-          "h": 17.1796875
-        },
-        {
-          "text": "is not checked here.",
-          "x": 988.3984375,
-          "y": 308.140625,
-          "w": 143.203125,
-          "h": 17.015625
-        },
-        {
-          "text": "Two separate commits.",
-          "x": 977.75,
-          "y": 1056.140625,
-          "w": 164.5,
-          "h": 17.1796875
-        },
-        {
-          "text": "Foreign keys validate IDs,",
-          "x": 967.9609375,
-          "y": 1073.140625,
-          "w": 184.078125,
-          "h": 17.3671875
-        },
-        {
-          "text": "not recruiter ownership.",
-          "x": 976.40625,
-          "y": 1091.140625,
-          "w": 167.1875,
-          "h": 17.1796875
-        }
-      ]
-    }
-  ],
-  "fit_checks": [
+  "visual_review": "Inspected each complete PNG after browser checks. Each final graph contains twelve unique entity cards and sixteen relationships; no stacked domain sections, repeated reference cards or header crossings. Full schema text requires zoom at normal screen sizes.",
+  "comparison_with_supplied_images": [
     {
       "id": "er-chen",
-      "fits": true,
-      "scrollTop": 0
+      "before_pixels": [
+        3700,
+        4680
+      ],
+      "after_pixels": [
+        3170,
+        2155
+      ],
+      "stacked_domain_sections_removed": true
     },
     {
       "id": "er-full",
-      "fits": true,
-      "scrollTop": 0
-    },
-    {
-      "id": "uml-use-case",
-      "fits": true,
-      "scrollTop": 0
-    },
-    {
-      "id": "uml-class",
-      "fits": true,
-      "scrollTop": 0
-    },
-    {
-      "id": "uml-sequence-apply",
-      "fits": true,
-      "scrollTop": 0
-    },
-    {
-      "id": "uml-sequence-interview",
-      "fits": true,
-      "scrollTop": 0
-    },
-    {
-      "id": "uml-activity",
-      "fits": true,
-      "scrollTop": 0
-    },
-    {
-      "id": "er-overview",
-      "fits": true,
-      "scrollTop": 0
-    }
-  ],
-  "focused_domain_checks": [
-    {
-      "id": "er-overview-domain-1",
-      "viewBox": "0 0 2500 1030",
-      "textWithinCards": true,
-      "svgExport": true,
-      "pngExport": true
-    },
-    {
-      "id": "er-overview-domain-2",
-      "viewBox": "0 1125 1800 884",
-      "textWithinCards": true,
-      "svgExport": true,
-      "pngExport": true
-    },
-    {
-      "id": "er-overview-domain-3",
-      "viewBox": "0 2104 2700 1770",
-      "textWithinCards": true,
-      "svgExport": true,
-      "pngExport": true
-    },
-    {
-      "id": "er-full-domain-1",
-      "viewBox": "0 0 2500 1304",
-      "textWithinCards": true,
-      "svgExport": true,
-      "pngExport": true
-    },
-    {
-      "id": "er-full-domain-2",
-      "viewBox": "0 1399 1800 1136",
-      "textWithinCards": true,
-      "svgExport": true,
-      "pngExport": true
-    },
-    {
-      "id": "er-full-domain-3",
-      "viewBox": "0 2630 2700 2162",
-      "textWithinCards": true,
-      "svgExport": true,
-      "pngExport": true
-    },
-    {
-      "id": "er-chen-domain-1",
-      "viewBox": "0 0 3560 1170",
-      "textWithinCards": true,
-      "svgExport": true,
-      "pngExport": true
-    },
-    {
-      "id": "er-chen-domain-2",
-      "viewBox": "0 1265 2500 1060",
-      "textWithinCards": true,
-      "svgExport": true,
-      "pngExport": true
-    },
-    {
-      "id": "er-chen-domain-3",
-      "viewBox": "0 2420 3700 2260",
-      "textWithinCards": true,
-      "svgExport": true,
-      "pngExport": true
-    },
-    {
-      "id": "uml-class-domain-1",
-      "viewBox": "0 0 2500 1066",
-      "textWithinCards": true,
-      "svgExport": true,
-      "pngExport": true
-    },
-    {
-      "id": "uml-class-domain-2",
-      "viewBox": "0 1161 1800 956",
-      "textWithinCards": true,
-      "svgExport": true,
-      "pngExport": true
-    },
-    {
-      "id": "uml-class-domain-3",
-      "viewBox": "0 2212 2700 1806",
-      "textWithinCards": true,
-      "svgExport": true,
-      "pngExport": true
-    }
-  ],
-  "relationship_label_checks": [
-    {
-      "id": "er-full",
-      "overlappingRelationshipTexts": []
-    },
-    {
-      "id": "er-overview",
-      "overlappingRelationshipTexts": []
+      "before_pixels": [
+        2700,
+        4792
+      ],
+      "after_pixels": [
+        3350,
+        2796
+      ],
+      "stacked_domain_sections_removed": true
     },
     {
       "id": "uml-class",
-      "overlappingRelationshipTexts": []
-    },
-    {
-      "id": "er-chen",
-      "overlappingRelationshipTexts": []
+      "before_pixels": [
+        2700,
+        4018
+      ],
+      "after_pixels": [
+        2710,
+        1772
+      ],
+      "stacked_domain_sections_removed": true
     }
-  ],
-  "visual_review": "Inspected Crow\u2019s Foot and Chen structural domain renders, use-case role projections, sequence lanes and gallery fit. Chen uses explicit same-side min/max participation and selected non-FK attribute ovals. Repositioned relationship labels to keep multiplicities visible. All diagrams remain deterministic SVG, with no generated artwork.",
-  "focused_export_hashes": [
-    {
-      "file": "svg/er-chen-domain-1.svg",
-      "sha256": "3b4967e921cf9287576842fc7b5c0d9e5dc8ef37096ffa136ad4fe0f99416288"
-    },
-    {
-      "file": "svg/er-chen-domain-2.svg",
-      "sha256": "404c0b80a609ead600d29499ea79dbbf64e9bdb9fbddbf6c3a83e6c9795512ef"
-    },
-    {
-      "file": "svg/er-chen-domain-3.svg",
-      "sha256": "4f2c83fafab098d57e9f7cec5b63dfe02a44320c4f3918a7e8cb8ed4f2be0483"
-    },
-    {
-      "file": "svg/er-full-domain-1.svg",
-      "sha256": "9e373a8fbeaf2ddc9bb40339b74dee563a3db7a4c1a71b42cbec4c8e2b3840c4"
-    },
-    {
-      "file": "svg/er-full-domain-2.svg",
-      "sha256": "2ad42acb4b70f4d01fa4921f10b6cab97f11c8827cb71c27f1c1902552ce234f"
-    },
-    {
-      "file": "svg/er-full-domain-3.svg",
-      "sha256": "af04e5b2adbb48ee449c45c471a6d76e195fe30caec741b0c81b4db1847c963d"
-    },
-    {
-      "file": "svg/er-overview-domain-1.svg",
-      "sha256": "257ba73dd5cae754799980b8d2f3122c4e725688360f294ef1a4c659a8c8fd1b"
-    },
-    {
-      "file": "svg/er-overview-domain-2.svg",
-      "sha256": "75f3634785c826ac690133d83c22c324e808cbdb8d2d56e43bea74d0ba41aa92"
-    },
-    {
-      "file": "svg/er-overview-domain-3.svg",
-      "sha256": "83de98c5e0f0b945c8d352478dc554835df8acefac4c29370e470abf4e8e76ad"
-    },
-    {
-      "file": "svg/uml-class-domain-1.svg",
-      "sha256": "f6c74bea0c9723e24e4974daa08e2c8986b54f456e072a166a8a10513cd5c7ab"
-    },
-    {
-      "file": "svg/uml-class-domain-2.svg",
-      "sha256": "05402e06a6647e10ec47bf0b91a1ec99d66596c4c9f60cdb94262b278813d02f"
-    },
-    {
-      "file": "svg/uml-class-domain-3.svg",
-      "sha256": "0f47071aec2bb0ff2bc153bee42a2c83766102438d3802985b55a4e22c0cc3e0"
-    }
-  ],
-  "png_selection": "Only the full Crow\u2019s Foot ER, Chen ER and UML class diagram are packaged as PNGs. Other viewer views support on-demand export."
+  ]
 }
