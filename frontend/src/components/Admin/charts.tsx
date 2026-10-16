@@ -1,9 +1,19 @@
+/*
+ * SVG chart components for already-aggregated admin data. Values arrive from
+ * backend count/group queries. The functions convert values to coordinates,
+ * arc angles or bar widths; they do not query MySQL or calculate hiring outcomes.
+ */
+
 import React from 'react';
 
 // ── Lightweight SVG charts for the admin console (no chart lib needed) ────────
 
+// Map day indexes to x-coordinates and counts to y-coordinates. SVG y
+// increases downward, so larger counts subtract more from the baseline.
 export const AreaChart: React.FC<{ data: { date: string; count: number }[]; height?: number }> = ({ data, height = 190 }) => {
   const w = 640, h = height, pad = { t: 14, r: 10, b: 26, l: 34 };
+  // Use at least 1 as the scale denominator so an empty/all-zero dataset
+  // does not divide by zero when computing chart positions.
   const max = Math.max(1, ...data.map((d) => d.count));
   const iw = w - pad.l - pad.r, ih = h - pad.t - pad.b;
   const x = (i: number) => pad.l + (data.length <= 1 ? iw / 2 : (i / (data.length - 1)) * iw);
@@ -43,6 +53,8 @@ export const AreaChart: React.FC<{ data: { date: string; count: number }[]; heig
   );
 };
 
+// Convert each count into a fraction of the total and then an arc angle.
+// The running accumulator positions segments after the previous segment.
 export const DonutChart: React.FC<{ data: { label: string; value: number; color: string }[]; centerLabel: string }> = ({ data, centerLabel }) => {  const total = data.reduce((s, d) => s + d.value, 0) || 1;
   const r = 62, cx = 80, cy = 80, sw = 22;
   let acc = 0;
@@ -85,6 +97,7 @@ export const DonutChart: React.FC<{ data: { label: string; value: number; color:
   );
 };
 
+// Scale each bar against the largest value in the supplied dataset.
 export const BarList: React.FC<{ data: { label: string; value: number; color?: string }[]; unit?: string }> = ({ data, unit = '' }) => {
   const max = Math.max(1, ...data.map((d) => d.value));
   const palette = ['#4f7cff', '#8b5cf6', '#06b6d4', '#f59e0b', '#ec4899'];
@@ -108,6 +121,8 @@ export const BarList: React.FC<{ data: { label: string; value: number; color?: s
 
 /* Daily-count bars — clearer than an area line when the data is sparse
    (most days are zero, a few spike). */
+// Give each day a horizontal slot and scale bar height by the maximum
+// count. Zero-count days use dots instead of a misleading positive bar.
 export const DailyBars: React.FC<{ data: { date: string; count: number }[]; height?: number }> = ({ data, height = 190 }) => {
   const w = 640, h = height, pad = { t: 18, r: 10, b: 26, l: 34 };
   const max = Math.max(1, ...data.map((d) => d.count));

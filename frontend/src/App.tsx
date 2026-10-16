@@ -1,3 +1,9 @@
+/*
+ * Top-level routing and providers. Authentication supplies the account role;
+ * the router chooses the student workspace, recruiter workspace or admin console.
+ * The signed-out landing page opens the shared registration/login modal.
+ */
+
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -13,6 +19,8 @@ import {
   Search, Bell, Bookmark, Building2, GraduationCap, CheckCircle2,
 } from 'lucide-react';
 
+// Wait for browser auth restoration, then choose the workspace from the
+// account role. Backend dependencies remain responsible for API authorization.
 const MainRouter: React.FC = () => {
   const { isAuthenticated, loading, user } = useAuth();
   const [authModal, setAuthModal] = useState<{ isOpen: boolean; tab: 'login' | 'register' }>({ isOpen: false, tab: 'login' });
@@ -70,6 +78,8 @@ const MainRouter: React.FC = () => {
 
 /* ---------------- Landing ---------------- */
 
+// Marketing copy and statistics below are hard-coded display content,
+// not measurements fetched from the database.
 const Landing: React.FC<{ onOpen: (tab: 'login' | 'register') => void }> = ({ onOpen }) => {
   const features = [
     { icon: Search, title: 'Smart discovery', desc: 'AI-matched internships tuned to your skills, mode, and stipend goals.' },
@@ -80,6 +90,8 @@ const Landing: React.FC<{ onOpen: (tab: 'login' | 'register') => void }> = ({ on
     { icon: TrendingUp, title: 'Career insights', desc: 'Stipend benchmarks and demand trends for every role.' },
   ];
 
+  // These marketing figures are static sample copy, not database statistics
+  // or an evaluated recommendation accuracy. Admin totals use API data instead.
   const stats = [
     { value: '12k+', label: 'Active internships' },
     { value: '850+', label: 'Hiring companies' },
@@ -241,6 +253,7 @@ const Landing: React.FC<{ onOpen: (tab: 'login' | 'register') => void }> = ({ on
   );
 };
 
+// Shared visual wordmark; compact mode hides the text beside the icon.
 const Brand: React.FC<{ compact?: boolean }> = ({ compact }) => (
   <div className="flex items-center gap-2.5 select-none">
     <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white shadow-sm" style={{ background: 'linear-gradient(135deg, var(--primary), var(--accent))' }}>
@@ -254,6 +267,8 @@ const Brand: React.FC<{ compact?: boolean }> = ({ compact }) => (
   </div>
 );
 
+// Provider nesting makes auth, theme and notifications available below
+// the browser router.
 const App: React.FC = () => (
   <Router>
     <AuthProvider>

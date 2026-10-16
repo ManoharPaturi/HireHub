@@ -1,3 +1,9 @@
+/*
+ * Student workspace shell. The selected tab chooses the dashboard, listings,
+ * bookmarks, tracker, messages or profile. A shared detail modal submits
+ * applications and triggers refetching of internship-related screens.
+ */
+
 import React, { useState } from 'react';
 import { Navbar } from '../Layout/Navbar';
 import { StudentDashboard } from '../Dashboard/StudentDashboard';
@@ -20,11 +26,14 @@ export const StudentApp: React.FC = () => {
 
   const handleViewDetails = (internship: Internship) => setSelectedInternship(internship);
 
+  // Wait for the multipart submission to succeed before changing refreshKey.
+  // A changed React key remounts listing/dashboard views and fetches fresh flags.
   const handleApplySubmit = async (internshipId: number, coverLetter: string, resume?: File | null) => {
     await applicationService.submitApplication(internshipId, coverLetter, resume ?? undefined);
     setRefreshKey((k) => k + 1);
   };
 
+  // The student workspace is already authenticated, so this callback is a no-op.
   const handleOpenAuth = () => {};
 
   return (

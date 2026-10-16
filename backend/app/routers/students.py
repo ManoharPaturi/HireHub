@@ -1,3 +1,7 @@
+# Student profiles, skills and documents. Profile queries start from the
+# authenticated account ID. Document metadata is returned in lists, while a
+# separate endpoint returns the full Base64 file payload when requested.
+
 import base64
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from sqlalchemy.orm import Session
@@ -13,6 +17,8 @@ from app.core.avatars import pick_avatar
 router = APIRouter(prefix="/api/students", tags=["Students"])
 
 
+# Assemble a single response from the student row, login email, linked
+# skills and document metadata. File contents are excluded from this view.
 @router.get("/profile", response_model=StudentProfileSchema)
 def get_student_profile(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     student = db.query(Student).filter(Student.user_id == current_user.id).first()
@@ -52,6 +58,8 @@ def get_student_profile(current_user: User = Depends(get_current_user), db: Sess
     )
 
 
+# Apply profile fields and, if skills were supplied, replace the student's
+# skill links using existing or newly inserted global Skill records.
 @router.put("/profile", response_model=StudentProfileSchema)
 def update_student_profile(
     payload: StudentProfileUpdateRequest,
@@ -76,6 +84,8 @@ def update_student_profile(
         student.avatar_url = pick_avatar(payload.gender, student.id)
     student.gender = new_gender
 
+    # An omitted skills field leaves the existing links intact. An empty list
+    # explicitly requests removal of all this student's skill links.
     if payload.skills is not None:
         db.query(StudentSkill).filter(StudentSkill.student_id == student.id).delete()
         db.commit()
@@ -97,6 +107,8 @@ def update_student_profile(
 MAX_FILE_BYTES = 8 * 1024 * 1024  # 8 MB cap
 
 
+# Read the uploaded bytes, enforce the size cap, encode a data URI and
+# store it with filename/type/size metadata under the student profile.
 @router.post("/documents", response_model=DocumentSchema)
 async def upload_document(
     document_type: str = Form("resume"),
@@ -135,6 +147,7 @@ async def upload_document(
     )
 
 
+# Return document metadata without transferring every stored file payload.
 @router.get("/documents", response_model=list[DocumentSchema])
 def list_documents(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     student = db.query(Student).filter(Student.user_id == current_user.id).first()
@@ -151,6 +164,8 @@ def list_documents(current_user: User = Depends(get_current_user), db: Session =
     ]
 
 
+# Check document ownership and return the stored data URI separately
+# from the metadata list for viewing or downloading.
 @router.get("/documents/{document_id}")
 def get_document_file(document_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     """Return the full data-URI payload so the client can view/download the file."""
@@ -165,6 +180,7 @@ def get_document_file(document_id: int, current_user: User = Depends(get_current
     return {"file_name": doc.file_name, "content_type": doc.content_type, "data": doc.file_data}
 
 
+# Delete only a document associated with the current student profile.
 @router.delete("/documents/{document_id}")
 def delete_document(document_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     student = db.query(Student).filter(Student.user_id == current_user.id).first()

@@ -1,3 +1,9 @@
+/*
+ * Shared sign-in and student/recruiter registration dialog. Role-specific
+ * form fields are collected locally and converted into the backend request
+ * shape. Authentication context stores the returned token and account identity.
+ */
+
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Briefcase, Eye, EyeOff, X, Check, Sparkles, GraduationCap, Building2 } from 'lucide-react';
@@ -30,8 +36,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, defaultTa
   const toggleSkill = (s: string) =>
     setSelectedSkills((prev) => (prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]));
 
+  // Switch form mode and discard the previous mode's error message.
   const switchMode = (m: AuthMode) => { setMode(m); setError(''); };
 
+  // Use login for existing accounts; otherwise build a student or recruiter
+  // registration payload. Convert graduation year from form text to a number.
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(''); setLoading(true);
@@ -242,6 +251,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, defaultTa
   );
 };
 
+// Shared labeled input used by registration fields.
 const Field: React.FC<{ label: string; type?: string; value: string; onChange: any; placeholder?: string; required?: boolean }> = ({ label, type = 'text', value, onChange, placeholder, required }) => (
   <div>
     <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-soft)' }}>{label}{required && <span style={{ color: 'var(--danger)' }}>*</span>}</label>
@@ -249,6 +259,7 @@ const Field: React.FC<{ label: string; type?: string; value: string; onChange: a
   </div>
 );
 
+// Shared labeled dropdown for predefined registration choices.
 const SelectField: React.FC<{ label: string; value: string; onChange: any; options: string[]; placeholder?: string }> = ({ label, value, onChange, options, placeholder }) => {
   const LABELS: Record<string, string> = { male: 'Male', female: 'Female', other: 'Other', prefer_not_to_say: 'Prefer not to say' };
   return (
@@ -262,6 +273,7 @@ const SelectField: React.FC<{ label: string; value: string; onChange: any; optio
   );
 };
 
+// Switch password visibility locally without changing the submitted value.
 const PasswordWithToggle: React.FC<{ label: string; value: string; onChange: any; show: boolean; setShow: (v: boolean) => void; placeholder?: string; required?: boolean }> = ({ label, value, onChange, show, setShow, placeholder, required }) => (
   <div>
     <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-soft)' }}>{label}{required && <span style={{ color: 'var(--danger)' }}>*</span>}</label>

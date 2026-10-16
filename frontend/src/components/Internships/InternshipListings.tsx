@@ -1,3 +1,9 @@
+/*
+ * Search screen. Filter state becomes API query parameters; the backend
+ * performs filtering/sorting/pagination. Grid/list is a display preference,
+ * while saving a posting writes a bookmark through the API.
+ */
+
 import React, { useEffect, useState } from 'react';
 import { Internship } from '../../types';
 import { internshipService } from '../../services/api';
@@ -36,6 +42,8 @@ export const InternshipListings: React.FC<InternshipListingsProps> = ({
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [page, setPage] = useState(1);
 
+  // Translate selected filters into API parameters. Undefined values omit
+  // unselected filters; the backend receives a page number and a 12-item limit.
   const fetchInternships = async () => {
     setLoading(true);
     try {
@@ -57,14 +65,18 @@ export const InternshipListings: React.FC<InternshipListingsProps> = ({
     }
   };
 
+  // Refetch whenever a query input changes. The dependencies below connect
+  // filter controls and page navigation to the next API request.
   useEffect(() => {
     fetchInternships();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, selectedLocation, selectedMode, minStipend, selectedSkills, sortBy, page]);
 
+  // Add or remove a skill from the selected filter values.
   const toggleSkillFilter = (skill: string) =>
     setSelectedSkills((prev) => (prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]));
 
+  // Persist the bookmark, then replace only the matching card's saved flag.
   const handleToggleSave = async (id: number) => {
     try {
       const res = await internshipService.toggleSave(id);
@@ -72,6 +84,7 @@ export const InternshipListings: React.FC<InternshipListingsProps> = ({
     } catch (e) { console.error(e); }
   };
 
+  // Reset all filters, sort order and pagination to their starting values.
   const resetFilters = () => {
     setSelectedLocation('All'); setSelectedMode('All'); setMinStipend(0);
     setSelectedSkills([]); setSearchQuery(''); setSortBy('newest'); setPage(1);

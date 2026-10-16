@@ -1,3 +1,9 @@
+/*
+ * Reusable posting summary used by discovery, recommendations and bookmarks.
+ * This component formats supplied data; parent callbacks handle loading,
+ * bookmark writes, detail selection and application actions.
+ */
+
 import React from 'react';
 import { Internship } from '../../types';
 import { MapPin, Calendar, Wallet, Bookmark, ExternalLink, ArrowUpRight, Clock } from 'lucide-react';

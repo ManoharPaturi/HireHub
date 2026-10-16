@@ -1,3 +1,9 @@
+/*
+ * Saved opportunities view. Bookmarks load from the server, so they survive
+ * navigation and reloads. Removing a bookmark drops its card from this screen
+ * without withdrawing any application.
+ */
+
 import React, { useEffect, useState } from 'react';
 import { Internship } from '../../types';
 import { internshipService } from '../../services/api';
@@ -13,6 +19,7 @@ export const SavedInternships: React.FC<SavedInternshipsProps> = ({ onViewDetail
   const [saved, setSaved] = useState<Internship[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Load the saved-posting records for the authenticated student.
   const fetch = async () => {
     setLoading(true);
     try { setSaved(await internshipService.getSaved()); }
@@ -22,6 +29,7 @@ export const SavedInternships: React.FC<SavedInternshipsProps> = ({ onViewDetail
 
   useEffect(() => { fetch(); }, []);
 
+  // An unsaved result removes the card immediately from this bookmark list.
   const handleToggleSave = async (id: number) => {
     try {
       const res = await internshipService.toggleSave(id);

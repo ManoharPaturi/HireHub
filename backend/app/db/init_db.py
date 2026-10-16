@@ -1,3 +1,7 @@
+# Demo-data initialization run during application startup. Checks for existing
+# accounts or table contents avoid recreating those samples on each restart.
+# Company names, people and recruitment records below are demonstration data.
+
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from app.db.database import engine, Base
@@ -9,6 +13,8 @@ from app.core.security import get_password_hash
 from app.core.avatars import pick_avatar
 
 
+# Create tables if absent, then insert missing demonstration accounts and data.
+# Each explicit commit makes that batch persistent before later seed steps run.
 def init_db(db: Session):
     # Create tables if missing (MySQL).
     Base.metadata.create_all(bind=engine)
@@ -188,6 +194,7 @@ def init_db(db: Session):
 
     # ── Seed Internships (each linked to its company's recruiter) ────────
     if db.query(Internship).count() == 0:
+        # Translate a demo company name into its recruiter profile foreign key.
         def rid(company):
             p = recruiter_profiles.get(company)
             return p.id if p else None

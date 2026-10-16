@@ -1,3 +1,9 @@
+/*
+ * Interview schedule display. Stored timestamps split interviews into upcoming
+ * and past lists. Meeting links open externally; the calendar-grid alternative
+ * is a placeholder rather than an implemented calendar.
+ */
+
 import React, { useState } from 'react';
 import { Interview, RecruiterApplication } from '../../types';
 import { Video, Clock, ExternalLink, Calendar, ListChecks } from 'lucide-react';
@@ -12,9 +18,12 @@ export const InterviewCalendar: React.FC<Props> = ({ interviews }) => {
   const [view, setView] = useState<'list' | 'calendar'>('list');
 
   const now = Date.now();
+  // Compare stored timestamps with the browser clock, then sort upcoming
+  // interviews soonest first and past interviews most recent first.
   const upcoming = interviews.filter((i) => new Date(i.scheduled_at).getTime() > now).sort((a, b) => new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime());
   const past = interviews.filter((i) => new Date(i.scheduled_at).getTime() <= now).sort((a, b) => new Date(b.scheduled_at).getTime() - new Date(a.scheduled_at).getTime());
 
+  // Format one interview's timestamp, duration, type and optional meeting link.
   const InterviewCard: React.FC<{ interview: Interview; dim?: boolean }> = ({ interview, dim }) => {
     const date = new Date(interview.scheduled_at);
     return (

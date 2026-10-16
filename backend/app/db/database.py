@@ -1,3 +1,7 @@
+# MySQL connection setup shared by every route. The engine manages reusable
+# connections; a session tracks pending reads/writes for one request. Routers
+# explicitly commit changes, and get_db closes the session when a request ends.
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from app.core.config import settings
@@ -5,6 +9,7 @@ from app.core.config import settings
 Base = declarative_base()
 
 
+# Combine settings into the SQLAlchemy connection string; PyMySQL is the driver.
 def get_mysql_url() -> str:
     """Build the MySQL connection URL from settings."""
     return (
@@ -13,8 +18,8 @@ def get_mysql_url() -> str:
     )
 
 
-# Single, authoritative engine — MySQL only. If MySQL is unreachable the app
-# fails fast at import time (desired: no silent fallback to a different store).
+# Configure the MySQL engine here. Connections are opened when first used;
+# startup table creation fails if MySQL is unavailable. No SQLite fallback exists.
 engine = create_engine(
     get_mysql_url(),
     pool_pre_ping=True,   # detect dropped connections before use
@@ -26,11 +31,15 @@ engine = create_engine(
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
+# Create missing tables from registered models. create_all does not migrate
+# columns in a table that already exists.
 def init_tables():
     """Create all tables on the MySQL database if they don't yet exist."""
     Base.metadata.create_all(bind=engine)
 
 
+# FastAPI dependency: open a session for the request, yield it to the route,
+# and always close it afterward. Closing does not commit pending changes.
 def get_db():
     db = SessionLocal()
     try:

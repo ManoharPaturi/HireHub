@@ -1,3 +1,8 @@
+# API data contracts. Pydantic models describe incoming request fields and
+# outgoing response fields; they are separate from the SQLAlchemy table models.
+# Optional fields may be omitted. from_attributes allows responses to be built
+# from ORM objects, including the related records requested by a response model.
+
 from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel, EmailStr
@@ -6,6 +11,7 @@ from pydantic import BaseModel, EmailStr
 # ─────────────────────────────────────────────
 # AUTH SCHEMAS
 # ─────────────────────────────────────────────
+# Registration fields shared across roles, with optional student/company details.
 class UserRegisterRequest(BaseModel):
     email: EmailStr
     password: str
@@ -31,14 +37,17 @@ class UserRegisterRequest(BaseModel):
     industry: Optional[str] = None
     company_website: Optional[str] = None
 
+# Login request fields; remember_me is accepted but does not change token duration.
 class UserLoginRequest(BaseModel):
     email: EmailStr
     password: str
     remember_me: Optional[bool] = False
 
+# Email-only request shape for the current reset placeholder endpoint.
 class ForgotPasswordRequest(BaseModel):
     email: EmailStr
 
+# Login response: bearer token plus the identity needed by the frontend.
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
@@ -53,6 +62,7 @@ class TokenResponse(BaseModel):
 # ─────────────────────────────────────────────
 # STUDENT SCHEMAS
 # ─────────────────────────────────────────────
+# Shared catalog entry returned without student-specific proficiency.
 class SkillSchema(BaseModel):
     id: int
     name: str
@@ -60,12 +70,14 @@ class SkillSchema(BaseModel):
     class Config:
         from_attributes = True
 
+# Student-skill link enriched with a display name and proficiency.
 class StudentSkillSchema(BaseModel):
     id: int
     skill_id: int
     skill_name: str
     proficiency_level: str
 
+# File metadata response. has_file signals stored bytes without exposing them.
 class DocumentSchema(BaseModel):
     id: int
     document_type: str
@@ -78,6 +90,7 @@ class DocumentSchema(BaseModel):
     class Config:
         from_attributes = True
 
+# Combined profile response with nested skill links and document metadata.
 class StudentProfileSchema(BaseModel):
     id: int
     user_id: int
@@ -101,6 +114,7 @@ class StudentProfileSchema(BaseModel):
     skills: List[StudentSkillSchema] = []
     documents: List[DocumentSchema] = []
 
+# Optional update fields; routes use exclude_unset to distinguish omissions.
 class StudentProfileUpdateRequest(BaseModel):
     full_name: Optional[str] = None
     phone: Optional[str] = None
@@ -123,6 +137,7 @@ class StudentProfileUpdateRequest(BaseModel):
 # ─────────────────────────────────────────────
 # RECRUITER SCHEMAS
 # ─────────────────────────────────────────────
+# Company/contact profile returned together with its account email.
 class RecruiterProfileSchema(BaseModel):
     id: int
     user_id: int
@@ -139,6 +154,7 @@ class RecruiterProfileSchema(BaseModel):
     linkedin_url: Optional[str] = None
     location: Optional[str] = None
 
+# Editable recruiter fields, separate from login credentials.
 class RecruiterProfileUpdateRequest(BaseModel):
     full_name: Optional[str] = None
     company_name: Optional[str] = None
@@ -152,6 +168,7 @@ class RecruiterProfileUpdateRequest(BaseModel):
     linkedin_url: Optional[str] = None
     location: Optional[str] = None
 
+# Counts displayed on the recruiter dashboard.
 class RecruiterStatsSchema(BaseModel):
     active_posts: int
     total_applications: int
@@ -163,6 +180,7 @@ class RecruiterStatsSchema(BaseModel):
 # ─────────────────────────────────────────────
 # INTERNSHIP SCHEMAS
 # ─────────────────────────────────────────────
+# Public posting fields plus per-student saved/applied flags and applicant count.
 class InternshipSchema(BaseModel):
     id: int
     title: str
@@ -192,6 +210,7 @@ class InternshipSchema(BaseModel):
     class Config:
         from_attributes = True
 
+# Posting data submitted by the recruiter create/update endpoints.
 class PostInternshipRequest(BaseModel):
     title: str
     company_name: str
@@ -210,6 +229,7 @@ class PostInternshipRequest(BaseModel):
     external_link: Optional[str] = None
     deadline: Optional[datetime] = None
 
+# Status and optional notes; status is a string rather than an enum constraint.
 class UpdateApplicationStatusRequest(BaseModel):
     status: str
     recruiter_notes: Optional[str] = None
@@ -218,11 +238,13 @@ class UpdateApplicationStatusRequest(BaseModel):
 # ─────────────────────────────────────────────
 # APPLICATION SCHEMAS
 # ─────────────────────────────────────────────
+# Legacy JSON application shape; the current submission route uses Form/File.
 class ApplicationSubmitRequest(BaseModel):
     internship_id: int
     cover_letter: Optional[str] = None
     resume_url: Optional[str] = None
 
+# Student tracker response, including the related internship as a nested object.
 class ApplicationResponseSchema(BaseModel):
     id: int
     student_id: int
@@ -236,6 +258,7 @@ class ApplicationResponseSchema(BaseModel):
     class Config:
         from_attributes = True
 
+# Candidate details assembled for recruiter review; resume content loads separately.
 class RecruiterApplicationSchema(BaseModel):
     id: int
     student_id: int
@@ -267,6 +290,7 @@ class RecruiterApplicationSchema(BaseModel):
 # ─────────────────────────────────────────────
 # INTERVIEW SCHEMAS
 # ─────────────────────────────────────────────
+# Interview inputs, including the application ID and meeting details.
 class ScheduleInterviewRequest(BaseModel):
     application_id: int
     internship_id: Optional[int] = None
@@ -276,6 +300,7 @@ class ScheduleInterviewRequest(BaseModel):
     meeting_link: Optional[str] = None
     notes: Optional[str] = None
 
+# Saved interview response enriched with candidate and internship display names.
 class InterviewSchema(BaseModel):
     id: int
     recruiter_id: int
@@ -297,6 +322,7 @@ class InterviewSchema(BaseModel):
 # ─────────────────────────────────────────────
 # NOTIFICATION / MESSAGE SCHEMAS
 # ─────────────────────────────────────────────
+# Stored alert returned to the notification bell/list.
 class NotificationSchema(BaseModel):
     id: int
     title: str
@@ -308,10 +334,12 @@ class NotificationSchema(BaseModel):
         from_attributes = True
 
 # ─────────────────────────────────────────────
+# New message input: recipient account ID and message text.
 class MessageCreateRequest(BaseModel):
     receiver_id: int
     content: str
 
+# Stored message output with participant IDs, read flag and timestamp.
 class MessageSchema(BaseModel):
     id: int
     sender_id: int
@@ -322,6 +350,7 @@ class MessageSchema(BaseModel):
     class Config:
         from_attributes = True
 
+# Conversation-list entry with partner details, latest preview and unread count.
 class MessageContactSchema(BaseModel):
     """The other party in a conversation. Works for both roles:
     student → recruiter of an applied-to internship; recruiter → student applicant."""

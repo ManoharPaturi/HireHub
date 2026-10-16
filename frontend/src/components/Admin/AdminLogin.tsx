@@ -1,3 +1,9 @@
+/*
+ * Dedicated admin sign-in page. It calls the admin authentication endpoint;
+ * normal student/recruiter credentials are rejected there. Successful context
+ * updates make the top-level router render the admin console.
+ */
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -10,6 +16,8 @@ export const AdminLogin: React.FC = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Call the dedicated admin login, display a backend error when rejected,
+  // and let the auth context/router handle a successful workspace change.
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);

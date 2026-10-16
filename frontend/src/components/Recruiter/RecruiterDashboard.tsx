@@ -1,3 +1,9 @@
+/*
+ * Recruiter overview built from parent-supplied API data. Summary cards show
+ * counts, while recent postings/applicants and status groups preview the
+ * workspace. Navigation callbacks open the corresponding management page.
+ */
+
 import React from 'react';
 import { RecruiterProfile, RecruiterStats, Internship, RecruiterApplication } from '../../types';
 import { TrendingUp, FileText, Star, CalendarCheck, ArrowRight, Plus } from 'lucide-react';
@@ -22,6 +28,8 @@ const STATUS_BADGE: Record<string, { bg: string; color: string }> = {
   Rejected: { bg: 'var(--danger-soft)', color: 'var(--danger)' },
 };
 
+// Use safe empty totals until data loads; recent lists and pipeline counts
+// are derived from the props, not a separate mock dataset.
 export const RecruiterDashboard: React.FC<Props> = ({ stats, internships, applicants, profile, onNavigate }) => {
   const s = stats || { active_posts: 0, total_applications: 0, shortlisted: 0, interviews_scheduled: 0, total_accepted: 0 };
   const recentApplicants = applicants.slice(0, 5);

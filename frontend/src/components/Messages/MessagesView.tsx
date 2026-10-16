@@ -1,3 +1,9 @@
+/*
+ * Shared student/recruiter conversation screen. Contacts come from application
+ * connections, not an unrestricted user directory. Opening a thread fetches
+ * messages and marks incoming messages read on the server. Polling fetches replies.
+ */
+
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { messageService } from '../../services/api';
 import { ChatMessage, MessageContact } from '../../types';
@@ -20,6 +26,7 @@ export const MessagesView: React.FC<{ initialUserId?: number | null }> = ({ init
   const [error, setError] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Fetch permitted partners with the latest preview and unread totals.
   const fetchContacts = useCallback(async () => {
     try {
       const list = await messageService.getContacts();
@@ -29,6 +36,8 @@ export const MessagesView: React.FC<{ initialUserId?: number | null }> = ({ init
     finally { setLoading(false); }
   }, []);
 
+  // Select the partner, load the conversation, and refresh contact badges
+  // because the server marks incoming messages read when the thread opens.
   const openThread = useCallback(async (contact: MessageContact) => {
     setSelected(contact);
     setLoadingThread(true);
@@ -41,6 +50,8 @@ export const MessagesView: React.FC<{ initialUserId?: number | null }> = ({ init
   }, [fetchContacts]);
 
   // Keep the open thread fresh so replies from the other side appear live.
+  // While a thread is open, fetch it every 10 seconds. The cleanup stops
+  // that thread's timer when the selected contact changes or the view unmounts.
   useEffect(() => {
     if (!selected) return;
     const t = setInterval(async () => {
@@ -69,6 +80,8 @@ export const MessagesView: React.FC<{ initialUserId?: number | null }> = ({ init
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [messages, loadingThread]);
 
+  // Reject empty text locally, send to the selected user, and append the
+  // saved server message. The server independently checks the connection.
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMsg.trim() || !selected || sending) return;

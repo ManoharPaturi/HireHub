@@ -1,3 +1,7 @@
+# Builds the earlier 24-slide PowerPoint presentation using python-pptx.
+# Coordinates, colors and helper functions below control native slide objects.
+# The eight-slide Beamer review is maintained separately in output/beamer.
+
 """Generate HireHub Internship Portal project presentation (PPTX).
 
 Run:  python make_presentation.py

@@ -1,3 +1,7 @@
+# Windows-only export helper for the earlier PowerPoint deck. It automates
+# an installed PowerPoint instance through COM, exports slide PNGs, and closes
+# the presentation and application even if exporting raises an error.
+
 """Render each slide of the PPTX to PNG via PowerPoint COM for visual QA."""
 import os
 import sys

@@ -1,3 +1,9 @@
+/*
+ * Settings-screen layout. Toggle values currently live only in component
+ * state and do not save through the API. Password, email and deactivation
+ * buttons are presentation controls without implemented handlers here.
+ */
+
 import React from 'react';
 import { Bell, Shield, AlertTriangle, Lock, Mail } from 'lucide-react';
 
@@ -44,6 +50,8 @@ export const RecruiterSettings: React.FC = () => {
   );
 };
 
+// This switch updates only local state. Reloading/remounting resets it
+// to defaultChecked because no preference API is connected.
 const Toggle: React.FC<{ label: string; desc: string; defaultChecked?: boolean }> = ({ label, desc, defaultChecked }) => {
   const [on, setOn] = React.useState(!!defaultChecked);
   return (

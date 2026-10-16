@@ -1,3 +1,7 @@
+# Student application workflow. An application connects one student to one
+# internship, stores its current selection status, and optionally holds a resume.
+# Routes use the authenticated student profile to scope reads and withdrawals.
+
 import base64
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
@@ -12,6 +16,9 @@ router = APIRouter(prefix="/api/applications", tags=["Applications"])
 MAX_FILE_BYTES = 8 * 1024 * 1024  # 8 MB
 
 
+# Read multipart form fields and an optional file. Find the student and
+# internship, reject an existing application, save the new record, then notify
+# the participants. Application and notification writes use separate commits.
 @router.post("", response_model=ApplicationResponseSchema)
 async def submit_application(
     internship_id: int = Form(...),
@@ -32,6 +39,9 @@ async def submit_application(
     if not internship:
         raise HTTPException(status_code=404, detail="Internship position not found")
 
+    # This check prevents a second application during ordinary requests.
+    # It is an API-level check, not a composite UNIQUE database constraint;
+    # simultaneous submissions can still race between this read and the insert.
     existing = db.query(Application).filter(
         Application.student_id == student.id,
         Application.internship_id == internship_id,
@@ -47,6 +57,8 @@ async def submit_application(
             raise HTTPException(status_code=413, detail="Resume file too large (8 MB max).")
         if raw:
             ct = resume.content_type or "application/octet-stream"
+            # Base64 converts bytes into text; the MIME prefix tells a browser how to
+            # interpret the payload. Encoding increases size and does not encrypt the file.
             encoded = base64.b64encode(raw).decode("ascii")
             resume_data_uri = f"data:{ct};base64,{encoded}"
             # Persist a copy on the student profile too.
@@ -65,6 +77,8 @@ async def submit_application(
     )
     db.add(new_app)
     db.commit()
+    # Refresh reads database-generated values such as the primary key back
+    # into this Python object after the application commit succeeds.
     db.refresh(new_app)
 
     db.add(Notification(
@@ -84,6 +98,8 @@ async def submit_application(
     return new_app
 
 
+# Return only this student's application records, newest first. The response
+# schema also includes each related internship for the tracker display.
 @router.get("", response_model=List[ApplicationResponseSchema])
 def list_student_applications(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     student = db.query(Student).filter(Student.user_id == current_user.id).first()
@@ -92,6 +108,8 @@ def list_student_applications(current_user: User = Depends(get_current_user), db
     return db.query(Application).filter(Application.student_id == student.id).order_by(Application.applied_at.desc()).all()
 
 
+# Match both application ID and student ID before deletion. Withdrawal
+# deletes the record; it does not create a separate Withdrawn status.
 @router.delete("/{application_id}")
 def withdraw_application(application_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     student = db.query(Student).filter(Student.user_id == current_user.id).first()

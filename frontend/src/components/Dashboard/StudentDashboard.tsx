@@ -1,3 +1,9 @@
+/*
+ * Student overview assembled from recommendations, applications and bookmarks.
+ * The cards summarize those responses, while pipeline rows visualize each
+ * application status. The displayed average stipend is for recommendations only.
+ */
+
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { internshipService, applicationService } from '../../services/api';
@@ -21,6 +27,8 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onNavigate, 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Load independent dashboard datasets together; Promise.all waits until
+    // all three API calls finish before updating the summary state.
     const load = async () => {
       setLoading(true);
       try {
@@ -36,6 +44,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onNavigate, 
     load();
   }, []);
 
+  // Use the server's saved result to update both the card flag and total.
   const handleToggleSave = async (id: number) => {
     try {
       const res = await internshipService.toggleSave(id);
@@ -150,6 +159,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onNavigate, 
 };
 
 const STAGES = ['Applied', 'Under Review', 'Shortlisted', 'Interview Scheduled', 'Accepted'];
+// Convert the stored status into a step index and highlight stages up to it.
 const PipelineRow: React.FC<{ app: Application }> = ({ app }) => {
   const currentStep = STAGES.indexOf(app.status) + 1;
   return (

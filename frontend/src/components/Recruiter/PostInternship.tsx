@@ -1,3 +1,9 @@
+/*
+ * Two-step posting form. Step one collects core role details and step two
+ * collects descriptive fields and skills. Submission converts form strings
+ * into API values and links the new posting to the signed-in recruiter.
+ */
+
 import React, { useState } from 'react';
 import { recruiterService } from '../../services/api';
 import { RecruiterProfile } from '../../types';
@@ -25,9 +31,12 @@ export const PostInternship: React.FC<Props> = ({ profile, onSuccess }) => {
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
 
+  // Keep one selected entry per skill in the form.
   const toggleSkill = (s: string) =>
     setSelectedSkills((prev) => (prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]));
 
+  // Convert stipend to a number, external status to a boolean, and skills
+  // to the comma-separated text expected by the current backend schema.
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(''); setLoading(true);
@@ -186,6 +195,7 @@ export const PostInternship: React.FC<Props> = ({ profile, onSuccess }) => {
   );
 };
 
+// Lay out a group of posting fields consistently.
 const FormRow: React.FC<{ label: string; children: React.ReactNode; required?: boolean }> = ({ label, children, required }) => (
   <div>
     <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-soft)' }}>{label}{required && <span style={{ color: 'var(--danger)' }}> *</span>}</label>

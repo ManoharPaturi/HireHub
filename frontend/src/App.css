@@ -1,3 +1,9 @@
+/*
+ * Additional app styles. main.tsx currently loads index.css rather than this
+ * file, so these rules take effect only if this stylesheet is imported.
+ * Changes here alone do not change the rendered App in the current entry flow.
+ */
+
 .counter {
   font-size: 16px;
   padding: 5px 10px;

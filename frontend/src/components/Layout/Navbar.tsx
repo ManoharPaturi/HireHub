@@ -1,3 +1,9 @@
+/*
+ * Student navigation, search, account menu and unread badges. Authentication,
+ * theme and notifications come from their shared contexts; the selected tab
+ * and search text are controlled by the parent StudentApp.
+ */
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -45,6 +51,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   useEffect(() => {
     if (!isAuthenticated) { setUnreadMessages(0); return; }
     let alive = true;
+    // Refresh the unread incoming-message count for the navigation badge.
     const load = async () => {
       try { const { count } = await messageService.getUnreadCount(); if (alive) setUnreadMessages(count); }
       catch { /* ignore */ }
@@ -56,6 +63,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   // Close popovers on outside click
   useEffect(() => {
+    // Close dropdowns when a click occurs outside their respective containers.
     const handler = (e: MouseEvent) => {
       if (notifRef.current && !notifRef.current.contains(e.target as Node)) setShowNotifications(false);
       if (profileRef.current && !profileRef.current.contains(e.target as Node)) setShowProfileMenu(false);
@@ -257,6 +265,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   );
 };
 
+// Reuse icon, label and callback rendering inside the account menu.
 const MenuItem: React.FC<{ icon: React.ElementType; label: string; onClick: () => void; danger?: boolean }> = ({ icon: Icon, label, onClick, danger }) => (
   <button
     onClick={onClick}

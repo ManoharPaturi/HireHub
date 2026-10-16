@@ -1,8 +1,16 @@
+/*
+ * Submitted applications view. Server statuses drive the badge and stage
+ * indicator. Withdrawal calls the delete endpoint and removes the successful
+ * result from local state; it is separate from removing a saved bookmark.
+ */
+
 import React, { useEffect, useState } from 'react';
 import { applicationService } from '../../services/api';
 import { Application } from '../../types';
 import { Bookmark, Trash2, Send, CheckCircle2, ChevronRight } from 'lucide-react';
 
+// The stepper shows five progressive stages; Rejected has its own badge
+// and is absent from this list, so it does not highlight a successful stage.
 const STAGES = ['Applied', 'Under Review', 'Shortlisted', 'Interview Scheduled', 'Accepted'] as const;
 const STAGE_LABELS = ['Submitted', 'Under Review', 'Shortlisted', 'Interview', 'Offer'];
 
@@ -19,6 +27,7 @@ export const ApplicationTracker: React.FC = () => {
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Load the student's submitted applications and nested internship details.
   const fetchApplications = async () => {
     setLoading(true);
     try { setApplications(await applicationService.getApplications()); }
@@ -28,6 +37,7 @@ export const ApplicationTracker: React.FC = () => {
 
   useEffect(() => { fetchApplications(); }, []);
 
+  // After confirmation, delete on the server before removing the local row.
   const handleWithdraw = async (id: number) => {
     if (window.confirm('Withdraw this application? This cannot be undone.')) {
       try { await applicationService.withdrawApplication(id); setApplications((prev) => prev.filter((a) => a.id !== id)); }

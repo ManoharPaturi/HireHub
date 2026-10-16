@@ -1,3 +1,7 @@
+# Administrative API with a separate login and an admin-role dependency.
+# Counts and grouped queries build dashboard summaries; management routes change
+# accounts and postings. Activity is assembled from current database records.
+
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -17,6 +21,7 @@ router = APIRouter(prefix="/api/admin", tags=["Admin"])
 
 # ── Auth ─────────────────────────────────────────────────────────────────────
 
+# Use the dedicated entry point to authenticate active admin accounts only.
 @router.post("/login", response_model=TokenResponse)
 def admin_login(payload: dict, db: Session = Depends(get_db)):
     """Dedicated admin login. Only role='admin' accounts may enter here —
@@ -38,6 +43,7 @@ def admin_login(payload: dict, db: Session = Depends(get_db)):
     )
 
 
+# Reuse token validation and then require the admin role for management APIs.
 def get_current_admin(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     if current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Administrator access required.")
@@ -46,6 +52,8 @@ def get_current_admin(current_user: User = Depends(get_current_user), db: Sessio
 
 # ── Overview / KPIs ──────────────────────────────────────────────────────────
 
+# COUNT measures record totals; AVG computes the active-post stipend mean.
+# Date filters separately count recent signups and applications.
 @router.get("/stats")
 def platform_stats(admin: User = Depends(get_current_admin), db: Session = Depends(get_db)):
     total_students = db.query(Student).count()
@@ -79,6 +87,8 @@ def platform_stats(admin: User = Depends(get_current_admin), db: Session = Depen
     }
 
 
+# Build chart-ready labels and values from database queries: daily counts,
+# status/mode distributions, and top universities, fields and companies.
 @router.get("/charts")
 def chart_data(admin: User = Depends(get_current_admin), db: Session = Depends(get_db)):
     """Aggregates for the overview charts, in the spirit of a traffic panel:
@@ -102,6 +112,8 @@ def chart_data(admin: User = Depends(get_current_admin), db: Session = Depends(g
                  for s, c in status_rows]
 
     # By work mode (of applied-to internships).
+    # A JOIN connects applications to their posting before grouping by mode.
+    # Counting application IDs measures applications per mode, not posting totals.
     mode_rows = (
         db.query(Internship.mode, func.count(Application.id))
         .join(Application, Application.internship_id == Internship.id)
@@ -147,6 +159,8 @@ def chart_data(admin: User = Depends(get_current_admin), db: Session = Depends(g
 
 # ── Users management ─────────────────────────────────────────────────────────
 
+# Load up to 200 non-admin accounts, enrich them from their profiles, and
+# apply name/email/company search in Python after the limited database query.
 @router.get("/users")
 def list_users(
     role: Optional[str] = None,
@@ -164,10 +178,12 @@ def list_users(
     if search:
         needle = search.strip().lower()
 
+        # Compare the search text against this account's combined identity fields.
         def matches(u: User, name: Optional[str], company: Optional[str]) -> bool:
             hay = " ".join(filter(None, [u.email, name, company])).lower()
             return needle in hay
     else:
+        # Compare the search text against this account's combined identity fields.
         def matches(u: User, name: Optional[str], company: Optional[str]) -> bool:
             return True
 
@@ -200,6 +216,8 @@ def list_users(
     return out
 
 
+# Enable or disable a non-admin account. Protected requests check is_active
+# again, so an existing token does not bypass account deactivation.
 @router.put("/users/{user_id}/toggle-active")
 def toggle_user(user_id: int, admin: User = Depends(get_current_admin), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == user_id, User.role != "admin").first()
@@ -210,6 +228,8 @@ def toggle_user(user_id: int, admin: User = Depends(get_current_admin), db: Sess
     return {"id": user.id, "is_active": user.is_active}
 
 
+# Delete the selected non-admin ORM object; related deletions follow
+# the model relationships and foreign-key constraints.
 @router.delete("/users/{user_id}")
 def delete_user(user_id: int, admin: User = Depends(get_current_admin), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == user_id, User.role != "admin").first()
@@ -222,6 +242,7 @@ def delete_user(user_id: int, admin: User = Depends(get_current_admin), db: Sess
 
 # ── Internships management ───────────────────────────────────────────────────
 
+# Expose posting metadata and per-post application totals for admin review.
 @router.get("/internships")
 def list_all_internships(admin: User = Depends(get_current_admin), db: Session = Depends(get_db)):
     internships = db.query(Internship).order_by(Internship.created_at.desc()).all()
@@ -239,6 +260,7 @@ def list_all_internships(admin: User = Depends(get_current_admin), db: Session =
     return out
 
 
+# Change the posting's active flag without removing its stored records.
 @router.put("/internships/{internship_id}/toggle")
 def toggle_internship(internship_id: int, admin: User = Depends(get_current_admin), db: Session = Depends(get_db)):
     i = db.query(Internship).filter(Internship.id == internship_id).first()
@@ -249,6 +271,7 @@ def toggle_internship(internship_id: int, admin: User = Depends(get_current_admi
     return {"id": i.id, "is_active": i.is_active}
 
 
+# Delete a posting selected by the administrator, including configured cascades.
 @router.delete("/internships/{internship_id}")
 def delete_internship(internship_id: int, admin: User = Depends(get_current_admin), db: Session = Depends(get_db)):
     i = db.query(Internship).filter(Internship.id == internship_id).first()
@@ -261,6 +284,7 @@ def delete_internship(internship_id: int, admin: User = Depends(get_current_admi
 
 # ── Applications feed ────────────────────────────────────────────────────────
 
+# Return a bounded recent application feed with related candidate/job names.
 @router.get("/applications")
 def list_all_applications(
     limit: int = 100,
@@ -287,6 +311,8 @@ def list_all_applications(
 
 # ── Activity feed ─────────────────────────────────────────────────────────────
 
+# Combine recent applications, postings, signups and interviews, sort them
+# by timestamp, and return a limited feed. This is not a separate audit-log table.
 @router.get("/activity")
 def recent_activity(limit: int = 40, admin: User = Depends(get_current_admin), db: Session = Depends(get_db)):
     """Merged, time-sorted feed of the latest platform events."""

@@ -1,3 +1,8 @@
+/*
+ * Recruiter/company profile editor. State holds editable form values; a
+ * successful update asks the parent workspace to reload the saved profile.
+ */
+
 import React, { useState } from 'react';
 import { RecruiterProfile } from '../../types';
 import { recruiterService } from '../../services/api';
@@ -26,6 +31,7 @@ export const RecruiterProfilePage: React.FC<Props> = ({ profile, onRefresh }) =>
 
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
+  // Save company/contact fields and request a workspace reload on success.
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -105,6 +111,7 @@ export const RecruiterProfilePage: React.FC<Props> = ({ profile, onRefresh }) =>
   );
 };
 
+// Shared controlled profile input with its label and editable value.
 const Field: React.FC<{ label: string; value: string; onChange: any; required?: boolean }> = ({ label, value, onChange, required }) => (
   <div>
     <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-soft)' }}>{label}{required && <span style={{ color: 'var(--danger)' }}> *</span>}</label>

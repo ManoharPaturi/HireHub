@@ -1,3 +1,9 @@
+/*
+ * Posting details and application dialog. Internal roles submit a cover
+ * letter and optional resume through the parent callback. External roles open
+ * a confirmation and then the company link without creating a local application.
+ */
+
 import React, { useState, useRef } from 'react';
 import { Internship } from '../../types';
 import {
@@ -35,11 +41,14 @@ export const InternshipDetailModal: React.FC<InternshipDetailModalProps> = ({
   const deadline = internship.deadline ? new Date(internship.deadline) : null;
   const daysLeft = deadline ? Math.max(0, Math.ceil((deadline.getTime() - Date.now()) / 86400000)) : null;
 
+  // External and internal applications follow different submission paths.
   const handleApplyClick = () => {
     if (internship.is_external) setShowExternalRedirectModal(true);
     else setShowApplyForm(true);
   };
 
+  // Submit the selected posting, cover letter and optional file. Success
+  // closes the dialog after a brief confirmation; the parent refreshes listings.
   const handleInternalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
@@ -233,6 +242,7 @@ export const InternshipDetailModal: React.FC<InternshipDetailModalProps> = ({
   );
 };
 
+// Reuse the same heading/body structure for each posting-detail section.
 const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <div>
     <h3 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--muted)' }}>{title}</h3>

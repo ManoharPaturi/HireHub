@@ -1,3 +1,9 @@
+/*
+ * Student profile editor and document list. Form state holds unsaved edits;
+ * saving sends the editable fields to FastAPI and reloads the saved profile.
+ * Document uploads use multipart requests and refresh metadata after success.
+ */
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { studentService } from '../../services/api';
@@ -9,6 +15,8 @@ import {
 
 export const ProfileView: React.FC = () => {
   const { user } = useAuth();
+  // Saved profile data and editable input state are separate: typing changes
+  // the form, while the server changes only after handleSaveProfile succeeds.
   const [profile, setProfile] = useState<StudentProfile | null>(null);
   const [editing, setEditing] = useState(false);
 
@@ -31,6 +39,7 @@ export const ProfileView: React.FC = () => {
   const [savedMsg, setSavedMsg] = useState('');
   const [loading, setLoading] = useState(true);
 
+  // Copy the saved API profile into both display data and editable form state.
   const refreshProfile = async () => {
     try {
       const data = await studentService.getProfile();
@@ -50,6 +59,7 @@ export const ProfileView: React.FC = () => {
 
   useEffect(() => { refreshProfile(); }, []);
 
+  // Send the current form values, reload the saved response, and leave edit mode.
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -66,6 +76,7 @@ export const ProfileView: React.FC = () => {
     finally { setSaving(false); }
   };
 
+  // Upload the file first, then fetch document metadata for the updated list.
   const handleUploadDoc = async (file: File) => {
     setUploading(true);
     try {
@@ -76,6 +87,7 @@ export const ProfileView: React.FC = () => {
     finally { setUploading(false); }
   };
 
+  // Require confirmation and server success before removing a document locally.
   const handleDeleteDoc = async (id: number) => {
     if (!window.confirm('Delete this document?')) return;
     try { await studentService.deleteDocument(id); setDocuments((prev) => prev.filter((d) => d.id !== id)); }
@@ -240,6 +252,7 @@ export const ProfileView: React.FC = () => {
   );
 };
 
+// Group related profile inputs under a shared heading.
 const FormSection: React.FC<{ title: string; icon: React.ElementType; children: React.ReactNode }> = ({ title, icon: Icon, children }) => (
   <div className="space-y-4">
     <h3 className="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 pb-2" style={{ color: 'var(--muted)', borderBottom: '1px solid var(--border)' }}>
@@ -249,6 +262,7 @@ const FormSection: React.FC<{ title: string; icon: React.ElementType; children: 
   </div>
 );
 
+// Render one controlled text input; editing determines whether it is disabled.
 const FormField: React.FC<{ label: string; value: string; onChange: any; editing: boolean; placeholder?: string }> = ({ label, value, onChange, editing, placeholder }) => (
   <div>
     <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-soft)' }}>{label}</label>

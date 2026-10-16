@@ -1,3 +1,9 @@
+/*
+ * Recruiter workspace shell. It loads company details and recruitment data,
+ * switches pages without separate page URLs, and refreshes applicants,
+ * interviews, notifications and unread-message counts every 15 seconds.
+ */
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { recruiterService, notificationService, messageService } from '../../services/api';
 import { RecruiterProfile, RecruiterStats, Internship, RecruiterApplication, Interview, NotificationItem } from '../../types';
@@ -46,6 +52,8 @@ export const RecruiterApp: React.FC = () => {
 
   useEffect(() => { loadAll(); }, []);
 
+  // Fetch the workspace datasets together, distribute them to page state,
+  // then refresh the smaller frequently changing dataset.
   const loadAll = async () => {
     setLoading(true);
     try {
@@ -62,6 +70,8 @@ export const RecruiterApp: React.FC = () => {
 
   // Light-weight poll so new applications / messages surface live (bell badge,
   // stats, applicants) without the recruiter reloading the page.
+  // Poll changing recruitment data and unread counts without replacing
+  // the company profile or posting list on every timer tick.
   const refreshLive = useCallback(async () => {
     try {
       const [notifs, s, apps, ivs, unread] = await Promise.all([
@@ -81,11 +91,14 @@ export const RecruiterApp: React.FC = () => {
     return () => { clearInterval(t); window.removeEventListener('focus', onFocus); };
   }, [refreshLive]);
 
+  // Optimistically mark one alert locally while its API request is sent.
   const markNotificationRead = async (id: number) => {
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)));
     try { await notificationService.markRead(id); } catch { /* optimistic */ }
   };
 
+  // Mark the displayed unread alerts locally, then persist each read flag.
+  // If a request fails, reload live data to reconcile with the server.
   const markAllNotificationsRead = async () => {
     const unreadIds = notifications.filter((n) => !n.is_read).map((n) => n.id);
     if (unreadIds.length === 0) return;
@@ -95,6 +108,8 @@ export const RecruiterApp: React.FC = () => {
   };
 
   // Jump into the chat with a specific candidate (from the Applicants page).
+  // Store the candidate's user ID and select Messages; that screen opens
+  // the matching contact when its list arrives.
   const openChatWith = (studentUserId: number) => {
     setMessageWith(studentUserId);
     setPage('messages');
@@ -225,6 +240,7 @@ export const RecruiterApp: React.FC = () => {
   );
 };
 
+// Render a navigation item with active state and optional unread badge.
 const NavButton: React.FC<{ item: { id: string; label: string; icon: React.ElementType }; active: boolean; collapsed: boolean; unread: number; onClick: () => void }> = ({ item, active, collapsed, unread, onClick }) => (
   <button onClick={onClick} title={collapsed ? item.label : undefined} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition relative"
     style={active ? { background: 'var(--primary-soft)', color: 'var(--primary)' } : { color: 'var(--muted)' }}
@@ -239,6 +255,7 @@ const NavButton: React.FC<{ item: { id: string; label: string; icon: React.Eleme
 );
 
 // Inline notifications page
+// Display alerts supplied by the shell; callbacks perform read-state writes.
 const NotificationsPage: React.FC<{
   notifications: NotificationItem[];
   onMarkRead: (id: number) => void;

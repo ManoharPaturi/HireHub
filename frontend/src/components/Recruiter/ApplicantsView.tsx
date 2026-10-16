@@ -1,3 +1,9 @@
+/*
+ * Candidate review screen with table and Kanban layouts over the same data.
+ * Recruiters can filter candidates, inspect profiles/resumes, change status,
+ * schedule interviews or open an application-connected conversation.
+ */
+
 import React, { useState } from 'react';
 import { recruiterService } from '../../services/api';
 import { RecruiterApplication, Internship, Interview } from '../../types';
@@ -11,6 +17,8 @@ interface Props {
   onMessage?: (studentUserId: number) => void;
 }
 
+// These labels group the UI pipeline. Selecting a different label sends
+// a status update; the board has no drag-and-drop transition logic.
 const STATUSES = ['Applied', 'Under Review', 'Shortlisted', 'Interview Scheduled', 'Accepted', 'Rejected'] as const;
 type Status = (typeof STATUSES)[number];
 
@@ -32,6 +40,8 @@ const COLUMN_META: Record<Status, { icon: string; border: string }> = {
   Rejected: { icon: '❌', border: 'var(--danger)' },
 };
 
+// Collect interview details, then pass application and internship IDs
+// with the selected date/time to the scheduling callback.
 const ScheduleModal: React.FC<{ app: RecruiterApplication; onSchedule: (data: any) => void; onClose: () => void }> = ({ app, onSchedule, onClose }) => {
   const [form, setForm] = useState({ scheduled_at: '', duration_minutes: '30', interview_type: 'Video Call', meeting_link: '', notes: '' });
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));
@@ -95,6 +105,7 @@ export const ApplicantsView: React.FC<Props> = ({ applicants, internships, onRef
     return inMatch && stMatch;
   });
 
+  // Persist the status and ask the shell to fetch updated applicants and totals.
   const handleStatusChange = async (id: number, status: string) => {
     setUpdating(id);
     try { await recruiterService.updateApplicationStatus(id, status); onRefresh(); }
@@ -102,11 +113,14 @@ export const ApplicantsView: React.FC<Props> = ({ applicants, internships, onRef
     finally { setUpdating(null); }
   };
 
+  // Create the interview and reload related data after closing the modal.
   const handleSchedule = async (data: any) => {
     try { await recruiterService.scheduleInterview(data); setScheduleFor(null); onRefresh(); }
     catch { alert('Failed to schedule interview.'); }
   };
 
+  // Load large resume data only when requested. Legacy URLs open directly;
+  // stored data URIs are embedded in a new tab for browser viewing.
   const handleViewResume = async (app: RecruiterApplication) => {
     try {
       const res = await recruiterService.getResume(app.id);
@@ -127,6 +141,7 @@ export const ApplicantsView: React.FC<Props> = ({ applicants, internships, onRef
   const FALLBACK_AVATAR = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80';
 
   // Rich applicant detail modal (#7)
+  // Expanded candidate information and the same review actions used by cards.
   const ApplicantDetail: React.FC<{ app: RecruiterApplication }> = ({ app }) => {
     const st = STATUS_STYLE[app.status as Status] || STATUS_STYLE['Applied'];
     return (
@@ -220,6 +235,7 @@ export const ApplicantsView: React.FC<Props> = ({ applicants, internships, onRef
     );
   };
 
+  // Compact candidate view used inside each status column.
   const ApplicantCard: React.FC<{ app: RecruiterApplication }> = ({ app }) => {
     const st = STATUS_STYLE[app.status as Status] || STATUS_STYLE['Applied'];
     return (

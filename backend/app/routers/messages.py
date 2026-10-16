@@ -1,3 +1,7 @@
+# Application-connected conversations. Contacts are derived from applications,
+# so a student talks to a recruiter whose internship they applied to, and a
+# recruiter talks to applicants. Messages store sender and receiver user IDs.
+
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -10,6 +14,8 @@ from app.routers.auth import get_current_user
 router = APIRouter(prefix="/api/messages", tags=["Messages"])
 
 
+# Follow application relationships to find permitted conversation partners.
+# The returned IDs belong to users, not student or recruiter profile rows.
 def _connected_user_ids(db: Session, current_user: User) -> set:
     """User ids the current user may message: recruiters of internships they
     applied to (for students) or students who applied to their internships
@@ -36,6 +42,7 @@ def _connected_user_ids(db: Session, current_user: User) -> set:
     return set()
 
 
+# Search both directions of a conversation and select its newest message.
 def _last_message(db: Session, me: int, other: int):
     return db.query(Message).filter(
         or_(
@@ -45,6 +52,7 @@ def _last_message(db: Session, me: int, other: int):
     ).order_by(desc(Message.sent_at)).first()
 
 
+# Count incoming messages from one partner whose read flag is still false.
 def _unread_count(db: Session, me: int, other: int) -> int:
     return db.query(Message).filter(
         Message.sender_id == other,
@@ -53,6 +61,8 @@ def _unread_count(db: Session, me: int, other: int) -> int:
     ).count()
 
 
+# Build one contact per connected user, add the latest preview and unread
+# count, then sort active conversations ahead of contacts without messages.
 @router.get("/contacts", response_model=List[MessageContactSchema])
 def get_contacts(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     """People the current user can message, derived from real applications:
@@ -109,6 +119,7 @@ def get_contacts(current_user: User = Depends(get_current_user), db: Session = D
     return rows
 
 
+# Count all unread incoming messages for the navigation badge.
 @router.get("/unread")
 def total_unread(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     """Total unread messages addressed to the current user (for nav badges)."""
@@ -119,10 +130,14 @@ def total_unread(current_user: User = Depends(get_current_user), db: Session = D
     return {"count": count}
 
 
+# Require an application connection, fetch both directions oldest first,
+# and mark incoming messages read when the conversation is opened.
 @router.get("", response_model=List[MessageSchema])
 def get_conversation(other_user_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     """Conversation between the current user and another user, oldest first.
     Messages addressed to me are marked read on open."""
+    # The relationship check runs before returning the conversation, so knowing
+    # an account ID alone is insufficient to fetch its messages.
     if other_user_id not in _connected_user_ids(db, current_user):
         raise HTTPException(status_code=403, detail="You can only message users connected through an application.")
     messages = db.query(Message).filter(
@@ -142,6 +157,8 @@ def get_conversation(other_user_id: int, current_user: User = Depends(get_curren
     return messages
 
 
+# Validate the partner and non-empty content, create the message and an
+# alert, then commit both together. The browser fetches replies by polling.
 @router.post("", response_model=MessageSchema)
 def send_message(payload: MessageCreateRequest, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     if payload.receiver_id == current_user.id:

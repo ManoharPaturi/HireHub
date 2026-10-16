@@ -1,3 +1,7 @@
+# Internship discovery and bookmarks. SQLAlchemy builds database queries from
+# optional search filters, then sorts and paginates the matching records.
+# Responses add per-student saved/applied flags when a login is available.
+
 from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
@@ -10,6 +14,8 @@ from app.core.security import decode_access_token
 
 router = APIRouter(prefix="/api/internships", tags=["Internships"])
 
+# Public browsing can work without a token. When decoding succeeds, return
+# the account so listings can also mark saved and previously applied roles.
 def get_optional_user(token: Optional[str] = Depends(oauth2_scheme_optional), db: Session = Depends(get_db)) -> Optional[User]:
     if not token:
         return None
@@ -22,6 +28,8 @@ def get_optional_user(token: Optional[str] = Depends(oauth2_scheme_optional), db
         pass
     return None
 
+# Start with all postings, add only the supplied filters, then sort and page
+# the query. A page is fetched from MySQL rather than slicing all rows in Python.
 @router.get("", response_model=List[InternshipSchema])
 def list_internships(
     search: Optional[str] = None,
@@ -80,6 +88,8 @@ def list_internships(
         query = query.order_by(desc(Internship.created_at))
 
     # Pagination
+    # Page 1 skips zero rows; page 2 skips one full page. LIMIT bounds the
+    # number of rows returned, reducing each list response.
     offset = (page - 1) * limit
     results = query.offset(offset).limit(limit).all()
 
@@ -105,6 +115,8 @@ def list_internships(
     return output
 
 
+# Read the student's bookmark links, fetch their internships, and attach
+# applied flags so saved cards reflect previously submitted applications.
 @router.get("/saved", response_model=List[InternshipSchema])
 def list_saved_internships(
     current_user: User = Depends(get_current_user),
@@ -130,6 +142,9 @@ def list_saved_internships(
     return output
 
 
+# Rule-based suggestions: with student skills present, match any skill OR
+# the preferred work mode, order by stipend, and fall back to recent posts
+# when no results exist. No model training or similarity score is used.
 @router.get("/recommendations", response_model=List[InternshipSchema])
 def get_recommendations(
     current_user: User = Depends(get_current_user),
@@ -144,6 +159,8 @@ def get_recommendations(
     query = db.query(Internship)
     if student_skills:
         # Match internships containing any of student's skills or preferred mode
+        # OR means any matching skill or preferred mode can qualify a posting.
+        # This mode condition is only added inside the student_skills branch.
         conditions = [Internship.skills_required.ilike(f"%{sk}%") for sk in student_skills]
         if student.preferred_mode:
             conditions.append(Internship.mode == student.preferred_mode)
@@ -171,6 +188,8 @@ def get_recommendations(
     return output
 
 
+# Load one posting by primary key and, when signed in as a student,
+# attach the account-specific bookmark and application flags.
 @router.get("/{internship_id}", response_model=InternshipSchema)
 def get_internship_detail(
     internship_id: int,
@@ -200,6 +219,8 @@ def get_internship_detail(
     return schema_obj
 
 
+# The link table acts as a bookmark: remove an existing student/post pair
+# or insert a new pair. The response tells the UI which state now applies.
 @router.post("/{internship_id}/save")
 def toggle_save_internship(
     internship_id: int,

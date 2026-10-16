@@ -1,3 +1,7 @@
+# Account registration, login and current-user lookup. A successful login
+# returns a JWT; protected endpoints use get_current_user to decode it and load
+# the account from MySQL. Student and recruiter details live in separate profiles.
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.db.database import get_db
@@ -14,6 +18,8 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 oauth2_scheme_optional = OAuth2PasswordBearer(tokenUrl="/api/auth/login", auto_error=False)
 
 
+# Dependency shared by protected routes: decode the bearer token, load its
+# user, and reject missing or deactivated accounts before running the endpoint.
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
     payload = decode_access_token(token)
     if not payload or "sub" not in payload:
@@ -29,6 +35,9 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     return user
 
 
+# Reject duplicate email addresses and admin self-registration, create the
+# account, then create its role-specific profile and optional student skills.
+# The returned token signs the user in immediately after registration.
 @router.post("/register", response_model=TokenResponse)
 def register(payload: UserRegisterRequest, db: Session = Depends(get_db)):
     if payload.role == "admin":
@@ -39,6 +48,8 @@ def register(payload: UserRegisterRequest, db: Session = Depends(get_db)):
     new_user = User(email=payload.email,
                     password_hash=get_password_hash(payload.password),
                     role=payload.role or "student", is_active=True)
+    # Registration is split across several commits below: account, profile and
+    # skills are not created as one all-or-nothing transaction.
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
@@ -92,6 +103,8 @@ def register(payload: UserRegisterRequest, db: Session = Depends(get_db)):
                          avatar_url=avatar, gender=gender)
 
 
+# Check the password and active flag, load the display name for the role,
+# and return the signed token plus the identity displayed by the interface.
 @router.post("/login", response_model=TokenResponse)
 def login(payload: UserLoginRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == payload.email).first()
@@ -124,6 +137,8 @@ def login(payload: UserLoginRequest, db: Session = Depends(get_db)):
                          avatar_url=avatar, gender=gender)
 
 
+# Currently checks whether the email exists and returns a confirmation.
+# There is no reset-token creation or email delivery in this endpoint.
 @router.post("/forgot-password")
 def forgot_password(payload: ForgotPasswordRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == payload.email).first()
@@ -132,6 +147,8 @@ def forgot_password(payload: ForgotPasswordRequest, db: Session = Depends(get_db
     return {"message": "Password reset instructions sent to your email."}
 
 
+# Return account identity with the associated profile ID and avatar.
+# Account IDs and student/recruiter profile IDs refer to different tables.
 @router.get("/me")
 def get_me(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     full_name = current_user.email

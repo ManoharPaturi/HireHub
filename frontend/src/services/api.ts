@@ -1,3 +1,9 @@
+/*
+ * Shared HTTP layer between the React screens and FastAPI. Service methods
+ * map UI actions to /api routes and return response data. The request interceptor
+ * adds the stored bearer token; database access happens on the server.
+ */
+
 import axios from 'axios';
 import {
   Internship, StudentProfile, RecruiterProfile, Application,
@@ -14,6 +20,8 @@ const API_BASE_URL = 'http://127.0.0.1:8000/api';
 // a pinned 'application/json' default here breaks every file upload (HTTP 422).
 export const api = axios.create({ baseURL: API_BASE_URL });
 
+// The interceptor runs before each request. Bearer identifies the token
+// format; FastAPI verifies the signature/expiry and looks up the account.
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('jwt_token');
   if (token && config.headers) config.headers.Authorization = `Bearer ${token}`;
@@ -21,6 +29,8 @@ api.interceptors.request.use((config) => {
 }, (error) => Promise.reject(error));
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
+// Account endpoints return a token and display identity; login/register
+// persist them so later requests and reloads can reuse the session.
 export const authService = {
   login: async (email: string, password: string, remember_me = false) => {
     const res = await api.post('/auth/login', { email, password, remember_me });
@@ -44,6 +54,8 @@ export const authService = {
 };
 
 // ── Student ───────────────────────────────────────────────────────────────────
+// Student profile and document endpoints. Files use FormData so the
+// browser sends multipart file bytes instead of JSON text.
 export const studentService = {
   getProfile: async (): Promise<StudentProfile> => (await api.get('/students/profile')).data,
   updateProfile: async (data: any): Promise<StudentProfile> => (await api.put('/students/profile', data)).data,
@@ -53,8 +65,7 @@ export const studentService = {
     const form = new FormData();
     form.append('file', file);
     form.append('document_type', document_type);
-    // The axios instance sets a default Content-Type: application/json (see
-    // axios.create above). For FormData we must clear it so axios attaches the
+    // Leave Content-Type unset for FormData so axios/browser can attach the
     // correct multipart/form-data; boundary=... header automatically —
     // otherwise the server cannot parse the body (HTTP 422).
     const res = await api.post('/students/documents', form, { headers: { 'Content-Type': undefined } });
@@ -66,6 +77,8 @@ export const studentService = {
 };
 
 // ── Internships ───────────────────────────────────────────────────────────────
+// Discovery reads postings; saved reads bookmarks; toggleSave changes
+// only the student/posting link, not the internship itself.
 export const internshipService = {
   getInternships: async (params?: any): Promise<Internship[]> => (await api.get('/internships', { params })).data,
   getRecommendations: async (): Promise<Internship[]> => (await api.get('/internships/recommendations')).data,
@@ -75,6 +88,8 @@ export const internshipService = {
 };
 
 // ── Applications ──────────────────────────────────────────────────────────────
+// Submit and withdraw application records. An optional resume is appended
+// as a file, while IDs and the cover letter are multipart form fields.
 export const applicationService = {
   // #2: multipart submit with optional resume file
   submitApplication: async (internship_id: number, cover_letter: string, resume?: File | null): Promise<Application> => {
@@ -82,7 +97,7 @@ export const applicationService = {
     form.append('internship_id', String(internship_id));
     if (cover_letter) form.append('cover_letter', cover_letter);
     if (resume) form.append('resume', resume);
-    // Clear the instance default Content-Type so axios sets the correct
+    // Leave Content-Type unset so axios/browser can set the correct
     // multipart/form-data; boundary=... header for the FormData body.
     const res = await api.post('/applications', form, { headers: { 'Content-Type': undefined } });
     return res.data;
@@ -92,12 +107,15 @@ export const applicationService = {
 };
 
 // ── Notifications ─────────────────────────────────────────────────────────────
+// Fetch alerts and persist a read flag for an individual notification.
 export const notificationService = {
   getNotifications: async (): Promise<NotificationItem[]> => (await api.get('/notifications')).data,
   markRead: async (id: number) => (await api.put(`/notifications/${id}/read`)).data,
 };
 
 // ── Messages (student ↔ recruiter conversations) ──────────────────────────────
+// Contacts are application-connected partners. other_user_id selects a
+// conversation; receiver_id identifies the destination of a new message.
 export const messageService = {
   // Role-aware: students get their recruiters, recruiters get their applicants.
   getContacts: async (): Promise<MessageContact[]> => (await api.get('/messages/contacts')).data,
@@ -109,6 +127,9 @@ export const messageService = {
 };
 
 // ── Recruiter ─────────────────────────────────────────────────────────────────
+// Recruiter profile, postings, applicants and interview endpoints. The
+// server uses the bearer token to identify the recruiter; the browser does
+// not send a trusted owner ID to select its workspace.
 export const recruiterService = {
   getProfile: async (): Promise<RecruiterProfile> => (await api.get('/recruiter/profile')).data,
   updateProfile: async (data: any): Promise<RecruiterProfile> => (await api.put('/recruiter/profile', data)).data,
@@ -136,6 +157,8 @@ export const recruiterService = {
 };
 
 // ── Admin (platform dashboard) ────────────────────────────────────────────────
+// Administrative endpoints use a dedicated login route. The backend
+// checks the admin role before returning data or changing records.
 export const adminService = {
   login: async (email: string, password: string) => {
     const res = await api.post('/admin/login', { email, password });

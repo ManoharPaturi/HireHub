@@ -1,3 +1,9 @@
+/*
+ * Shared browser authentication state. Login/register store the server token
+ * and identity; context consumers use them to render the correct workspace.
+ * Restoring localStorage restores UI state, while the API still validates tokens.
+ */
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { authService, adminService } from '../services/api';
 import { UserRole } from '../types';
@@ -22,6 +28,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Restore the last browser identity once on mount. This does not contact
+  // the server or prove the stored token is still valid; API requests perform
+  // their own validation and may reject it.
   useEffect(() => {
     const raw = localStorage.getItem('user_info');
     const token = localStorage.getItem('jwt_token');
@@ -31,6 +40,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setLoading(false);
   }, []);
 
+  // Authenticate through the API, then share the returned identity with
+  // all context consumers. The service also persists the token.
   const login = async (email: string, password: string) => {
     const data = await authService.login(email, password);
     setUser(data);
@@ -39,18 +50,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Separate admin-portal login (/api/admin/login); non-admin accounts are
   // rejected by the backend.
+  // Use the separate admin endpoint rather than the regular login path.
   const loginAdmin = async (email: string, password: string) => {
     const data = await adminService.login(email, password);
     setUser(data);
     localStorage.setItem('user_info', JSON.stringify(data));
   };
 
+  // Create the account and reuse its immediate login response as UI state.
   const register = async (payload: any) => {
     const data = await authService.register(payload);
     setUser(data);
     localStorage.setItem('user_info', JSON.stringify(data));
   };
 
+  // Clear persisted credentials and immediately return the UI to signed-out state.
   const logout = () => {
     authService.logout();
     setUser(null);
@@ -63,6 +77,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
+// Expose the shared context and reject calls outside its provider.
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error('useAuth must be used within AuthProvider');

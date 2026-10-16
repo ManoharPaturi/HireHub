@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/*
+ * Shared design system loaded by main.tsx. CSS variables define colors,
+ * spacing and surfaces; .dark overrides the variables for the saved theme.
+ * Utility/component classes reuse these tokens across student and recruiter views.
+ */
+
 /* ============================================================
    HireHub Design System
    Light-professional default · indigo accent · tokens + utilities

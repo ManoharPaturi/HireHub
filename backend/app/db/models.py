@@ -1,3 +1,8 @@
+# Relational database model: each class maps to a MySQL table, and each Column
+# maps to a stored field. Primary keys identify rows; foreign keys link rows
+# across tables. relationship() lets Python navigate those links as objects.
+# Deleting through SQLAlchemy can also apply its configured ORM cascades.
+
 from datetime import datetime
 from sqlalchemy import (
     Column, Integer, String, Text, Boolean, Float, DateTime, ForeignKey
@@ -6,6 +11,12 @@ from sqlalchemy.dialects.mysql import MEDIUMTEXT
 from sqlalchemy.orm import relationship
 from app.db.database import Base
 
+# Shared login identity. Unique email distinguishes accounts; role selects
+# student, recruiter or administrator access in the application.
+# Column options express storage rules: nullable=False requires a value;
+# unique=True prevents duplicate values; index=True adds a lookup index.
+# ForeignKey points to another table, while back_populates pairs the two
+# Python directions of a relationship. These are different from API schemas.
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
@@ -22,6 +33,8 @@ class User(Base):
     received_messages = relationship("Message", foreign_keys="Message.receiver_id", back_populates="receiver")
 
 
+# Company/contact profile linked to exactly one account through unique
+# user_id. Its ID is the owner key used by postings and interviews.
 class RecruiterProfile(Base):
     __tablename__ = "recruiter_profiles"
     id = Column(Integer, primary_key=True, index=True)
@@ -44,6 +57,8 @@ class RecruiterProfile(Base):
     interviews = relationship("Interview", back_populates="recruiter", cascade="all, delete-orphan")
 
 
+# Student-specific academic and contact data. Its profile ID is referenced
+# by applications, uploaded documents, skill links and bookmarks.
 class Student(Base):
     __tablename__ = "students"
     id = Column(Integer, primary_key=True, index=True)
@@ -73,6 +88,8 @@ class Student(Base):
     saved_internships = relationship("SavedInternship", back_populates="student", cascade="all, delete-orphan")
 
 
+# One student-owned upload. Metadata describes the file; file_data stores
+# a Base64 data URI in MEDIUMTEXT rather than a filesystem path.
 class Document(Base):
     __tablename__ = "documents"
     id = Column(Integer, primary_key=True, index=True)
@@ -87,6 +104,8 @@ class Document(Base):
     student = relationship("Student", back_populates="documents")
 
 
+# Shared skill catalog. A unique name avoids separate definitions of the
+# same skill; individual students connect to it through StudentSkill.
 class Skill(Base):
     __tablename__ = "skills"
     id = Column(Integer, primary_key=True, index=True)
@@ -95,6 +114,8 @@ class Skill(Base):
     student_skills = relationship("StudentSkill", back_populates="skill", cascade="all, delete-orphan")
 
 
+# Junction table for the many-to-many student/skill relationship. Each row
+# links one student and one skill and adds a proficiency level.
 class StudentSkill(Base):
     __tablename__ = "student_skills"
     id = Column(Integer, primary_key=True, index=True)
@@ -105,6 +126,8 @@ class StudentSkill(Base):
     skill = relationship("Skill", back_populates="student_skills")
 
 
+# A recruitment opportunity, optionally owned by a recruiter profile.
+# Company/contact fields are copied here; required skills are stored as text.
 class Internship(Base):
     __tablename__ = "internships"
     id = Column(Integer, primary_key=True, index=True)
@@ -137,6 +160,9 @@ class Internship(Base):
     interviews = relationship("Interview", back_populates="internship", cascade="all, delete-orphan")
 
 
+# Junction record between a student and an internship with selection
+# status, cover letter and resume. resume_url also holds uploaded data URIs.
+# The model does not define a unique student_id/internship_id pair.
 class Application(Base):
     __tablename__ = "applications"
     id = Column(Integer, primary_key=True, index=True)
@@ -156,6 +182,9 @@ class Application(Base):
     interviews = relationship("Interview", back_populates="application", cascade="all, delete-orphan")
 
 
+# Interview details linked to a recruiter and an application. internship_id
+# is optional and declares SET NULL; ORM delete cascades on related objects
+# can still remove interviews when their parent records are deleted.
 class Interview(Base):
     __tablename__ = "interviews"
     id = Column(Integer, primary_key=True, index=True)
@@ -175,6 +204,7 @@ class Interview(Base):
     internship = relationship("Internship", back_populates="interviews")
 
 
+# An account-owned alert with a persistent read flag and creation time.
 class Notification(Base):
     __tablename__ = "notifications"
     id = Column(Integer, primary_key=True, index=True)
@@ -187,6 +217,8 @@ class Notification(Base):
     user = relationship("User", back_populates="notifications")
 
 
+# Bookmark link between a student profile and an internship. It is
+# separate from Application, so saving does not submit an application.
 class SavedInternship(Base):
     __tablename__ = "saved_internships"
     id = Column(Integer, primary_key=True, index=True)
@@ -197,6 +229,8 @@ class SavedInternship(Base):
     internship = relationship("Internship", back_populates="saved_by")
 
 
+# One directional message. Two foreign keys reference users: sender_id
+# and receiver_id. A conversation queries records in both directions.
 class Message(Base):
     __tablename__ = "messages"
     id = Column(Integer, primary_key=True, index=True)

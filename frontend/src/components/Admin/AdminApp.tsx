@@ -1,3 +1,9 @@
+/*
+ * Administrator workspace. The shell loads API summaries and switches between
+ * overview, users, internships and applications. Child views call management
+ * endpoints, then refresh or update the affected local list.
+ */
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { adminService } from '../../services/api';
@@ -40,6 +46,8 @@ export const AdminApp: React.FC = () => {
   const [activity, setActivity] = useState<AdminActivityItem[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Load overview datasets on each page change and fetch that page's
+  // management list when required. A separate refresh action reuses this function.
   const load = useCallback(async () => {
     try {
       const [s, c, act] = await Promise.all([
@@ -59,6 +67,7 @@ export const AdminApp: React.FC = () => {
   const currentNav = NAV.find((n) => n.id === page);
   const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 
+  // Clear the session and navigate to the admin entry URL.
   const logoutAdmin = () => {
     // Clears token + context state, then leaves the console.
     logout();
@@ -164,6 +173,7 @@ export const AdminApp: React.FC = () => {
 };
 
 /* ── shared bits ── */
+// Shared visual section wrapper; it does not load or modify data.
 const Panel: React.FC<{ title?: string; sub?: string; children: React.ReactNode; className?: string }> = ({ title, sub, children, className = '' }) => (
   <div className={`rounded-2xl p-5 ${className}`} style={{ background: C.panel, border: `1px solid ${C.border}` }}>
     {title && (
@@ -180,6 +190,7 @@ const STATUS_COLORS: Record<string, string> = {
   'Applied': C.blue, 'Under Review': C.orange, 'Shortlisted': C.purple,
   'Interview Scheduled': C.cyan, 'Accepted': C.green, 'Rejected': C.red,
 };
+// Translate a stored status into its display color.
 const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
   const col = STATUS_COLORS[status] || C.muted;
   return (
@@ -188,6 +199,7 @@ const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
 };
 
 /* ── Overview ── */
+// Render API-provided totals and grouped chart data.
 const Overview: React.FC<{
   stats: AdminStats | null; charts: AdminChartData | null;
   activity: AdminActivityItem[]; onGo: (p: AdminPage) => void;
@@ -273,6 +285,7 @@ const Overview: React.FC<{
   );
 };
 
+// Convert an event timestamp into a compact elapsed-time label.
 const relTime = (iso: string) => {
   const diff = Date.now() - new Date(iso).getTime();
   const mins = Math.floor(diff / 60000);
@@ -283,6 +296,7 @@ const relTime = (iso: string) => {
   return `${Math.floor(hrs / 24)}d ago`;
 };
 
+// Display the combined event feed supplied by the backend.
 const ActivityLog: React.FC<{ activity: AdminActivityItem[] }> = ({ activity }) => {
   const META: Record<string, { icon: React.ElementType; color: string; bg: string }> = {
     application: { icon: Send, color: C.blue, bg: 'rgba(79,124,255,0.13)' },
@@ -317,6 +331,7 @@ const ActivityLog: React.FC<{ activity: AdminActivityItem[] }> = ({ activity }) 
 };
 
 /* ── Users ── */
+// Filter/search account records and call admin actions for enabling or deletion.
 const UsersPage: React.FC<{ users: AdminUser[]; onRefresh: () => void; setUsers: (u: AdminUser[]) => void }> = ({ users, onRefresh, setUsers }) => {
   const [filter, setFilter] = useState<'all' | 'student' | 'recruiter'>('all');
   const [search, setSearch] = useState('');
@@ -441,6 +456,7 @@ const UsersPage: React.FC<{ users: AdminUser[]; onRefresh: () => void; setUsers:
 };
 
 /* ── Internships ── */
+// List postings and expose administrator close/reopen/delete actions.
 const InternshipsPage: React.FC<{ internships: AdminInternship[]; onRefresh: () => void }> = ({ internships, onRefresh }) => {
   const [busy, setBusy] = useState<number | null>(null);
 
@@ -509,6 +525,7 @@ const InternshipsPage: React.FC<{ internships: AdminInternship[]; onRefresh: () 
 };
 
 /* ── Applications ── */
+// Read-only application feed enriched with candidate and posting information.
 const ApplicationsPage: React.FC<{ applications: AdminApplication[] }> = ({ applications }) => (
   <div className="rounded-2xl overflow-hidden" style={{ background: C.panel, border: `1px solid ${C.border}` }}>
     <div className="overflow-x-auto">

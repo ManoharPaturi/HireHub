@@ -1,3 +1,7 @@
+# Recruiter workspace API. The role dependency loads the recruiter profile,
+# while posting/applicant queries normally filter by that profile ID. Related
+# student and internship records supply the candidate details shown in the UI.
+
 from typing import List, Optional
 from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException
@@ -17,6 +21,8 @@ from app.routers.auth import get_current_user
 router = APIRouter(prefix="/api/recruiter", tags=["Recruiter"])
 
 
+# Reject non-recruiter roles and resolve the account's recruiter profile.
+# Profile IDs, rather than user IDs, own internship and interview records.
 def get_recruiter(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> RecruiterProfile:
     if current_user.role != "recruiter":
         raise HTTPException(status_code=403, detail="Recruiter access only.")
@@ -27,6 +33,7 @@ def get_recruiter(current_user: User = Depends(get_current_user), db: Session = 
 
 
 # ── Profile ───────────────────────────────────────────────────────────────────
+# Build the recruiter response from profile fields plus the login email.
 @router.get("/profile", response_model=RecruiterProfileSchema)
 def get_profile(recruiter: RecruiterProfile = Depends(get_recruiter),
                 current_user: User = Depends(get_current_user)):
@@ -40,6 +47,7 @@ def get_profile(recruiter: RecruiterProfile = Depends(get_recruiter),
     )
 
 
+# Apply supplied non-null profile fields, commit, and return the saved view.
 @router.put("/profile", response_model=RecruiterProfileSchema)
 def update_profile(payload: RecruiterProfileUpdateRequest,
                    recruiter: RecruiterProfile = Depends(get_recruiter),
@@ -54,6 +62,8 @@ def update_profile(payload: RecruiterProfileUpdateRequest,
 
 
 # ── Stats KPI ─────────────────────────────────────────────────────────────────
+# Collect this recruiter's internship IDs, then count related applications
+# and interviews. The shortlisted total also includes interview/accepted stages.
 @router.get("/stats", response_model=RecruiterStatsSchema)
 def get_stats(recruiter: RecruiterProfile = Depends(get_recruiter), db: Session = Depends(get_db)):
     internship_ids = [i.id for i in db.query(Internship.id).filter(Internship.recruiter_id == recruiter.id).all()]
@@ -73,6 +83,8 @@ def get_stats(recruiter: RecruiterProfile = Depends(get_recruiter), db: Session 
 
 
 # ── Internships ───────────────────────────────────────────────────────────────
+# Create a posting owned by the current recruiter. Company and contact
+# fields are copied onto the posting for its public listing response.
 @router.post("/internships", response_model=InternshipSchema)
 def post_internship(payload: PostInternshipRequest,
                     recruiter: RecruiterProfile = Depends(get_recruiter),
@@ -99,6 +111,8 @@ def post_internship(payload: PostInternshipRequest,
     return schema
 
 
+# Load only this recruiter's postings and calculate an application count
+# for each card in the Manage view.
 @router.get("/internships", response_model=List[InternshipSchema])
 def list_my_internships(recruiter: RecruiterProfile = Depends(get_recruiter), db: Session = Depends(get_db)):
     items = db.query(Internship).filter(Internship.recruiter_id == recruiter.id).order_by(desc(Internship.created_at)).all()
@@ -110,6 +124,7 @@ def list_my_internships(recruiter: RecruiterProfile = Depends(get_recruiter), db
     return result
 
 
+# Find a posting by both its ID and owner before applying supplied fields.
 @router.put("/internships/{internship_id}", response_model=InternshipSchema)
 def update_internship(internship_id: int, payload: PostInternshipRequest,
                       recruiter: RecruiterProfile = Depends(get_recruiter),
@@ -128,6 +143,8 @@ def update_internship(internship_id: int, payload: PostInternshipRequest,
     return s
 
 
+# Delete an owned posting. Related records may also be deleted through
+# the SQLAlchemy relationships and database foreign-key rules.
 @router.delete("/internships/{internship_id}")
 def delete_internship(internship_id: int,
                       recruiter: RecruiterProfile = Depends(get_recruiter),
@@ -141,6 +158,7 @@ def delete_internship(internship_id: int,
     return {"message": "Internship deleted successfully."}
 
 
+# Flip the stored active flag without deleting the posting or applications.
 @router.put("/internships/{internship_id}/toggle")
 def toggle_internship_status(internship_id: int,
                               recruiter: RecruiterProfile = Depends(get_recruiter),
@@ -155,6 +173,9 @@ def toggle_internship_status(internship_id: int,
 
 
 # ── Applicants ────────────────────────────────────────────────────────────────
+# Load applications for owned internships and combine each with student
+# profile/skill details. Large uploaded resumes are omitted from list responses;
+# a separate endpoint supplies the file when the recruiter requests it.
 @router.get("/applicants", response_model=List[RecruiterApplicationSchema])
 def list_applicants(internship_id: Optional[int] = None,
                     recruiter: RecruiterProfile = Depends(get_recruiter),
@@ -204,6 +225,9 @@ def list_applicants(internship_id: Optional[int] = None,
     return result
 
 
+# Update an owned application and queue a student notification in the same
+# commit. The supplied status string is stored directly, not enforced as a
+# strict sequence of transitions by this function.
 @router.put("/applications/{app_id}/status")
 def update_app_status(app_id: int, payload: UpdateApplicationStatusRequest,
                       recruiter: RecruiterProfile = Depends(get_recruiter),
@@ -230,6 +254,8 @@ def update_app_status(app_id: int, payload: UpdateApplicationStatusRequest,
     return {"message": "Status updated.", "status": payload.status}
 
 
+# Verify the application belongs to an owned internship before returning
+# the file data, or preserve an external URL for older application records.
 @router.get("/applications/{app_id}/resume")
 def get_applicant_resume(app_id: int,
                          recruiter: RecruiterProfile = Depends(get_recruiter),
@@ -249,6 +275,9 @@ def get_applicant_resume(app_id: int,
 
 
 # ── Interviews ────────────────────────────────────────────────────────────────
+# Insert the supplied interview details, then update the referenced
+# application to Interview Scheduled and notify its student. These steps
+# currently use separate commits, so they are not one atomic transaction.
 @router.post("/interviews", response_model=InterviewSchema)
 def schedule_interview(payload: ScheduleInterviewRequest,
                        recruiter: RecruiterProfile = Depends(get_recruiter),
@@ -260,6 +289,9 @@ def schedule_interview(payload: ScheduleInterviewRequest,
         interview_type=payload.interview_type or "Video Call",
         meeting_link=payload.meeting_link, notes=payload.notes, status="Scheduled"
     )
+    # The application_id comes from the submitted request. This function does
+    # not separately verify that the referenced application belongs to the current
+    # recruiter before insertion; the foreign key only checks record existence.
     db.add(interview)
     db.commit()
     db.refresh(interview)
@@ -285,6 +317,8 @@ def schedule_interview(payload: ScheduleInterviewRequest,
     return s
 
 
+# Return this recruiter's interviews in date order and add candidate/job
+# names from the related application and internship for display.
 @router.get("/interviews", response_model=List[InterviewSchema])
 def list_interviews(recruiter: RecruiterProfile = Depends(get_recruiter), db: Session = Depends(get_db)):
     interviews = db.query(Interview).filter(
@@ -301,6 +335,7 @@ def list_interviews(recruiter: RecruiterProfile = Depends(get_recruiter), db: Se
 
 
 # ── Notifications ─────────────────────────────────────────────────────────────
+# Return alerts addressed to the authenticated user, newest first.
 @router.get("/notifications", response_model=List[NotificationSchema])
 def recruiter_notifications(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     return db.query(Notification).filter(Notification.user_id == current_user.id).order_by(

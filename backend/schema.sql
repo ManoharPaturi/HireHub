@@ -1,3 +1,10 @@
+-- Reference SQL snapshot. The active application creates tables from
+-- backend/app/db/models.py; this snapshot predates some model fields.
+-- PRIMARY KEY identifies a row, UNIQUE rejects repeated values, and
+-- FOREIGN KEY requires a referenced parent row. ON DELETE defines how
+-- MySQL handles linked rows when a parent is removed. INDEX supports
+-- lookups, while InnoDB supplies transaction and foreign-key support.
+
 -- Internship Portal v2.0 MySQL Full Schema
 -- Includes Student Module + Recruiter Module tables
 -- Run this entire script in MySQL Workbench

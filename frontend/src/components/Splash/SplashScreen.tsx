@@ -1,3 +1,9 @@
+/*
+ * Optional animated loading screen. The progress timer is visual and is not
+ * connected to API/database readiness. The current App entry point does not
+ * mount this component.
+ */
+
 import React, { useEffect, useState } from 'react';
 import { Briefcase, Sparkles, Code2, Rocket } from 'lucide-react';
 

@@ -1,3 +1,6 @@
+# Profile avatar helper. The user ID chooses a stable image from the selected
+# pool, so fetching a profile repeatedly does not change its assigned portrait.
+
 """Deterministic gender-aware avatar selection (curated Unsplash portraits)."""
 
 # Curated professional headshots from Unsplash (royalty-free).
@@ -26,6 +29,8 @@ _NEUTRAL_AVATARS = [
 ]
 
 
+# Normalize the gender value, select its image pool, and use modulo
+# to keep the ID-based index inside that pool.
 def pick_avatar(gender: str | None, seed: int = 0) -> str:
     """Return a stable avatar URL for the given gender and seed (user id)."""
     g = (gender or "").strip().lower()

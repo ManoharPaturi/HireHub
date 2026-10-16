@@ -1,3 +1,9 @@
+/*
+ * Owned-posting list. Local filters switch between all, active and closed
+ * records. Closing changes a flag; deleting removes a posting and may delete
+ * related records through configured database/ORM cascades.
+ */
+
 import React, { useState } from 'react';
 import { recruiterService } from '../../services/api';
 import { Internship } from '../../types';
@@ -20,6 +26,7 @@ export const ManageInternships: React.FC<Props> = ({ internships, onRefresh, onN
     return true;
   });
 
+  // Confirm deletion, show the busy state for that posting, and reload after success.
   const handleDelete = async (id: number) => {
     if (!window.confirm('Delete this internship? All its applications will be removed.')) return;
     setDeleting(id);
@@ -28,6 +35,7 @@ export const ManageInternships: React.FC<Props> = ({ internships, onRefresh, onN
     finally { setDeleting(null); }
   };
 
+  // Close or reopen the posting through the API without deleting its record.
   const handleToggle = async (id: number) => {
     setToggling(id);
     try { await recruiterService.toggleInternship(id); onRefresh(); }
