@@ -1,0 +1,35 @@
+sequenceDiagram
+    autonumber
+    actor S as Student
+    participant UI as React student UI
+    participant API as FastAPI applications route
+    participant DB as MySQL via SQLAlchemy
+    S->>UI: Submit application with optional resume
+    UI->>API: POST /api/applications (bearer token, multipart)
+    API->>DB: Load account by token subject
+    DB-->>API: Account identity
+    API->>API: Check active-account flag
+    API->>DB: Find student, internship, existing application
+    DB-->>API: Related records and duplicate result
+    alt Missing profile or internship
+        API-->>UI: 404 response
+    else Application already exists
+        API-->>UI: 400 response
+    else New application
+        opt Resume supplied
+            API->>API: Read resume bytes
+            break Abort request if size exceeds 8 MiB
+                API-->>UI: 413 response before writes
+            end
+            opt Non-empty file
+                API->>API: Encode data URI and queue Document
+            end
+        end
+        API->>DB: INSERT Application (+ optional Document), COMMIT 1
+        DB-->>API: Application ID, refreshed record
+        API->>DB: INSERT student alert (+ recruiter alert if linked), COMMIT 2
+        DB-->>API: Alerts persisted
+        API-->>UI: Application response with related internship
+        UI-->>S: Confirmation, refresh listing/dashboard data
+    end
+    Note over API,DB: Application and alerts<br/>use separate commits.<br/>COMMIT 1 survives a later<br/>alert failure.<br/>Duplicate checks are not<br/>a UNIQUE constraint.

@@ -1,0 +1,305 @@
+{
+  "nodes": [
+    [
+      "start",
+      "initial",
+      650,
+      65,
+      ""
+    ],
+    [
+      "choose",
+      "action",
+      650,
+      160,
+      "Open internship details"
+    ],
+    [
+      "external",
+      "decision",
+      650,
+      300,
+      "External role?"
+    ],
+    [
+      "redirect",
+      "action",
+      1250,
+      300,
+      "Confirm redirect; open company link"
+    ],
+    [
+      "final_external",
+      "final",
+      1250,
+      430,
+      ""
+    ],
+    [
+      "form",
+      "action",
+      650,
+      450,
+      "Enter cover letter; select optional file"
+    ],
+    [
+      "submit",
+      "action",
+      650,
+      570,
+      "Send internal multipart application"
+    ],
+    [
+      "exists",
+      "decision",
+      650,
+      710,
+      "Records found?"
+    ],
+    [
+      "duplicate",
+      "decision",
+      650,
+      880,
+      "Already applied?"
+    ],
+    [
+      "file",
+      "decision",
+      650,
+      1050,
+      "Resume supplied?"
+    ],
+    [
+      "size",
+      "decision",
+      1250,
+      1050,
+      "Within 8 MiB?"
+    ],
+    [
+      "encode",
+      "action",
+      1250,
+      1220,
+      "Encode non-empty file; queue Document"
+    ],
+    [
+      "merge",
+      "merge",
+      650,
+      1370,
+      ""
+    ],
+    [
+      "commit1",
+      "action",
+      650,
+      1500,
+      "Insert Application (+ Document)\nCOMMIT 1"
+    ],
+    [
+      "commit2",
+      "action",
+      650,
+      1630,
+      "Insert participant notifications\nCOMMIT 2"
+    ],
+    [
+      "response",
+      "action",
+      650,
+      1760,
+      "Return saved application; show confirmation"
+    ],
+    [
+      "final_ok",
+      "final",
+      650,
+      1870,
+      ""
+    ],
+    [
+      "error404",
+      "action",
+      1250,
+      710,
+      "Return 404: missing student or posting"
+    ],
+    [
+      "final404",
+      "final",
+      1580,
+      710,
+      ""
+    ],
+    [
+      "error400",
+      "action",
+      1250,
+      880,
+      "Return 400: duplicate application"
+    ],
+    [
+      "final400",
+      "final",
+      1580,
+      880,
+      ""
+    ],
+    [
+      "error413",
+      "action",
+      1740,
+      1050,
+      "Return 413: oversized file"
+    ],
+    [
+      "final413",
+      "final",
+      1740,
+      1220,
+      ""
+    ]
+  ],
+  "edges": [
+    [
+      "start",
+      "choose",
+      null,
+      "650,78 650,125"
+    ],
+    [
+      "choose",
+      "external",
+      null,
+      "650,195 650,245"
+    ],
+    [
+      "external",
+      "redirect",
+      "external",
+      "805,300 1010,300"
+    ],
+    [
+      "redirect",
+      "final_external",
+      null,
+      "1250,335 1250,416"
+    ],
+    [
+      "external",
+      "form",
+      "internal",
+      "650,355 650,415"
+    ],
+    [
+      "form",
+      "submit",
+      null,
+      "650,485 650,535"
+    ],
+    [
+      "submit",
+      "exists",
+      null,
+      "650,605 650,655"
+    ],
+    [
+      "exists",
+      "error404",
+      "missing",
+      "805,710 1010,710"
+    ],
+    [
+      "error404",
+      "final404",
+      null,
+      "1490,710 1566,710"
+    ],
+    [
+      "exists",
+      "duplicate",
+      "found",
+      "650,765 650,825"
+    ],
+    [
+      "duplicate",
+      "error400",
+      "yes",
+      "805,880 1010,880"
+    ],
+    [
+      "error400",
+      "final400",
+      null,
+      "1490,880 1566,880"
+    ],
+    [
+      "duplicate",
+      "file",
+      "no",
+      "650,935 650,995"
+    ],
+    [
+      "file",
+      "size",
+      "yes",
+      "805,1050 1095,1050"
+    ],
+    [
+      "size",
+      "error413",
+      "no",
+      "1405,1050 1500,1050"
+    ],
+    [
+      "error413",
+      "final413",
+      null,
+      "1740,1085 1740,1206"
+    ],
+    [
+      "size",
+      "encode",
+      "yes",
+      "1250,1105 1250,1185"
+    ],
+    [
+      "encode",
+      "merge",
+      null,
+      "1250,1255 1250,1370 675,1370"
+    ],
+    [
+      "file",
+      "merge",
+      "no",
+      "650,1105 650,1345"
+    ],
+    [
+      "merge",
+      "commit1",
+      null,
+      "650,1395 650,1465"
+    ],
+    [
+      "commit1",
+      "commit2",
+      null,
+      "650,1535 650,1595"
+    ],
+    [
+      "commit2",
+      "response",
+      null,
+      "650,1665 650,1725"
+    ],
+    [
+      "response",
+      "final_ok",
+      null,
+      "650,1795 650,1856"
+    ]
+  ]
+}

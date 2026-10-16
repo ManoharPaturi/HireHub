@@ -1,0 +1,26 @@
+sequenceDiagram
+    autonumber
+    actor R as Recruiter
+    participant UI as ApplicantsView
+    participant API as FastAPI recruiter route
+    participant DB as MySQL via SQLAlchemy
+    R->>UI: Select candidate, enter interview details
+    UI->>API: POST /api/recruiter/interviews
+    API->>DB: Load active account and recruiter profile
+    DB-->>API: Recruiter identity
+    Note over API,DB: Recruiter role is checked.<br/>Candidate ownership<br/>is not checked here.
+    API->>DB: INSERT Interview, COMMIT 1, refresh
+    DB-->>API: Saved interview
+    API->>DB: Find Application by submitted application_id
+    DB-->>API: Application record
+    opt Referenced application found
+        API->>API: Set status to Interview Scheduled
+        API->>API: Queue student notification if student is linked
+        API->>DB: UPDATE Application (+ notification), COMMIT 2
+        DB-->>API: Changes persisted
+    end
+    API-->>UI: Interview response with display names
+    UI->>API: Reload recruiter workspace datasets
+    API-->>UI: Updated applicants, interviews and totals
+    UI-->>R: Updated applicant list and interview schedule
+    Note over API,DB: Two separate commits.<br/>Foreign keys validate IDs,<br/>not recruiter ownership.

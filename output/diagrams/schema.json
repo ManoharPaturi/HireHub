@@ -1,0 +1,1478 @@
+{
+  "source": "backend/app/db/models.py",
+  "sha256": "31aea1ccb0541eb28fb394ca6d7227dec430cafe64ac47d35540f986a9a4eba5",
+  "entities": [
+    {
+      "class_name": "User",
+      "table": "users",
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "email",
+          "type": "String(255)",
+          "pk": false,
+          "unique": true,
+          "nullable": false,
+          "indexed": true,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "password_hash",
+          "type": "String(255)",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "role",
+          "type": "String(50)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": "student"
+        },
+        {
+          "name": "is_active",
+          "type": "Boolean",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": true
+        },
+        {
+          "name": "created_at",
+          "type": "DateTime",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": "datetime.utcnow"
+        }
+      ]
+    },
+    {
+      "class_name": "RecruiterProfile",
+      "table": "recruiter_profiles",
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "user_id",
+          "type": "Integer",
+          "pk": false,
+          "unique": true,
+          "nullable": false,
+          "indexed": false,
+          "fk": "users.id",
+          "ondelete": "CASCADE",
+          "default": null
+        },
+        {
+          "name": "full_name",
+          "type": "String(255)",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "company_name",
+          "type": "String(255)",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "company_logo",
+          "type": "String(500)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "designation",
+          "type": "String(255)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "phone",
+          "type": "String(50)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "company_website",
+          "type": "String(500)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "company_size",
+          "type": "String(100)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "industry",
+          "type": "String(255)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "bio",
+          "type": "Text",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "linkedin_url",
+          "type": "String(500)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "location",
+          "type": "String(255)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "updated_at",
+          "type": "DateTime",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": "datetime.utcnow"
+        }
+      ]
+    },
+    {
+      "class_name": "Student",
+      "table": "students",
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "user_id",
+          "type": "Integer",
+          "pk": false,
+          "unique": true,
+          "nullable": false,
+          "indexed": false,
+          "fk": "users.id",
+          "ondelete": "CASCADE",
+          "default": null
+        },
+        {
+          "name": "full_name",
+          "type": "String(255)",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "phone",
+          "type": "String(50)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "avatar_url",
+          "type": "String(500)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "gender",
+          "type": "String(20)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "university",
+          "type": "String(255)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "degree",
+          "type": "String(255)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "field_of_study",
+          "type": "String(255)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "graduation_year",
+          "type": "Integer",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "cgpa",
+          "type": "Float",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "bio",
+          "type": "Text",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "location",
+          "type": "String(255)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "preferred_mode",
+          "type": "String(50)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": "Remote"
+        },
+        {
+          "name": "expected_stipend",
+          "type": "String(100)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "portfolio_url",
+          "type": "String(500)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "github_url",
+          "type": "String(500)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "linkedin_url",
+          "type": "String(500)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "updated_at",
+          "type": "DateTime",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": "datetime.utcnow"
+        }
+      ]
+    },
+    {
+      "class_name": "Document",
+      "table": "documents",
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "student_id",
+          "type": "Integer",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": "students.id",
+          "ondelete": "CASCADE",
+          "default": null
+        },
+        {
+          "name": "document_type",
+          "type": "String(100)",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "file_name",
+          "type": "String(255)",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "file_url",
+          "type": "String(500)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "content_type",
+          "type": "String(100)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "file_size",
+          "type": "Integer",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "file_data",
+          "type": "MEDIUMTEXT",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "uploaded_at",
+          "type": "DateTime",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": "datetime.utcnow"
+        }
+      ]
+    },
+    {
+      "class_name": "Skill",
+      "table": "skills",
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "name",
+          "type": "String(100)",
+          "pk": false,
+          "unique": true,
+          "nullable": false,
+          "indexed": true,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "category",
+          "type": "String(100)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        }
+      ]
+    },
+    {
+      "class_name": "StudentSkill",
+      "table": "student_skills",
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "student_id",
+          "type": "Integer",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": "students.id",
+          "ondelete": "CASCADE",
+          "default": null
+        },
+        {
+          "name": "skill_id",
+          "type": "Integer",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": "skills.id",
+          "ondelete": "CASCADE",
+          "default": null
+        },
+        {
+          "name": "proficiency_level",
+          "type": "String(50)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": "Intermediate"
+        }
+      ]
+    },
+    {
+      "class_name": "Internship",
+      "table": "internships",
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "recruiter_id",
+          "type": "Integer",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": "recruiter_profiles.id",
+          "ondelete": "CASCADE",
+          "default": null
+        },
+        {
+          "name": "title",
+          "type": "String(255)",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "company_name",
+          "type": "String(255)",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "company_logo",
+          "type": "String(500)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "location",
+          "type": "String(255)",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "mode",
+          "type": "String(50)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": "Remote"
+        },
+        {
+          "name": "stipend_amount",
+          "type": "Integer",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": 0
+        },
+        {
+          "name": "stipend_currency",
+          "type": "String(10)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": "\u20b9"
+        },
+        {
+          "name": "duration",
+          "type": "String(100)",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "description",
+          "type": "Text",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "eligibility",
+          "type": "Text",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "responsibilities",
+          "type": "Text",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "benefits",
+          "type": "Text",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "recruiter_name",
+          "type": "String(255)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "recruiter_email",
+          "type": "String(255)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "recruiter_title",
+          "type": "String(255)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "skills_required",
+          "type": "String(500)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "is_external",
+          "type": "Boolean",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": false
+        },
+        {
+          "name": "external_link",
+          "type": "String(500)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "is_active",
+          "type": "Boolean",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": true
+        },
+        {
+          "name": "deadline",
+          "type": "DateTime",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "created_at",
+          "type": "DateTime",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": "datetime.utcnow"
+        }
+      ]
+    },
+    {
+      "class_name": "Application",
+      "table": "applications",
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "student_id",
+          "type": "Integer",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": "students.id",
+          "ondelete": "CASCADE",
+          "default": null
+        },
+        {
+          "name": "internship_id",
+          "type": "Integer",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": "internships.id",
+          "ondelete": "CASCADE",
+          "default": null
+        },
+        {
+          "name": "status",
+          "type": "String(50)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": "Applied"
+        },
+        {
+          "name": "cover_letter",
+          "type": "Text",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "resume_url",
+          "type": "MEDIUMTEXT",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "applied_at",
+          "type": "DateTime",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": "datetime.utcnow"
+        },
+        {
+          "name": "recruiter_notes",
+          "type": "Text",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        }
+      ]
+    },
+    {
+      "class_name": "Interview",
+      "table": "interviews",
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "recruiter_id",
+          "type": "Integer",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": false,
+          "fk": "recruiter_profiles.id",
+          "ondelete": "CASCADE",
+          "default": null
+        },
+        {
+          "name": "application_id",
+          "type": "Integer",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": false,
+          "fk": "applications.id",
+          "ondelete": "CASCADE",
+          "default": null
+        },
+        {
+          "name": "internship_id",
+          "type": "Integer",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": "internships.id",
+          "ondelete": "SET NULL",
+          "default": null
+        },
+        {
+          "name": "scheduled_at",
+          "type": "DateTime",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "duration_minutes",
+          "type": "Integer",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": 30
+        },
+        {
+          "name": "interview_type",
+          "type": "String(50)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": "Video Call"
+        },
+        {
+          "name": "meeting_link",
+          "type": "String(500)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "notes",
+          "type": "Text",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "status",
+          "type": "String(50)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": "Scheduled"
+        },
+        {
+          "name": "created_at",
+          "type": "DateTime",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": "datetime.utcnow"
+        }
+      ]
+    },
+    {
+      "class_name": "Notification",
+      "table": "notifications",
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "user_id",
+          "type": "Integer",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": "users.id",
+          "ondelete": "CASCADE",
+          "default": null
+        },
+        {
+          "name": "title",
+          "type": "String(255)",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "message",
+          "type": "Text",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "type",
+          "type": "String(50)",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": "info"
+        },
+        {
+          "name": "is_read",
+          "type": "Boolean",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": false
+        },
+        {
+          "name": "created_at",
+          "type": "DateTime",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": "datetime.utcnow"
+        }
+      ]
+    },
+    {
+      "class_name": "SavedInternship",
+      "table": "saved_internships",
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "student_id",
+          "type": "Integer",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": "students.id",
+          "ondelete": "CASCADE",
+          "default": null
+        },
+        {
+          "name": "internship_id",
+          "type": "Integer",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": "internships.id",
+          "ondelete": "CASCADE",
+          "default": null
+        },
+        {
+          "name": "saved_at",
+          "type": "DateTime",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": "datetime.utcnow"
+        }
+      ]
+    },
+    {
+      "class_name": "Message",
+      "table": "messages",
+      "columns": [
+        {
+          "name": "id",
+          "type": "Integer",
+          "pk": true,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "sender_id",
+          "type": "Integer",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": "users.id",
+          "ondelete": "CASCADE",
+          "default": null
+        },
+        {
+          "name": "receiver_id",
+          "type": "Integer",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": true,
+          "fk": "users.id",
+          "ondelete": "CASCADE",
+          "default": null
+        },
+        {
+          "name": "content",
+          "type": "Text",
+          "pk": false,
+          "unique": false,
+          "nullable": false,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": null
+        },
+        {
+          "name": "is_read",
+          "type": "Boolean",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": false
+        },
+        {
+          "name": "sent_at",
+          "type": "DateTime",
+          "pk": false,
+          "unique": false,
+          "nullable": true,
+          "indexed": false,
+          "fk": null,
+          "ondelete": null,
+          "default": "datetime.utcnow"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "parent": "users",
+      "child": "recruiter_profiles",
+      "field": "user_id",
+      "parent_end": "1",
+      "child_end": "0..1",
+      "ondelete": "CASCADE",
+      "identifying": false
+    },
+    {
+      "parent": "users",
+      "child": "students",
+      "field": "user_id",
+      "parent_end": "1",
+      "child_end": "0..1",
+      "ondelete": "CASCADE",
+      "identifying": false
+    },
+    {
+      "parent": "students",
+      "child": "documents",
+      "field": "student_id",
+      "parent_end": "1",
+      "child_end": "0..*",
+      "ondelete": "CASCADE",
+      "identifying": false
+    },
+    {
+      "parent": "students",
+      "child": "student_skills",
+      "field": "student_id",
+      "parent_end": "1",
+      "child_end": "0..*",
+      "ondelete": "CASCADE",
+      "identifying": false
+    },
+    {
+      "parent": "skills",
+      "child": "student_skills",
+      "field": "skill_id",
+      "parent_end": "1",
+      "child_end": "0..*",
+      "ondelete": "CASCADE",
+      "identifying": false
+    },
+    {
+      "parent": "recruiter_profiles",
+      "child": "internships",
+      "field": "recruiter_id",
+      "parent_end": "0..1",
+      "child_end": "0..*",
+      "ondelete": "CASCADE",
+      "identifying": false
+    },
+    {
+      "parent": "students",
+      "child": "applications",
+      "field": "student_id",
+      "parent_end": "1",
+      "child_end": "0..*",
+      "ondelete": "CASCADE",
+      "identifying": false
+    },
+    {
+      "parent": "internships",
+      "child": "applications",
+      "field": "internship_id",
+      "parent_end": "1",
+      "child_end": "0..*",
+      "ondelete": "CASCADE",
+      "identifying": false
+    },
+    {
+      "parent": "recruiter_profiles",
+      "child": "interviews",
+      "field": "recruiter_id",
+      "parent_end": "1",
+      "child_end": "0..*",
+      "ondelete": "CASCADE",
+      "identifying": false
+    },
+    {
+      "parent": "applications",
+      "child": "interviews",
+      "field": "application_id",
+      "parent_end": "1",
+      "child_end": "0..*",
+      "ondelete": "CASCADE",
+      "identifying": false
+    },
+    {
+      "parent": "internships",
+      "child": "interviews",
+      "field": "internship_id",
+      "parent_end": "0..1",
+      "child_end": "0..*",
+      "ondelete": "SET NULL",
+      "identifying": false
+    },
+    {
+      "parent": "users",
+      "child": "notifications",
+      "field": "user_id",
+      "parent_end": "1",
+      "child_end": "0..*",
+      "ondelete": "CASCADE",
+      "identifying": false
+    },
+    {
+      "parent": "students",
+      "child": "saved_internships",
+      "field": "student_id",
+      "parent_end": "1",
+      "child_end": "0..*",
+      "ondelete": "CASCADE",
+      "identifying": false
+    },
+    {
+      "parent": "internships",
+      "child": "saved_internships",
+      "field": "internship_id",
+      "parent_end": "1",
+      "child_end": "0..*",
+      "ondelete": "CASCADE",
+      "identifying": false
+    },
+    {
+      "parent": "users",
+      "child": "messages",
+      "field": "sender_id",
+      "parent_end": "1",
+      "child_end": "0..*",
+      "ondelete": "CASCADE",
+      "identifying": false
+    },
+    {
+      "parent": "users",
+      "child": "messages",
+      "field": "receiver_id",
+      "parent_end": "1",
+      "child_end": "0..*",
+      "ondelete": "CASCADE",
+      "identifying": false
+    }
+  ]
+}

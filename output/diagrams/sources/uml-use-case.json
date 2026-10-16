@@ -1,0 +1,107 @@
+[
+  [
+    "Student",
+    [
+      [
+        "Register / sign in",
+        "backend/app/routers/auth.py",
+        "register"
+      ],
+      [
+        "Maintain profile and skills",
+        "backend/app/routers/students.py",
+        "update_student_profile"
+      ],
+      [
+        "Upload / remove documents",
+        "backend/app/routers/students.py",
+        "upload_document"
+      ],
+      [
+        "Discover / save opportunities",
+        "backend/app/routers/internships.py",
+        "list_internships"
+      ],
+      [
+        "Submit / withdraw applications",
+        "backend/app/routers/applications.py",
+        "submit_application"
+      ],
+      [
+        "Track application status",
+        "backend/app/routers/applications.py",
+        "list_student_applications"
+      ],
+      [
+        "Message recruiters / read alerts",
+        "backend/app/routers/messages.py",
+        "send_message"
+      ]
+    ]
+  ],
+  [
+    "Recruiter",
+    [
+      [
+        "Register / sign in",
+        "backend/app/routers/auth.py",
+        "login"
+      ],
+      [
+        "Maintain company profile",
+        "backend/app/routers/recruiter.py",
+        "update_profile"
+      ],
+      [
+        "Manage internship postings",
+        "backend/app/routers/recruiter.py",
+        "post_internship"
+      ],
+      [
+        "Review candidates / resumes",
+        "backend/app/routers/recruiter.py",
+        "list_applicants"
+      ],
+      [
+        "Update candidate status",
+        "backend/app/routers/recruiter.py",
+        "update_app_status"
+      ],
+      [
+        "Schedule / view interviews",
+        "backend/app/routers/recruiter.py",
+        "schedule_interview"
+      ],
+      [
+        "Message applicants / read alerts",
+        "backend/app/routers/messages.py",
+        "send_message"
+      ]
+    ]
+  ],
+  [
+    "Administrator",
+    [
+      [
+        "Sign in to admin console",
+        "backend/app/routers/admin.py",
+        "admin_login"
+      ],
+      [
+        "Manage user accounts",
+        "backend/app/routers/admin.py",
+        "toggle_user"
+      ],
+      [
+        "Manage postings / inspect applications",
+        "backend/app/routers/admin.py",
+        "list_all_applications"
+      ],
+      [
+        "View reports and recent activity",
+        "backend/app/routers/admin.py",
+        "chart_data"
+      ]
+    ]
+  ]
+]

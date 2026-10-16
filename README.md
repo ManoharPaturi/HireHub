@@ -78,6 +78,7 @@ Other sample recruiter accounts are documented in [backend/README.md](backend/RE
 - [SQLAlchemy models](backend/app/db/models.py): application schema source of truth, with 12 tables and 16 foreign-key relationships.
 - [SQL reference](backend/schema.sql): an earlier SQL schema snapshot. It does not contain every field in the current models.
 - [Eight-slide Beamer source](output/beamer/HireHub_DBMS_Review.tex) and [compiled presentation](output/beamer/HireHub_DBMS_Review.pdf).
+- [Offline ER and UML viewer](output/diagrams/index.html), with [SVG/PNG images and editable definitions](output/diagrams/README.md).
 
 ## Compile the review presentation
 

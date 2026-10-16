@@ -1,0 +1,87 @@
+classDiagram
+    direction LR
+    class User {
+        id : Integer
+        email : String
+        role : String
+        is_active : Boolean
+    }
+    class RecruiterProfile {
+        id : Integer
+        user_id : Integer
+        full_name : String
+        company_name : String
+    }
+    class Student {
+        id : Integer
+        user_id : Integer
+        full_name : String
+        university : String
+    }
+    class Document {
+        id : Integer
+        student_id : Integer
+        file_name : String
+        file_data : MEDIUMTEXT
+    }
+    class Skill {
+        id : Integer
+        name : String
+    }
+    class StudentSkill {
+        id : Integer
+        student_id : Integer
+        skill_id : Integer
+        proficiency_level : String
+    }
+    class Internship {
+        id : Integer
+        recruiter_id : Integer
+        title : String
+        skills_required : String
+    }
+    class Application {
+        id : Integer
+        student_id : Integer
+        internship_id : Integer
+        status : String
+    }
+    class Interview {
+        id : Integer
+        recruiter_id : Integer
+        application_id : Integer
+        internship_id : Integer
+        scheduled_at : DateTime
+    }
+    class Notification {
+        id : Integer
+        user_id : Integer
+        is_read : Boolean
+    }
+    class SavedInternship {
+        id : Integer
+        student_id : Integer
+        internship_id : Integer
+    }
+    class Message {
+        id : Integer
+        sender_id : Integer
+        receiver_id : Integer
+        content : Text
+    }
+    User "1" -- "0..1" RecruiterProfile : user
+    User "1" -- "0..1" Student : user
+    Student "1" -- "0..*" Document : student
+    Student "1" -- "0..*" StudentSkill : student
+    Skill "1" -- "0..*" StudentSkill : skill
+    RecruiterProfile "0..1" -- "0..*" Internship : recruiter
+    Student "1" -- "0..*" Application : student
+    Internship "1" -- "0..*" Application : internship
+    RecruiterProfile "1" -- "0..*" Interview : recruiter
+    Application "1" -- "0..*" Interview : application
+    Internship "0..1" -- "0..*" Interview : internship
+    User "1" -- "0..*" Notification : user
+    Student "1" -- "0..*" SavedInternship : student
+    Internship "1" -- "0..*" SavedInternship : internship
+    User "1" -- "0..*" Message : sender
+    User "1" -- "0..*" Message : receiver

@@ -1,0 +1,130 @@
+[
+  {
+    "id": "er-overview",
+    "kind": "ER",
+    "title": "Relational overview",
+    "subtitle": "All 12 tables and all 16 foreign keys, with identity fields only.",
+    "source": "er-overview.mmd",
+    "code": "erDiagram\n    direction LR\n    users {\n        INT id PK \"NOT NULL\"\n    }\n    recruiter_profiles {\n        INT id PK \"NOT NULL\"\n        INT user_id FK, UK \"NOT NULL\"\n    }\n    students {\n        INT id PK \"NOT NULL\"\n        INT user_id FK, UK \"NOT NULL\"\n    }\n    documents {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n    }\n    skills {\n        INT id PK \"NOT NULL\"\n    }\n    student_skills {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n        INT skill_id FK \"NOT NULL\"\n    }\n    internships {\n        INT id PK \"NOT NULL\"\n        INT recruiter_id FK \"NULL allowed\"\n    }\n    applications {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n        INT internship_id FK \"NOT NULL\"\n    }\n    interviews {\n        INT id PK \"NOT NULL\"\n        INT recruiter_id FK \"NOT NULL\"\n        INT application_id FK \"NOT NULL\"\n        INT internship_id FK \"NULL allowed\"\n    }\n    notifications {\n        INT id PK \"NOT NULL\"\n        INT user_id FK \"NOT NULL\"\n    }\n    saved_internships {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n        INT internship_id FK \"NOT NULL\"\n    }\n    messages {\n        INT id PK \"NOT NULL\"\n        INT sender_id FK \"NOT NULL\"\n        INT receiver_id FK \"NOT NULL\"\n    }\n    users ||..o| recruiter_profiles : \"user_id\"\n    users ||..o| students : \"user_id\"\n    students ||..o{ documents : \"student_id\"\n    students ||..o{ student_skills : \"student_id\"\n    skills ||..o{ student_skills : \"skill_id\"\n    recruiter_profiles |o..o{ internships : \"recruiter_id\"\n    students ||..o{ applications : \"student_id\"\n    internships ||..o{ applications : \"internship_id\"\n    recruiter_profiles ||..o{ interviews : \"recruiter_id\"\n    applications ||..o{ interviews : \"application_id\"\n    internships |o..o{ interviews : \"internship_id\"\n    users ||..o{ notifications : \"user_id\"\n    students ||..o{ saved_internships : \"student_id\"\n    internships ||..o{ saved_internships : \"internship_id\"\n    users ||..o{ messages : \"sender_id\"\n    users ||..o{ messages : \"receiver_id\"",
+    "sources": [
+      "backend/app/db/models.py"
+    ],
+    "notes": [
+      "Crow's-foot markers show cardinalities at both ends. Dashed links are non-identifying: every child table has its own surrogate primary key.",
+      "A user may have zero or one student profile and zero or one recruiter profile. Role exclusivity is application logic, not a database inheritance relationship.",
+      "The two messages-to-users links are distinct: sender_id and receiver_id."
+    ]
+  },
+  {
+    "id": "er-full",
+    "kind": "ER",
+    "title": "Full physical schema",
+    "subtitle": "Every mapped field, SQL type, key and declared nullability.",
+    "source": "er-full.mmd",
+    "code": "erDiagram\n    direction LR\n    users {\n        INT id PK \"NOT NULL\"\n        VARCHAR(255) email UK \"NOT NULL\"\n        VARCHAR(255) password_hash \"NOT NULL\"\n        VARCHAR(50) role \"NULL allowed\"\n        BOOLEAN is_active \"NULL allowed\"\n        DATETIME created_at \"NULL allowed\"\n    }\n    recruiter_profiles {\n        INT id PK \"NOT NULL\"\n        INT user_id FK, UK \"NOT NULL\"\n        VARCHAR(255) full_name \"NOT NULL\"\n        VARCHAR(255) company_name \"NOT NULL\"\n        VARCHAR(500) company_logo \"NULL allowed\"\n        VARCHAR(255) designation \"NULL allowed\"\n        VARCHAR(50) phone \"NULL allowed\"\n        VARCHAR(500) company_website \"NULL allowed\"\n        VARCHAR(100) company_size \"NULL allowed\"\n        VARCHAR(255) industry \"NULL allowed\"\n        TEXT bio \"NULL allowed\"\n        VARCHAR(500) linkedin_url \"NULL allowed\"\n        VARCHAR(255) location \"NULL allowed\"\n        DATETIME updated_at \"NULL allowed\"\n    }\n    students {\n        INT id PK \"NOT NULL\"\n        INT user_id FK, UK \"NOT NULL\"\n        VARCHAR(255) full_name \"NOT NULL\"\n        VARCHAR(50) phone \"NULL allowed\"\n        VARCHAR(500) avatar_url \"NULL allowed\"\n        VARCHAR(20) gender \"NULL allowed\"\n        VARCHAR(255) university \"NULL allowed\"\n        VARCHAR(255) degree \"NULL allowed\"\n        VARCHAR(255) field_of_study \"NULL allowed\"\n        INT graduation_year \"NULL allowed\"\n        FLOAT cgpa \"NULL allowed\"\n        TEXT bio \"NULL allowed\"\n        VARCHAR(255) location \"NULL allowed\"\n        VARCHAR(50) preferred_mode \"NULL allowed\"\n        VARCHAR(100) expected_stipend \"NULL allowed\"\n        VARCHAR(500) portfolio_url \"NULL allowed\"\n        VARCHAR(500) github_url \"NULL allowed\"\n        VARCHAR(500) linkedin_url \"NULL allowed\"\n        DATETIME updated_at \"NULL allowed\"\n    }\n    documents {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n        VARCHAR(100) document_type \"NOT NULL\"\n        VARCHAR(255) file_name \"NOT NULL\"\n        VARCHAR(500) file_url \"NULL allowed\"\n        VARCHAR(100) content_type \"NULL allowed\"\n        INT file_size \"NULL allowed\"\n        MEDIUMTEXT file_data \"NULL allowed\"\n        DATETIME uploaded_at \"NULL allowed\"\n    }\n    skills {\n        INT id PK \"NOT NULL\"\n        VARCHAR(100) name UK \"NOT NULL\"\n        VARCHAR(100) category \"NULL allowed\"\n    }\n    student_skills {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n        INT skill_id FK \"NOT NULL\"\n        VARCHAR(50) proficiency_level \"NULL allowed\"\n    }\n    internships {\n        INT id PK \"NOT NULL\"\n        INT recruiter_id FK \"NULL allowed\"\n        VARCHAR(255) title \"NOT NULL\"\n        VARCHAR(255) company_name \"NOT NULL\"\n        VARCHAR(500) company_logo \"NULL allowed\"\n        VARCHAR(255) location \"NOT NULL\"\n        VARCHAR(50) mode \"NULL allowed\"\n        INT stipend_amount \"NOT NULL\"\n        VARCHAR(10) stipend_currency \"NULL allowed\"\n        VARCHAR(100) duration \"NOT NULL\"\n        TEXT description \"NOT NULL\"\n        TEXT eligibility \"NULL allowed\"\n        TEXT responsibilities \"NULL allowed\"\n        TEXT benefits \"NULL allowed\"\n        VARCHAR(255) recruiter_name \"NULL allowed\"\n        VARCHAR(255) recruiter_email \"NULL allowed\"\n        VARCHAR(255) recruiter_title \"NULL allowed\"\n        VARCHAR(500) skills_required \"NULL allowed\"\n        BOOLEAN is_external \"NULL allowed\"\n        VARCHAR(500) external_link \"NULL allowed\"\n        BOOLEAN is_active \"NULL allowed\"\n        DATETIME deadline \"NULL allowed\"\n        DATETIME created_at \"NULL allowed\"\n    }\n    applications {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n        INT internship_id FK \"NOT NULL\"\n        VARCHAR(50) status \"NULL allowed\"\n        TEXT cover_letter \"NULL allowed\"\n        MEDIUMTEXT resume_url \"NULL allowed\"\n        DATETIME applied_at \"NULL allowed\"\n        TEXT recruiter_notes \"NULL allowed\"\n    }\n    interviews {\n        INT id PK \"NOT NULL\"\n        INT recruiter_id FK \"NOT NULL\"\n        INT application_id FK \"NOT NULL\"\n        INT internship_id FK \"NULL allowed\"\n        DATETIME scheduled_at \"NOT NULL\"\n        INT duration_minutes \"NULL allowed\"\n        VARCHAR(50) interview_type \"NULL allowed\"\n        VARCHAR(500) meeting_link \"NULL allowed\"\n        TEXT notes \"NULL allowed\"\n        VARCHAR(50) status \"NULL allowed\"\n        DATETIME created_at \"NULL allowed\"\n    }\n    notifications {\n        INT id PK \"NOT NULL\"\n        INT user_id FK \"NOT NULL\"\n        VARCHAR(255) title \"NOT NULL\"\n        TEXT message \"NOT NULL\"\n        VARCHAR(50) type \"NULL allowed\"\n        BOOLEAN is_read \"NULL allowed\"\n        DATETIME created_at \"NULL allowed\"\n    }\n    saved_internships {\n        INT id PK \"NOT NULL\"\n        INT student_id FK \"NOT NULL\"\n        INT internship_id FK \"NOT NULL\"\n        DATETIME saved_at \"NULL allowed\"\n    }\n    messages {\n        INT id PK \"NOT NULL\"\n        INT sender_id FK \"NOT NULL\"\n        INT receiver_id FK \"NOT NULL\"\n        TEXT content \"NOT NULL\"\n        BOOLEAN is_read \"NULL allowed\"\n        DATETIME sent_at \"NULL allowed\"\n    }\n    users ||..o| recruiter_profiles : \"user_id\"\n    users ||..o| students : \"user_id\"\n    students ||..o{ documents : \"student_id\"\n    students ||..o{ student_skills : \"student_id\"\n    skills ||..o{ student_skills : \"skill_id\"\n    recruiter_profiles |o..o{ internships : \"recruiter_id\"\n    students ||..o{ applications : \"student_id\"\n    internships ||..o{ applications : \"internship_id\"\n    recruiter_profiles ||..o{ interviews : \"recruiter_id\"\n    applications ||..o{ interviews : \"application_id\"\n    internships |o..o{ interviews : \"internship_id\"\n    users ||..o{ notifications : \"user_id\"\n    students ||..o{ saved_internships : \"student_id\"\n    internships ||..o{ saved_internships : \"internship_id\"\n    users ||..o{ messages : \"sender_id\"\n    users ||..o{ messages : \"receiver_id\"",
+    "sources": [
+      "backend/app/db/models.py"
+    ],
+    "notes": [
+      "NULL labels follow the ORM model literally. A default value does not imply NOT NULL.",
+      "Only recruiter_id on internships and internship_id on interviews are nullable foreign keys.",
+      "student_skills, applications and saved_internships have surrogate IDs but no composite pair-uniqueness constraints.",
+      "documents belongs to students; there is no documents-to-applications foreign key. Application resume content is stored separately in applications.resume_url."
+    ]
+  },
+  {
+    "id": "uml-class",
+    "kind": "UML class",
+    "title": "Domain class associations",
+    "subtitle": "The 12 ORM entities, selected declared attributes and exact association multiplicities.",
+    "source": "uml-class.mmd",
+    "code": "classDiagram\n    direction LR\n    class User {\n        id : Integer\n        email : String\n        role : String\n        is_active : Boolean\n    }\n    class RecruiterProfile {\n        id : Integer\n        user_id : Integer\n        full_name : String\n        company_name : String\n    }\n    class Student {\n        id : Integer\n        user_id : Integer\n        full_name : String\n        university : String\n    }\n    class Document {\n        id : Integer\n        student_id : Integer\n        file_name : String\n        file_data : MEDIUMTEXT\n    }\n    class Skill {\n        id : Integer\n        name : String\n    }\n    class StudentSkill {\n        id : Integer\n        student_id : Integer\n        skill_id : Integer\n        proficiency_level : String\n    }\n    class Internship {\n        id : Integer\n        recruiter_id : Integer\n        title : String\n        skills_required : String\n    }\n    class Application {\n        id : Integer\n        student_id : Integer\n        internship_id : Integer\n        status : String\n    }\n    class Interview {\n        id : Integer\n        recruiter_id : Integer\n        application_id : Integer\n        internship_id : Integer\n        scheduled_at : DateTime\n    }\n    class Notification {\n        id : Integer\n        user_id : Integer\n        is_read : Boolean\n    }\n    class SavedInternship {\n        id : Integer\n        student_id : Integer\n        internship_id : Integer\n    }\n    class Message {\n        id : Integer\n        sender_id : Integer\n        receiver_id : Integer\n        content : Text\n    }\n    User \"1\" -- \"0..1\" RecruiterProfile : user\n    User \"1\" -- \"0..1\" Student : user\n    Student \"1\" -- \"0..*\" Document : student\n    Student \"1\" -- \"0..*\" StudentSkill : student\n    Skill \"1\" -- \"0..*\" StudentSkill : skill\n    RecruiterProfile \"0..1\" -- \"0..*\" Internship : recruiter\n    Student \"1\" -- \"0..*\" Application : student\n    Internship \"1\" -- \"0..*\" Application : internship\n    RecruiterProfile \"1\" -- \"0..*\" Interview : recruiter\n    Application \"1\" -- \"0..*\" Interview : application\n    Internship \"0..1\" -- \"0..*\" Interview : internship\n    User \"1\" -- \"0..*\" Notification : user\n    Student \"1\" -- \"0..*\" SavedInternship : student\n    Internship \"1\" -- \"0..*\" SavedInternship : internship\n    User \"1\" -- \"0..*\" Message : sender\n    User \"1\" -- \"0..*\" Message : receiver",
+    "sources": [
+      "backend/app/db/models.py"
+    ],
+    "notes": [
+      "Solid lines are UML associations. No inheritance or composition is claimed.",
+      "Selected attributes are shown for readability. Endpoint functions are not invented as entity methods.",
+      "Student and RecruiterProfile associate with User. They do not inherit from User in the implementation."
+    ]
+  },
+  {
+    "id": "uml-use-case",
+    "kind": "UML use case",
+    "title": "Actors and system responsibilities",
+    "subtitle": "Student, recruiter and administrator goals inside the HireHub system boundary.",
+    "source": "uml-use-case.json",
+    "code": null,
+    "sources": [
+      "backend/app/routers/auth.py",
+      "backend/app/routers/students.py",
+      "backend/app/routers/internships.py",
+      "backend/app/routers/applications.py",
+      "backend/app/routers/recruiter.py",
+      "backend/app/routers/admin.py",
+      "backend/app/routers/messages.py",
+      "backend/app/routers/notifications.py"
+    ],
+    "notes": [
+      "Actors remain outside the system boundary. Ellipses represent user goals; unarrowed solid lines show participation.",
+      "Authenticated access is a precondition for protected goals, not an include arrow to a login screen.",
+      "Messaging requires an existing application connection. Shared goal names appear for each participating role to keep the view readable.",
+      "Admin self-registration, email delivery, a calendar grid and machine-learned matching are not shown as implemented capabilities."
+    ]
+  },
+  {
+    "id": "uml-sequence-apply",
+    "kind": "UML sequence",
+    "title": "Submit an application",
+    "subtitle": "Internal application request, optional resume, rejection paths and both commits.",
+    "source": "uml-sequence-apply.mmd",
+    "code": "sequenceDiagram\n    autonumber\n    actor S as Student\n    participant UI as React student UI\n    participant API as FastAPI applications route\n    participant DB as MySQL via SQLAlchemy\n    S->>UI: Submit application with optional resume\n    UI->>API: POST /api/applications (bearer token, multipart)\n    API->>DB: Load account by token subject\n    DB-->>API: Account identity\n    API->>API: Check active-account flag\n    API->>DB: Find student, internship, existing application\n    DB-->>API: Related records and duplicate result\n    alt Missing profile or internship\n        API-->>UI: 404 response\n    else Application already exists\n        API-->>UI: 400 response\n    else New application\n        opt Resume supplied\n            API->>API: Read resume bytes\n            break Abort request if size exceeds 8 MiB\n                API-->>UI: 413 response before writes\n            end\n            opt Non-empty file\n                API->>API: Encode data URI and queue Document\n            end\n        end\n        API->>DB: INSERT Application (+ optional Document), COMMIT 1\n        DB-->>API: Application ID, refreshed record\n        API->>DB: INSERT student alert (+ recruiter alert if linked), COMMIT 2\n        DB-->>API: Alerts persisted\n        API-->>UI: Application response with related internship\n        UI-->>S: Confirmation, refresh listing/dashboard data\n    end\n    Note over API,DB: Application and alerts<br/>use separate commits.<br/>COMMIT 1 survives a later<br/>alert failure.<br/>Duplicate checks are not<br/>a UNIQUE constraint.\n",
+    "sources": [
+      "frontend/src/components/Student/StudentApp.tsx",
+      "frontend/src/services/api.ts",
+      "backend/app/routers/auth.py",
+      "backend/app/routers/applications.py"
+    ],
+    "notes": [
+      "Solid arrows are requests/calls; dashed arrows are replies. opt and alt frames show conditional behavior.",
+      "Authentication/token rejection and database exceptions can terminate processing; the diagram details business validation branches after successful authentication.",
+      "COMMIT 1 saves the application and optional document. COMMIT 2 saves alerts. These boundaries intentionally match the current code."
+    ]
+  },
+  {
+    "id": "uml-sequence-interview",
+    "kind": "UML sequence",
+    "title": "Schedule an interview",
+    "subtitle": "Recruiter scheduling with the current authorization and transaction behavior.",
+    "source": "uml-sequence-interview.mmd",
+    "code": "sequenceDiagram\n    autonumber\n    actor R as Recruiter\n    participant UI as ApplicantsView\n    participant API as FastAPI recruiter route\n    participant DB as MySQL via SQLAlchemy\n    R->>UI: Select candidate, enter interview details\n    UI->>API: POST /api/recruiter/interviews\n    API->>DB: Load active account and recruiter profile\n    DB-->>API: Recruiter identity\n    Note over API,DB: Recruiter role is checked.<br/>Candidate ownership<br/>is not checked here.\n    API->>DB: INSERT Interview, COMMIT 1, refresh\n    DB-->>API: Saved interview\n    API->>DB: Find Application by submitted application_id\n    DB-->>API: Application record\n    opt Referenced application found\n        API->>API: Set status to Interview Scheduled\n        API->>API: Queue student notification if student is linked\n        API->>DB: UPDATE Application (+ notification), COMMIT 2\n        DB-->>API: Changes persisted\n    end\n    API-->>UI: Interview response with display names\n    UI->>API: Reload recruiter workspace datasets\n    API-->>UI: Updated applicants, interviews and totals\n    UI-->>R: Updated applicant list and interview schedule\n    Note over API,DB: Two separate commits.<br/>Foreign keys validate IDs,<br/>not recruiter ownership.\n",
+    "sources": [
+      "frontend/src/components/Recruiter/ApplicantsView.tsx",
+      "frontend/src/components/Recruiter/RecruiterApp.tsx",
+      "backend/app/routers/recruiter.py"
+    ],
+    "notes": [
+      "Successful authentication and database writes are assumed; failures return before later steps.",
+      "The recruiter role dependency is implemented, but schedule_interview does not verify ownership of the submitted application. The diagram records this gap rather than inventing a check.",
+      "Interview persistence precedes the application status/notification commit. The meeting link is supplied data; there is no video-conferencing integration."
+    ]
+  },
+  {
+    "id": "uml-activity",
+    "kind": "UML activity",
+    "title": "Application submission activity",
+    "subtitle": "Guarded branches for internal/external roles and the internal API processing path.",
+    "source": "uml-activity.json",
+    "code": null,
+    "sources": [
+      "frontend/src/components/Internships/InternshipDetailModal.tsx",
+      "backend/app/routers/applications.py"
+    ],
+    "notes": [
+      "Filled circle: initial node. Bullseye: activity final. Rounded rectangles: actions. Diamonds: decisions. Every outgoing decision edge has a guard.",
+      "External applications redirect to a supplied company link; this branch does not create a local application record.",
+      "The internal branch assumes a valid active-account token. A rejected request ends this attempt; a user may start another attempt.",
+      "Application validation does not currently enforce active-post or deadline eligibility; no such checks are invented here."
+    ]
+  }
+]

@@ -1,0 +1,389 @@
+{
+  "verification": "passed",
+  "scope": "Declared ORM metadata, diagram definitions, route evidence and SVG structure. No live MySQL or end-to-end application execution.",
+  "tables": 12,
+  "columns": 114,
+  "foreign_keys": 16,
+  "use_cases": 18,
+  "diagrams": [
+    {
+      "id": "er-overview",
+      "svg": "svg/er-overview.svg",
+      "png": "png/er-overview.png",
+      "source": "sources/er-overview.mmd",
+      "svg_sha256": "7e991222dd486fc37b595e9a039b68be3deaf6ea0d7dfb5ce94a226accccd565",
+      "png_sha256": "af0750d43f4c73835143b03e3876273fc6181a3be5dcb107319e2d8146401670"
+    },
+    {
+      "id": "er-full",
+      "svg": "svg/er-full.svg",
+      "png": "png/er-full.png",
+      "source": "sources/er-full.mmd",
+      "svg_sha256": "d0dd529a6e95e99c5b9134fd77c305f5973aaa42d383deea13180f008ecd5d2a",
+      "png_sha256": "8cc3aa6a95aabf1174d6b2c77d22ac7e356092d06d5022cb3a3ef35ec7cc9e42"
+    },
+    {
+      "id": "uml-class",
+      "svg": "svg/uml-class.svg",
+      "png": "png/uml-class.png",
+      "source": "sources/uml-class.mmd",
+      "svg_sha256": "d3a3f849dddc452ef750e513a9fadaf56bcb6239c071ad7a103cbc1b96f54253",
+      "png_sha256": "678d81a5dc1a21c81349fb1bfd446d1e47682c47524d45178cb0d03d0181dd75"
+    },
+    {
+      "id": "uml-use-case",
+      "svg": "svg/uml-use-case.svg",
+      "png": "png/uml-use-case.png",
+      "source": "sources/uml-use-case.json",
+      "svg_sha256": "d6829986f3c14fbc13f815b3d24f206b3fd9bbba8f0a588185c0bffa8a15c429",
+      "png_sha256": "863749f4130424a9ef5a32d0c6cd18b907f1b3f7fce00896b94ca27078e599e9"
+    },
+    {
+      "id": "uml-sequence-apply",
+      "svg": "svg/uml-sequence-apply.svg",
+      "png": "png/uml-sequence-apply.png",
+      "source": "sources/uml-sequence-apply.mmd",
+      "svg_sha256": "1c8c5115551b0a7e03ac7e48ed65a4960aaf171e9e9a9c3e110d86f8242784fc",
+      "png_sha256": "464067420c7f670b19344467d3a2f0ce54731a5b9bb8724565b2eb641840bdcb"
+    },
+    {
+      "id": "uml-sequence-interview",
+      "svg": "svg/uml-sequence-interview.svg",
+      "png": "png/uml-sequence-interview.png",
+      "source": "sources/uml-sequence-interview.mmd",
+      "svg_sha256": "61bbcab5a908590cb27f5950e0f65e92c43de515a6fb1b200ed89c4d149f0a2f",
+      "png_sha256": "8751daa63d6e96cdc23f95cbb5b7b47c6c14cbfe5ec78abfa133a4560ea604c9"
+    },
+    {
+      "id": "uml-activity",
+      "svg": "svg/uml-activity.svg",
+      "png": "png/uml-activity.png",
+      "source": "sources/uml-activity.json",
+      "svg_sha256": "7fea2146d3382946c84e4599a3909168efa9dac438c3894b151275aefb5a452c",
+      "png_sha256": "6f99dd956cd634ac26525cdd28ed077cbd44a6322eec1388beea5576a3b87ffe"
+    }
+  ],
+  "implementation_hashes": [
+    {
+      "source": "backend/app/db/models.py",
+      "sha256": "31aea1ccb0541eb28fb394ca6d7227dec430cafe64ac47d35540f986a9a4eba5"
+    },
+    {
+      "source": "backend/app/routers/admin.py",
+      "sha256": "f8cead9ba5271b940da548958d5b71879001fdb042afd7959acfc4b5a63ff5f4"
+    },
+    {
+      "source": "backend/app/routers/applications.py",
+      "sha256": "d6860365eece116c0b4fda1e3e3c3becbe29cb6d139d15a19a18f3a18f2bf501"
+    },
+    {
+      "source": "backend/app/routers/auth.py",
+      "sha256": "4dcce0956e6ba0931763f6628f68fee1176090e21c3507de44096663f6bc968b"
+    },
+    {
+      "source": "backend/app/routers/internships.py",
+      "sha256": "8505aa6be8dff407d7f79e566561bbe1335967cd7cccb16e6e70b41e4583150e"
+    },
+    {
+      "source": "backend/app/routers/messages.py",
+      "sha256": "f919ca0d8b74dfed7f1fa2732d74fdedf3306da1d1910b4d26eaf7968c064626"
+    },
+    {
+      "source": "backend/app/routers/notifications.py",
+      "sha256": "c319251cb37380476b2ce77a7a81aed458ca5eeb0845f98bcfea2e26eb78d07d"
+    },
+    {
+      "source": "backend/app/routers/recruiter.py",
+      "sha256": "8d78f5d04bb8dd8857576b652744541d2f841bb23fc61df78df77cf7ce80d8e4"
+    },
+    {
+      "source": "backend/app/routers/students.py",
+      "sha256": "e88831aadaea06178f1e2d945bf01d7eee709a6f397a9cc12cbaeddc6e9d5a48"
+    },
+    {
+      "source": "frontend/src/components/Internships/InternshipDetailModal.tsx",
+      "sha256": "ce17509c96e6ac4d824f0e49ccb9ba7466050b76392381c7d18cca2ca42a6d6a"
+    },
+    {
+      "source": "frontend/src/components/Recruiter/ApplicantsView.tsx",
+      "sha256": "f5bbfb281fad0b77cde5fa410122f4e64bb0ccc091847f240160e52aefad3a41"
+    },
+    {
+      "source": "frontend/src/components/Recruiter/RecruiterApp.tsx",
+      "sha256": "6c8907972c760a518be0ee0502ccc5448ec17ffbe63b99eddcfe94649831a724"
+    },
+    {
+      "source": "frontend/src/components/Student/StudentApp.tsx",
+      "sha256": "d4e6cf85a580f0d3340f7facc6a1d2627dcd1450e76d7e69d197cac08a41a863"
+    },
+    {
+      "source": "frontend/src/services/api.ts",
+      "sha256": "4a08900fdac511438129b5b9bc3696ce6c1d30d660fc11d76dfbea75cdee37be"
+    }
+  ],
+  "checks": [
+    "all mapped tables and fields",
+    "declared nullability, types, PK, UK, index and delete rules",
+    "all 16 ER links and their endpoint multiplicities",
+    "all 114 fields present in the rendered full ER SVG",
+    "12 UML entity classes and 16 exact associations",
+    "all use-case endpoint evidence",
+    "activity guard completeness and endpoints",
+    "two-commit order in both sequence workflows",
+    "valid text-only SVG exports"
+  ],
+  "browser_checks": {
+    "checks": [
+      {
+        "id": "er-overview",
+        "w": 2400.546875,
+        "h": 1374.625,
+        "texts": 140,
+        "zoomed": "125%",
+        "svgDownload": true,
+        "sourceDownload": true
+      },
+      {
+        "id": "er-full",
+        "w": 3294.375,
+        "h": 2651,
+        "texts": 484,
+        "zoomed": "125%",
+        "svgDownload": true,
+        "sourceDownload": true
+      },
+      {
+        "id": "uml-class",
+        "w": 1781.7548828125,
+        "h": 1160,
+        "texts": 105,
+        "zoomed": "125%",
+        "svgDownload": true,
+        "sourceDownload": true
+      },
+      {
+        "id": "uml-use-case",
+        "w": 1180,
+        "h": 2140,
+        "texts": 22,
+        "zoomed": "125%",
+        "svgDownload": true,
+        "sourceDownload": true
+      },
+      {
+        "id": "uml-sequence-apply",
+        "w": 892,
+        "h": 1860,
+        "texts": 78,
+        "zoomed": "125%",
+        "svgDownload": true,
+        "sourceDownload": true
+      },
+      {
+        "id": "uml-sequence-interview",
+        "w": 901,
+        "h": 1453,
+        "texts": 63,
+        "zoomed": "125%",
+        "svgDownload": true,
+        "sourceDownload": true
+      },
+      {
+        "id": "uml-activity",
+        "w": 2040,
+        "h": 1950,
+        "texts": 30,
+        "zoomed": "125%",
+        "svgDownload": true,
+        "sourceDownload": true
+      },
+      {
+        "pngDownload": "uml-sequence-apply.png"
+      }
+    ],
+    "consoleErrors": [],
+    "networkRequests": []
+  },
+  "export_checks": [
+    {
+      "id": "er-full",
+      "pngExportBytes": 2222739,
+      "width": 6588,
+      "height": 5302
+    },
+    {
+      "id": "uml-use-case",
+      "pngExportBytes": 834972,
+      "width": 2360,
+      "height": 4280
+    },
+    {
+      "id": "uml-class",
+      "pngExportBytes": 587867,
+      "width": 3563,
+      "height": 2320
+    },
+    {
+      "id": "uml-activity",
+      "pngExportBytes": 681574,
+      "width": 4080,
+      "height": 3900
+    },
+    {
+      "id": "uml-sequence-apply",
+      "dashed": true,
+      "notes": [
+        {
+          "x": 480,
+          "y": 1575,
+          "w": 292,
+          "h": 139
+        }
+      ],
+      "texts": [
+        {
+          "text": "Application and alerts",
+          "x": 549.484375,
+          "y": 1590.140625,
+          "w": 153.0078125,
+          "h": 17.1796875
+        },
+        {
+          "text": "use separate commits.",
+          "x": 545.5234375,
+          "y": 1607.140625,
+          "w": 160.953125,
+          "h": 17.1796875
+        },
+        {
+          "text": "COMMIT 1 survives a later",
+          "x": 531.015625,
+          "y": 1624.140625,
+          "w": 190.1875,
+          "h": 17.015625
+        },
+        {
+          "text": "alert failure.",
+          "x": 584.203125,
+          "y": 1641.140625,
+          "w": 83.59375,
+          "h": 17.015625
+        },
+        {
+          "text": "Duplicate checks are not",
+          "x": 538.3984375,
+          "y": 1658.140625,
+          "w": 175.203125,
+          "h": 17.1796875
+        },
+        {
+          "text": "a UNIQUE constraint.",
+          "x": 549.0859375,
+          "y": 1676.140625,
+          "w": 153.828125,
+          "h": 17.015625
+        }
+      ]
+    },
+    {
+      "id": "uml-sequence-interview",
+      "dashed": true,
+      "notes": [
+        {
+          "x": 491,
+          "y": 295,
+          "w": 290,
+          "h": 87
+        },
+        {
+          "x": 491,
+          "y": 1219,
+          "w": 290,
+          "h": 88
+        }
+      ],
+      "texts": [
+        {
+          "text": "Recruiter role is checked.",
+          "x": 545.7421875,
+          "y": 310.140625,
+          "w": 180.515625,
+          "h": 17.015625
+        },
+        {
+          "text": "Candidate ownership",
+          "x": 560.8359375,
+          "y": 327.140625,
+          "w": 150.328125,
+          "h": 17.1796875
+        },
+        {
+          "text": "is not checked here.",
+          "x": 564.3984375,
+          "y": 344.140625,
+          "w": 143.203125,
+          "h": 17.015625
+        },
+        {
+          "text": "Two separate commits.",
+          "x": 553.75,
+          "y": 1234.140625,
+          "w": 164.5,
+          "h": 17.1796875
+        },
+        {
+          "text": "Foreign keys validate IDs,",
+          "x": 543.9609375,
+          "y": 1251.140625,
+          "w": 184.078125,
+          "h": 17.3671875
+        },
+        {
+          "text": "not recruiter ownership.",
+          "x": 552.40625,
+          "y": 1269.140625,
+          "w": 167.1875,
+          "h": 17.1796875
+        }
+      ]
+    }
+  ],
+  "final_fit_navigation": [
+    {
+      "id": "er-full",
+      "fits": true,
+      "scrollTop": 0
+    },
+    {
+      "id": "uml-use-case",
+      "fits": true,
+      "scrollTop": 0
+    },
+    {
+      "id": "uml-class",
+      "fits": true,
+      "scrollTop": 0
+    },
+    {
+      "id": "uml-sequence-apply",
+      "fits": true,
+      "scrollTop": 0
+    },
+    {
+      "id": "uml-sequence-interview",
+      "fits": true,
+      "scrollTop": 0
+    },
+    {
+      "id": "uml-activity",
+      "fits": true,
+      "scrollTop": 0
+    },
+    {
+      "id": "er-overview",
+      "fits": true,
+      "scrollTop": 0
+    }
+  ],
+  "visual_review": "All seven standalone PNGs visually inspected; sequence note bounds also checked in the SVG DOM."
+}

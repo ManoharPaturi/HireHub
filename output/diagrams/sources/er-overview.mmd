@@ -1,0 +1,70 @@
+erDiagram
+    direction LR
+    users {
+        INT id PK "NOT NULL"
+    }
+    recruiter_profiles {
+        INT id PK "NOT NULL"
+        INT user_id FK, UK "NOT NULL"
+    }
+    students {
+        INT id PK "NOT NULL"
+        INT user_id FK, UK "NOT NULL"
+    }
+    documents {
+        INT id PK "NOT NULL"
+        INT student_id FK "NOT NULL"
+    }
+    skills {
+        INT id PK "NOT NULL"
+    }
+    student_skills {
+        INT id PK "NOT NULL"
+        INT student_id FK "NOT NULL"
+        INT skill_id FK "NOT NULL"
+    }
+    internships {
+        INT id PK "NOT NULL"
+        INT recruiter_id FK "NULL allowed"
+    }
+    applications {
+        INT id PK "NOT NULL"
+        INT student_id FK "NOT NULL"
+        INT internship_id FK "NOT NULL"
+    }
+    interviews {
+        INT id PK "NOT NULL"
+        INT recruiter_id FK "NOT NULL"
+        INT application_id FK "NOT NULL"
+        INT internship_id FK "NULL allowed"
+    }
+    notifications {
+        INT id PK "NOT NULL"
+        INT user_id FK "NOT NULL"
+    }
+    saved_internships {
+        INT id PK "NOT NULL"
+        INT student_id FK "NOT NULL"
+        INT internship_id FK "NOT NULL"
+    }
+    messages {
+        INT id PK "NOT NULL"
+        INT sender_id FK "NOT NULL"
+        INT receiver_id FK "NOT NULL"
+    }
+    users ||..o| recruiter_profiles : "user_id"
+    users ||..o| students : "user_id"
+    students ||..o{ documents : "student_id"
+    students ||..o{ student_skills : "student_id"
+    skills ||..o{ student_skills : "skill_id"
+    recruiter_profiles |o..o{ internships : "recruiter_id"
+    students ||..o{ applications : "student_id"
+    internships ||..o{ applications : "internship_id"
+    recruiter_profiles ||..o{ interviews : "recruiter_id"
+    applications ||..o{ interviews : "application_id"
+    internships |o..o{ interviews : "internship_id"
+    users ||..o{ notifications : "user_id"
+    students ||..o{ saved_internships : "student_id"
+    internships ||..o{ saved_internships : "internship_id"
+    users ||..o{ messages : "sender_id"
+    users ||..o{ messages : "receiver_id"
