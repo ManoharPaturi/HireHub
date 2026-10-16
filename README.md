@@ -73,13 +73,11 @@ These are intentional sample credentials created by the initialization script, n
 
 Other sample recruiter accounts are documented in [backend/README.md](backend/README.md). Administrators use the separate `/admin` entry point.
 
-## Database and documentation
+## Database and review presentation
 
 - [SQLAlchemy models](backend/app/db/models.py): application schema source of truth, with 12 tables and 16 foreign-key relationships.
 - [SQL reference](backend/schema.sql): an earlier SQL schema snapshot. It does not contain every field in the current models.
-- [ER documentation](docs/ER_DIAGRAM.md), [Mermaid source](docs/er-diagram.mmd), and [editable draw.io diagram](docs/er-diagram-v2.drawio).
 - [Eight-slide Beamer source](output/beamer/HireHub_DBMS_Review.tex) and [compiled presentation](output/beamer/HireHub_DBMS_Review.pdf).
-- [Earlier PowerPoint presentation](HireHub_Internship_Portal_Presentation.pptx).
 
 ## Compile the review presentation
 

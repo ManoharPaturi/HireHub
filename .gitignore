@@ -39,3 +39,8 @@ __pycache__/
 *.synctex.gz
 *.vrb
 
+
+# Archived presentation materials kept outside version control
+/docs/
+*.ppt
+*.pptx
