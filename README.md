@@ -86,7 +86,7 @@ Open `output/beamer/HireHub_DBMS_Review.tex` in Overleaf or a local LaTeX editor
 
 ## Project status and limitations
 
-This repository is an academic demonstration. The interview list and scheduling are implemented; the calendar grid and several recruiter settings remain placeholders. Email password-reset delivery is not implemented. Messaging and notifications refresh through polling. Resumes use Base64 text storage in MySQL, with an 8 MiB upload limit.
+This repository is an academic demonstration only. The interview list and scheduling are implemented; the calendar grid and several recruiter settings remain placeholders. Email password-reset delivery is not implemented. Messaging and notifications refresh through polling. Resumes use Base64 text storage in MySQL, with an 8 MiB upload limit.
 
 The landing page includes hard-coded promotional figures, which are not measured results. Demonstration company names and profiles are sample data and do not imply partnerships. Placement impact and large-scale performance have not been measured.
 
